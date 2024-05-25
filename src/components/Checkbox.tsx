@@ -7,7 +7,7 @@ export const Checkbox = ({
   i18n,
   name,
   className,
-  symbol,
+  symbol = "check",
   symbolUnchecked,
   ...rest
 }: DOMProps<"input", { i18n: I18n; name: string; symbol?: string; symbolUnchecked?: string }>) => (
@@ -15,6 +15,7 @@ export const Checkbox = ({
     <input
       className={cn("material-symbols-outlined", className)}
       type="checkbox"
+      name={`attr_${name}`}
       data-symbol={symbol}
       data-symbol-unchecked={symbolUnchecked}
       {...rest}

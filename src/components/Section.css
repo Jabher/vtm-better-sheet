@@ -1,3 +1,7 @@
+.sheet-element-section-heading:has(.sheet-component--row-description-toggler:not(:checked)) + .sheet-element-section-body {
+    display: none;
+}
+
 .sheet-element-section-heading {
     flex: 0;
     width: 100%;
@@ -12,6 +16,29 @@
     padding-bottom: 4px;
     align-items: flex-start;
     justify-content: center;
+
+    .sheet-component--row-description-toggler {
+        flex: 0;
+        padding: 0 16px;
+        margin: 0;
+        align-self: flex-start;
+        appearance: none;
+        background: transparent;
+        color: var(--v20-color-text);
+        border: none;
+        width: min-content;
+        height: min-content;
+        &::after {
+            content: 'expand_content'
+        }
+        &:checked::after {
+            content: 'collapse_content'
+        }
+
+        &:active, &:focus {
+            outline: none;
+        }
+    }
 }
 
 .sheet-element-section-heading > * {

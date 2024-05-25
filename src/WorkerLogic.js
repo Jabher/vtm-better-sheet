@@ -1,8 +1,4 @@
 export class WorkerLogic {
-  static getRepeatingKey = (attribute) => {
-    return attribute.replace(new RegExp("_" + attribute + "$", "i"), "");
-  };
-
   dependencies = {};
   repeatingDefaults = {};
 
@@ -109,16 +105,26 @@ export class WorkerLogic {
       for (const [triggerKey, fn] of Object.entries(triggers)) {
         console.debug("registering repeater", key, triggerKey);
         on(`change:repeating_${key}:${triggerKey}`, (eventInfo) => {
-          const prefix = WorkerLogic.getRepeatingKey(eventInfo.sourceAttribute);
+          const [_, group, groupId] = eventInfo.sourceAttribute.split('_');
+          const prefix = `repeating_${group}_${groupId}`;
           const result = fn(eventInfo.newValue);
-          console.debug("updating repeating key for", key, {
-            triggerKey,
-            result,
-            eventInfo,
-            prefix,
-          });
           if (result) {
-            setAttrs(Object.fromEntries(Object.entries(result).map(([key2, value]) => [`${prefix}_${key2}`, value])));
+            const newAttrs = Object.fromEntries(Object.entries(result).map(([key2, value]) => [`${prefix}_${key2}`, value]));
+            console.debug("updating repeating key for", key, {
+              triggerKey,
+              result,
+              eventInfo,
+              prefix,
+              newAttrs
+            });
+            setAttrs(newAttrs);
+          } else {
+            console.debug("updating repeating key failed for", key, {
+              triggerKey,
+              result,
+              eventInfo,
+              prefix,
+            });
           }
         });
       }

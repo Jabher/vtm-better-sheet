@@ -35,7 +35,7 @@ textarea {
     .sheet-binput {
         color: var(--v20-color-text);
         padding: 4px 8px;
-        font-size: 16px;
+        font-size: var(--v20-font-size-normal);
         min-height: 24px;
         min-width: 36px;
         outline: none;

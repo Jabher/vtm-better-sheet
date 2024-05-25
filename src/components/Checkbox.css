@@ -1,5 +1,7 @@
 .sheet-component--checkbox.sheet-component--checkbox.sheet-component--checkbox {
     white-space: nowrap;
+    flex: 0 0 min-content;
+    width: min-content;
 
     & > input {
         align-self: flex-end;

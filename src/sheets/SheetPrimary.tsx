@@ -12,6 +12,7 @@ import { SquareRadio } from "../components/SquareRadio.tsx";
 import { talents, knowledges, skills } from "../consts.ts";
 import { RollButton } from "../components/Buttons.tsx";
 import { RepeatingSection } from "../components/RepeatingSection.tsx";
+import { Row } from "../components/Row.tsx";
 
 export const SheetPrimary = () => (
   <div className="sheet-tab-content sheet-primary">
@@ -99,10 +100,15 @@ export const SheetPrimary = () => (
           <H3 i18n="disciplines-u" />
           <RepeatingSection name="disciplines">
             {() => (
-              <div style={{ display: "flex" }}>
-                <Input name={`name`} list="discipline-datalist" />
-                <Counter fade from={0} to={9} name={`points`} />
-              </div>
+              <Row>
+                <Input name="name" list="discipline-datalist" />
+                <Counter fade from={0} to={9} name="points" />
+                <span className="sheet-component--attr-input-linked">
+                  <input type="checkbox" name="attr_linked" defaultChecked={true} />
+                  <span className="material-symbols-outlined sheet-component--attr-input-linked-icon">share</span>
+                  <span data-i18n="discipline-is-linked" className="sheet-component--attr-input-linked-tooltip" />
+                </span>
+              </Row>
             )}
           </RepeatingSection>
         </div>

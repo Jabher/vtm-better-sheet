@@ -1,5 +1,20 @@
 .sheet-tabCombat {
+    .sheet-component--labelled:has(input[type="number"]) {
+        flex: 0 1 min-content;
+    }
 
+    .sheet-tabCombat--weaponName {
+        opacity: .5;
+        &:empty {
+            display: none;
+        }
+        &::before {
+            content: '('
+        }
+        &::after {
+            content: ')'
+        }
+    }
     & .sheet-tabCombat--item {
         & + .sheet-tabCombat--item {
             padding-top: 40px;

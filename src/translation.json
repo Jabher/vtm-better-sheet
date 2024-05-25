@@ -230,8 +230,9 @@
 	"bond-1-label": "Первые узы",
 	"bond-2-label": "Вторые узы",
 	"bond-3-label": "Третьи узы",
-	"use-health-minus-label": "Учитывать штрафы ранений",
-	"use-celerity-minus-label": "Стремительности использовано",
+	"use-health-minus-label": "Учитывать ранения",
+	"use-celerity-minus-label": "Стремительности вложено",
+	"use-potence-minus-label": "Мощи вложено",
 	"use-initiative-label": "В очередь",
 	"weapon-conceal-pocket-label": "В кармане",
 	"weapon-conceal-jacket-label": "Под курткой",
@@ -298,5 +299,6 @@
 	"maneuver-ranged-quickfire": "Беглый огонь",
 	"maneuver-ranged-longburst": "Длинная очередь",
 	"maneuver-ranged-shortburst": "Короткая очередь",
-	"maneuver-ranged-shelling": "Обстрел"
+	"maneuver-ranged-shelling": "Обстрел",
+	"discipline-is-linked": "Дисциплина подставляется в расчеты автоматически"
 }

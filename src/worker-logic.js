@@ -18,7 +18,7 @@ const Roll20 = {
   resetRepeatingField: () => {
     try {
       trigger?.({
-        eventname: "reset_repeating_field",
+        eventname: "resetRepeatingField",
       });
     } catch {
       console.log("failed to reset workerGlobals");
@@ -31,7 +31,7 @@ const Roll20 = {
 
   getGroupAttrs: (group, keys, globalKeys, cb) => {
     console.log("getGroupAttrs", group, keys, globalKeys);
-    if (cb == undefined && globalKeys instanceof Function) {
+    if (cb === undefined && globalKeys instanceof Function) {
       cb = globalKeys;
       globalKeys = undefined;
     }
@@ -115,7 +115,7 @@ const declareRepeatingDependency = (groupName, extraKeys, globalDependencies, ge
     Roll20.getGroupAttrs(groupName, extraKeys, globalDependencies, (groupedAttrs, globalAttrs) => {
       console.log("declareRepeatingDependency state", groupedAttrs, globalAttrs);
       for (const [id, attrs] of Object.entries(groupedAttrs)) {
-        console.log("declareRepeatingDependency updating group", groupName, {
+        console.log("declareRepeatingDependency updating group", groupName, attrs, globalAttrs, {
           [id]: getter(attrs, globalAttrs),
         });
         Roll20.setGroupAttrs(groupName, {
@@ -181,27 +181,29 @@ export const worker = () =>
     }
 
     init() {
-      const boundDisciplines = {
-        celerity: undefined,
-        potence: undefined,
-      };
-      const boundDisciplineNames = Object.keys(boundDisciplines).map((key) => [
+      const boundDisciplines = new Set(["celerity", "potence"]);
+      const boundDisciplineNames = [...boundDisciplines].map((key) => [
         key,
         getTranslationByKey(`discipline-name-${key}`).toLowerCase(),
       ]);
       const resolveName = (name) => boundDisciplineNames.find((keys) => keys.includes(name.toLowerCase()))?.[0];
 
       onRepeatingChange("disciplines", ["name", "points"], (attrs) => {
-        const names = Object.fromEntries(Object.entries(attrs).map(([key, props]) => [resolveName(props.name), key]));
-        for (const key of Object.keys(boundDisciplines)) {
-          boundDisciplines[key] = names[key];
+        const boosts = {};
+        const links = {};
+        for (const [key, { name, points = 0 }] of Object.entries(attrs)) {
+          const resolvedName = resolveName(name);
+          const isBound = boundDisciplines.has(resolvedName);
+          if (isBound) {
+            boosts[`${resolvedName}Boost`] = points ?? 0;
+          }
+          links[`repeating_disciplines_${key}_linked`] = isBound ? "on" : "off";
         }
-        console.log("boundDisciplines", boundDisciplines);
-        const boosts = Object.fromEntries(
-          Object.entries(boundDisciplines).map(([key, value]) => [`${key}Boost`, attrs[value]?.points ?? 0])
-        );
-        console.log("setting boosts", boosts);
-        setAttrs(boosts);
+        console.log("setting boosts", boosts, links);
+        setAttrs({
+          ...boosts,
+          ...links,
+        });
       });
 
       on("clicked:roll_willpower", (eventInfo) => {
@@ -223,51 +225,147 @@ export const worker = () =>
         });
       });
 
+      const attributesWithBoosts = [
+        ...attributes,
+        "celerityBoost",
+        "celeritySpent",
+        "potenceBoost",
+        "potenceSpent",
+        "useHealthInCombat",
+        "Health",
+      ];
+
+      const computedAttrs = (globals, getter) => {
+        const attrs = {
+          ...globals,
+          Strength: int(globals.Strength) + Math.max(0, int(globals.potenceBoost) - int(globals.potenceSpent)),
+          Dexterity: int(globals.Dexterity) + Math.max(0, int(globals.celerityBoost) - int(globals.celeritySpent)),
+          Stamina: int(globals.Stamina),
+          Charisma: int(globals.Charisma),
+          Manipulation: int(globals.Manipulation),
+          Appearance: int(globals.Appearance),
+          Perception: int(globals.Perception),
+          Intelligence: int(globals.Intelligence),
+          Wits: int(globals.Wits),
+        };
+
+        return Math.max(0, getter(attrs) + (globals.useHealthInCombat === "on" ? int(globals.Health) : 0));
+      };
+      const potenceAddition = (globals, rollAttribute) =>
+        rollAttribute === "Strength" && int(globals.potenceSpent) > 0 ? `+${globals.potenceSpent}` : "";
+
       declareRepeatingDependency(
         "brawlCombatDice",
         ["rollAttribute", "rollSkill"],
-        attributes,
-        ({ rollAttribute, rollSkill }, attrs) => ({
-          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]),
+        attributesWithBoosts,
+        ({ rollAttribute, rollSkill }, globals) => ({
+          combatRollNumber: `${int(globals[rollAttribute]) + int(globals[rollSkill])}${potenceAddition(globals, rollAttribute)}`,
         })
       );
 
       declareRepeatingDependency(
         "meleeCombatDice",
         ["rollAccuracy", "rollAttribute", "rollSkill"],
-        attributes,
-        ({ rollAttribute, rollSkill, rollAccuracy }, attrs) => ({
-          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]) + int(rollAccuracy),
-        })
-      );
-
-      declareRepeatingDependency(
-        "meleeCombatDice",
-        ["rollAccuracy", "rollAttribute", "rollSkill", "damageAttribute"],
-        attributes,
-        ({ rollAttribute, rollSkill, rollAccuracy, damageAttribute }, attrs) => ({
-          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]) + int(rollAccuracy),
-          damageRollNumber: int(attrs[damageAttribute]),
+        [...attributesWithBoosts, "CurrentMeleeWeaponDamage"],
+        ({ rollAttribute, rollSkill, rollAccuracy }, globals) => ({
+          combatRollNumber: `${computedAttrs(
+            globals,
+            ({ [rollAttribute]: attribute }) => attribute + int(globals[rollSkill]) + int(rollAccuracy)
+          )}${potenceAddition(globals, rollAttribute)}`,
+          damageRollNumber: int(globals.CurrentMeleeWeaponDamage),
         })
       );
 
       declareRepeatingDependency(
         "rangedCombatDice",
-        ["rollAccuracy", "rollAttribute", "rollSkill"],
-        attributes,
-        ({ rollAttribute, rollSkill, rollAccuracy }, attrs) => ({
-          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]) + int(rollAccuracy),
+        ["rollAccuracy", "rollAttribute", "rollSkill", "damageAttribute"],
+        [...attributesWithBoosts, "CurrentRangedWeaponDamage"],
+        ({ rollAttribute, rollSkill, rollAccuracy, damageAttribute }, globals) => ({
+          combatRollNumber: `${computedAttrs(
+            globals,
+            ({ [rollAttribute]: attribute }) => attribute + int(globals[rollSkill]) + int(rollAccuracy)
+          )}${potenceAddition(globals, rollAttribute)}`,
+          damageRollNumber: int(globals[damageAttribute]) + int(globals.CurrentRangedWeaponDamage),
         })
       );
 
-      on("change:repeating_melee:selected", (e) => {
-        // todo
-        console.log(e);
-      });
-      on("change:repeating_ranged:selected", (e) => {
-        // todo
-        console.log(e);
-      });
+      declareRepeatingDependency(
+        "rangedCombatDice",
+        ["rollAccuracy", "rollAttribute", "damageAttribute", "rollSkill"],
+        attributesWithBoosts,
+        ({ rollAttribute, rollSkill, rollAccuracy, damageAttribute }, globals) => ({
+          combatRollNumber: `${computedAttrs(
+            globals,
+            ({ [rollAttribute]: attribute }) => attribute + int(globals[rollSkill]) + int(rollAccuracy)
+          )}${potenceAddition(globals, rollAttribute)}`,
+          damageRollNumber: int(globals[damageAttribute]),
+        })
+      );
+
+      for (const type of ["MeleeWeapon", "RangedWeapon"]) {
+        on(`change:repeating_${type}:Equipped`, (e) => {
+          const enabled = e.newValue === "on";
+          const [, group, sourceId] = e.sourceAttribute.split("_");
+          if (!enabled) {
+            getAttrs([`Current${type}ID`], ({ [`Current${type}ID`]: currentID }) => {
+              if (currentID === sourceId) {
+                setAttrs({
+                  [`Current${type}ID`]: "",
+                  [`Current${type}Name`]: "",
+                  [`Current${type}Damage`]: 0,
+                });
+              }
+            });
+          } else {
+            getAttrs(
+              [
+                `repeating_${type}_WeaponName`,
+                `repeating_${type}_Type`,
+                `repeating_${type}_Damage`,
+                `repeating_${type}_damageAttribute`
+                `repeating_${type}_damageExtra`,
+              ],
+              (attrs) => {
+                Roll20.sectionIDs(group, (ids) => {
+                  Roll20.setGroupAttrs(
+                    group,
+                    {
+                      ...Object.fromEntries(ids.map((id) => [id, { Equipped: false }])),
+                    [id]: {}
+                    },
+                    {
+                      [`Current${type}ID`]: sourceId,
+                      [`Current${type}Name`]:
+                        attrs[`repeating_${type}_WeaponName`] || attrs[`repeating_${type}_Type`] || "???",
+                      [`Current${type}Damage`]: attrs[`repeating_${type}_Damage`],
+                    }
+                  );
+                });
+              }
+            );
+          }
+        });
+        on(`change:repeating_${type}:WeaponName change:repeating_${type}:Type change:repeating_${type}:Damage`, () => {
+          getAttrs(
+            [
+              `repeating_${type}_Equipped`,
+              `repeating_${type}_WeaponName`,
+              `repeating_${type}_Type`,
+              `repeating_${type}_Damage`,
+            ],
+            (attrs) => {
+              if (attrs[`repeating_${type}_Equipped`] !== "on") {
+                return;
+              }
+              setAttrs({
+                [`Current${type}Name`]:
+                  attrs[`repeating_${type}_WeaponName`] || attrs[`repeating_${type}_Type`] || "???",
+                [`Current${type}Damage`]: attrs[`repeating_${type}_Damage`],
+              });
+            }
+          );
+        });
+      }
     }
 
     dependencies = {
@@ -280,10 +378,12 @@ export const worker = () =>
       willpowerRoll: ({ Willpower, WillpowerBoost }) => int(Willpower) + int(WillpowerBoost),
       // todo boosts
       willpowerUsedRoll: ({ WillpowerUsed, WillpowerBoost }) => int(WillpowerUsed) + int(WillpowerBoost),
+      initiativeBonus: ({ Dexterity, Wits, celerityBoost, initiativeModifier }) =>
+        `+${int(Dexterity) + int(Wits) + int(celerityBoost) + int(initiativeModifier)}`,
     };
 
     repeatingDefaults = {
-      MeleeWeapons: {
+      MeleeWeapon: {
         Type: (type) => {
           const weapon = Roll20.findIntl(meleeWeapons, type, "weapon-melee");
           if (weapon)
@@ -294,7 +394,7 @@ export const worker = () =>
             };
         },
       },
-      RangedWeapons: {
+      RangedWeapon: {
         Type: (type) => {
           const weapon = Roll20.findIntl(rangedWeapons, type, "weapon-ranged");
           if (weapon) {
