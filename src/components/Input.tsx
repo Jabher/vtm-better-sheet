@@ -9,6 +9,7 @@ export const Input = ({
   labelName,
   className,
   postfix,
+  disabled,
   ...rest
 }: ComponentProps<"input"> & {
   i18n?: I18n;
@@ -25,10 +26,14 @@ export const Input = ({
     ...rest,
   };
   if (i18n || labelName) {
-    return (
+      return (
       <div className="sheet-element-input">
         <div className="sheet-element-input-container">
-          <input {...inputProps} />
+            {disabled
+                // @ts-ignore
+                ? <span className="sheet-binput" name={inputProps.name}/>
+                : <input {...inputProps} />
+            }
           {postfix ? <H5 className="sheet-element-input-postfix" i18n={postfix} /> : null}
         </div>
         {i18n ? <label data-i18n={i18n}></label> : <label>{labelName}</label>}
@@ -38,14 +43,14 @@ export const Input = ({
     return (
       <div className="sheet-element-input">
         <div className="sheet-element-input-container">
-          <input {...inputProps} />
+            {disabled
+                // @ts-ignore
+                ? <span className="sheet-binput" name={inputProps.name}/>
+                : <input {...inputProps} />
+            }
           {postfix ? <H5 className="sheet-element-input-postfix" i18n={postfix} /> : null}
         </div>
       </div>
     );
   }
 };
-
-export const ReadonlyInput = ({ name, value, className, ...rest }: ComponentProps<"input">) => (
-  <input name={name} value={value} disabled className={cn(className, "sheet-element-input-readonly")} {...rest} />
-);

@@ -38,23 +38,23 @@ export const SheetCombat = () => (
           {() => (
             <section className="sheet-tabCombat--item">
               <div className="sheet-tabCombat--item-row">
-                <Input i18n="name2-u" name="attr_MeleeWeaponName" />
-                <Input i18n="type-u" name="attr_MeleeWeaponType" list="melee-weapon-datalist" />
-                {/*<Input i18n="minstr-u" type="number" name="attr_MeleeWeaponMinimumStrength" />*/}
-                <Input i18n="damage-u" type="number" name="attr_MeleeWeaponDamage" />
-                <SelectInput i18n="type-u" name="attr_MeleeWeaponLethality">
+                <Input i18n="name2-u" name="attr_Name" />
+                <Input i18n="type-u" name="attr_Type" list="melee-weapon-datalist" />
+                {/*<Input i18n="minstr-u" type="number" name="attr_MinimumStrength" />*/}
+                <Input i18n="damage-u" type="number" name="attr_Damage" />
+                <SelectInput i18n="type-u" name="attr_Lethality">
                   <option value={DamageType.Bashing} data-i18n="bashing-u" />
                   <option value={DamageType.Lethal} data-i18n="lethal-u" />
                   <option value={DamageType.Aggravated} data-i18n="aggravated-u" />
                 </SelectInput>
-                <SelectInput i18n="conceal-u" name="attr_MeleeWeaponConceal">
+                <SelectInput i18n="conceal-u" name="attr_Conceal">
                   <option value={ConcealType.Pocket} data-i18n="weapon-conceal-pocket-label" />
                   <option value={ConcealType.Jacket} data-i18n="weapon-conceal-jacket-label" />
                   <option value={ConcealType.Trench} data-i18n="weapon-conceal-trench-label" />
                   <option value={ConcealType.Impossible} data-i18n="weapon-conceal-impossible-label" />
                 </SelectInput>
               </div>
-              <ResizingTextarea i18n="notes-label" name="attr_MeleeWeaponDesc" />
+              <ResizingTextarea i18n="notes-label" name="attr_Desc" />
             </section>
           )}
         </RepeatingSection>
@@ -68,26 +68,26 @@ export const SheetCombat = () => (
           {() => (
             <section className="sheet-tabCombat--item">
               <div>
-                <Input i18n="name2-u" name="attr_RangedWeaponName" />
-                <Input i18n="type-u" name="attr_RangedWeaponType" list="ranged-weapon-datalist" />
-                {/*<Input i18n="minstr-u" type="number" name="attr_RangedWeaponMinimumStrength" />*/}
-                <Input i18n="damage-u" type="number" name="attr_RangedWeaponDamage" />
-                <SelectInput i18n="type-u" name="attr_RangedWeaponLethality" defaultValue={0}>
+                <Input i18n="name2-u" name="attr_Name" />
+                <Input i18n="type-u" name="attr_Type" list="ranged-weapon-datalist" />
+                {/*<Input i18n="minstr-u" type="number" name="attr_MinimumStrength" />*/}
+                <Input i18n="damage-u" type="number" name="attr_Damage" />
+                <SelectInput i18n="type-u" name="attr_Lethality" defaultValue={0}>
                   <option value={0} data-i18n="bashing-u" />
                   <option value={2} data-i18n="lethal-u" />
                   <option value={3} data-i18n="aggravated-u" />
                 </SelectInput>
-                <Input i18n="range-u" name="attr_RangedWeaponRange" type="number" />
-                <Input i18n="rate-u" name="attr_RangedWeaponRate" type="number" />
-                <Input i18n="clip-u" name="attr_RangedWeaponClip" type="number" />
-                <SelectInput i18n="conceal-u" name="RangedWeaponConceal">
+                <Input i18n="range-u" name="attr_Range" type="number" />
+                <Input i18n="rate-u" name="attr_Rate" type="number" />
+                <Input i18n="clip-u" name="attr_Clip" type="number" />
+                <SelectInput i18n="conceal-u" name="Conceal">
                   <option value={ConcealType.Pocket} data-i18n="weapon-conceal-pocket-label" />
                   <option value={ConcealType.Jacket} data-i18n="weapon-conceal-jacket-label" />
                   <option value={ConcealType.Trench} data-i18n="weapon-conceal-trench-label" />
                   <option value={ConcealType.Impossible} data-i18n="weapon-conceal-impossible-label" />
                 </SelectInput>
               </div>
-              <ResizingTextarea i18n="notes-label" name="attr_RangedWeaponDesc" />
+              <ResizingTextarea i18n="notes-label" name="attr_Desc" />
             </section>
           )}
         </RepeatingSection>
@@ -127,7 +127,7 @@ export const SheetCombat = () => (
             <section className="sheet-tabCombat--item">
               <div className="sheet-tabCombat--item-row">
                 <Input labelName="Vehicle" name="attr_VehicleName" />
-                <SelectInput i18n="vehicle-type-label" name="attr_VehicleType" defaultValue="Car">
+                <SelectInput i18n="vehicle-type-label" name="attr_Type" defaultValue="Car">
                   {Object.keys(cars).map((name) => (
                     <option
                       data-i18n={`vehicle-type-${name as keyof typeof cars}-label` as const}

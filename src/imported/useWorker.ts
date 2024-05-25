@@ -107,10 +107,11 @@ export const useWorker = (worker: Worker) => {
     };
 
     // @ts-expect-error roll20
-    globalThis.setAttrs = (attrs: Record<string, string | number>) => {
+    globalThis.setAttrs = (attrs: Record<string, string | number>, cb) => {
       updateInputs(attrs);
       updateValues(attrs);
       Object.assign(state, attrs);
+      cb();
     };
     worker();
     for (const callback of eventListeners["sheet:opened"] || []) {

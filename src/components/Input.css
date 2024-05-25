@@ -27,7 +27,7 @@ textarea {
 }
 
 .sheet-element-input.sheet-element-input.sheet-element-input {
-    input {
+    .sheet-binput {
         color: var(--v20-color-text);
         padding: 4px 8px;
         font-size: 16px;
@@ -39,10 +39,6 @@ textarea {
         background: transparent;
         width: 100%;
         border: none;
-    }
-
-    input:disabled {
-        border-color: rgba(128, 128, 128, 0.05);
     }
 
     input::placeholder {
@@ -75,7 +71,7 @@ textarea {
         padding: 10px 4px 2px;
     }
 
-    &:has(label) input {
+    &:has(label) .sheet-binput {
         padding: 16px 16px;
     }
 
@@ -86,14 +82,4 @@ textarea {
 }
 .sheet-element-input-postfix {
     padding: 4px 8px;
-}
-
-input.sheet-element-input-readonly[disabled] {
-    border: none;
-    outline: none;
-    background-color: transparent;
-    display: inline-block;
-    margin: 0;
-    padding: 0;
-    width: 50px;
 }
