@@ -3,6 +3,13 @@
 }
 
 .sheet-element-section-heading {
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(5px);
+    z-index: 1;
+    mask: var(--v20-blurry-5-20);
+    background-color: white;
+
     flex: 0;
     width: 100%;
     text-align: center;

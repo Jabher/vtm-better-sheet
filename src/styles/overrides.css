@@ -20,20 +20,28 @@ html, body {
 .nav-tabs {
     margin-bottom: 8px;
     border-bottom: 1px solid var(--v20-color-neutral);
-    padding: 0 20px;
+    padding: 0 16px;
+}
+
+.nav-tabs > li {
+    padding: 4px 0;
 }
 
 .nav-tabs > li > a {
     cursor: pointer !important;
     border: none !important;
     outline: none;
-    transition: all var(--v20-transition-duration) ease-in-out;
+    opacity: .5;
+    transition: none var(--v20-transition-duration) ease-in-out;
+    border-bottom: 2px transparent solid !important;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
     text-decoration: none !important;
     color: var(--v20-color-text) !important;
-    background-color: var(--v20-color-neutral) !important;
+    background: none !important;
+    opacity: 1;
+    border-color: var(--v20-color-visual-accent) !important;
 }
 
 .nav-tabs > li > a {
