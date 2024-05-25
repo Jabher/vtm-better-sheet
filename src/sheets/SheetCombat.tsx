@@ -40,16 +40,16 @@ export const SheetCombat = () => (
         ))}
     </datalist>
 
-    <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", flexDirection: "row-reverse" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap" }}>
       <Section i18n="initiative-dice-pool-label" style={{ flex: "1 1 min-content" }}>
-        <Row>
+        <Row style={{ justifyContent: "center" }}>
           <Checkbox name="initiativeAddTracker" i18n="use-initiative-label" symbol="low_priority" />
           <Input type="number" name="initiativeModifier" i18n="result-modifiers-label" />
-          <RollButton name="initiativeRoll" childrenName="initiativeBonus" />
+          <RollButton name="initiative" childrenName="initiativeBonus" />
         </Row>
       </Section>
       <Section i18n="combat-dice-pools-label" style={{ flex: "1 1 min-content" }}>
-        <Row>
+        <Row style={{ justifyContent: "center" }}>
           <Checkbox name="useHealthInCombat" i18n="use-health-minus-label" symbol="ecg_heart" />
           {/*todo use var*/}
           <Input name="celeritySpent" type="number" i18n="use-celerity-minus-label" />
@@ -66,7 +66,13 @@ export const SheetCombat = () => (
             <AttributeSelect name="rollAttr" />
             <SkillSelect name="rollSkill" />
             <Input type="number" name="difficulty" defaultValue={6} i18n="difficulty-label" />
-            <RollButton name="combatRoll" childrenName="combatRollNumber" />
+            <RollButton
+              data-template="combat"
+              data-attribute="combatRollNumber"
+              data-difficulty-value="difficulty"
+              data-attribute-name-value="rollName"
+              childrenName="combatRollNumber"
+            />
             <RowDescription>
               <ResizingTextarea i18n="notes-label" name="description" />
             </RowDescription>
@@ -88,7 +94,16 @@ export const SheetCombat = () => (
               <SkillSelect name="rollSkill" />
               <Input type="number" name="rollAccuracy" defaultValue={0} i18n="accuracy-label" />
               <Input type="number" name="rollDifficulty" defaultValue={6} i18n="difficulty-label" />
-              <RollButton name="combatRoll" childrenName="combatRollNumber" />
+              <RollButton
+                data-template="combat"
+                data-attribute="combatRollNumber"
+                data-difficulty-value="rollDifficulty"
+                data-attribute-name-prefix-value="CurrentMeleeWeaponName"
+                data-attribute-name-value="rollName"
+                data-damage-type-value="CurrentMeleeWeaponLethality"
+                data-damage-roll-value="damageRollNumber"
+                childrenName="combatRollNumber"
+              />
               <RowDescription>
                 <Row>
                   <H3
@@ -119,7 +134,16 @@ export const SheetCombat = () => (
               <SkillSelect name="rollSkill" />
               <Input type="number" name="rollAccuracy" defaultValue={0} i18n="accuracy-label" />
               <Input type="number" name="rollDifficulty" defaultValue={6} i18n="difficulty-label" />
-              <RollButton name="combatRoll" childrenName="combatRollNumber" />
+              <RollButton
+                data-template="combat"
+                data-attribute="combatRollNumber"
+                data-difficulty-value="rollDifficulty"
+                data-attribute-name-prefix-value="CurrentRangedWeaponName"
+                data-attribute-name-value="rollName"
+                data-damage-type-value="CurrentRangedWeaponLethality"
+                data-damage-roll-value="damageRollNumber"
+                childrenName="combatRollNumber"
+              />
               <RowDescription>
                 <Row>
                   <H3
@@ -155,7 +179,15 @@ export const SheetCombat = () => (
               <option value={ConcealType.Trench} data-i18n="weapon-conceal-trench-label" />
               <option value={ConcealType.Impossible} data-i18n="weapon-conceal-impossible-label" />
             </SelectInput>
-            <RollButton name="combatRoll" childrenName="combatRollNumber" />
+            <RollButton
+              data-template="combat"
+              data-attribute="combatRollNumber"
+              data-difficulty-value="6"
+              data-attribute-name-value="WeaponName"
+              data-damage-type-value="Lethality"
+              data-damage-roll-value="damageRollNumber"
+              childrenName="combatRollNumber"
+            />
             <RowDescription>
               <Row>
                 <H3
@@ -163,7 +195,7 @@ export const SheetCombat = () => (
                   style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
                 />
                 <AttributeSelect name="damageAttr" defaultValue="Strength" />
-                <Input i18n="damage-bonus-label" type="number" name="Damage" />
+                <Input i18n="damage-label" type="number" name="Damage" />
                 <RollButton name="damageRoll" childrenName="damageRollNumber" />
               </Row>
               <ResizingTextarea i18n="notes-label" name="Desc" />
@@ -191,7 +223,15 @@ export const SheetCombat = () => (
               <option value={ConcealType.Trench} data-i18n="weapon-conceal-trench-label" />
               <option value={ConcealType.Impossible} data-i18n="weapon-conceal-impossible-label" />
             </SelectInput>
-            <RollButton name="combatRoll" childrenName="combatRollNumber" />
+            <RollButton
+              data-template="combat"
+              data-attribute="combatRollNumber"
+              data-difficulty-value="6"
+              data-attribute-name-value="WeaponName"
+              data-damage-type-value="Lethality"
+              data-damage-roll-value="damageRollNumber"
+              childrenName="combatRollNumber"
+            />
             <RowDescription>
               <Row>
                 <Input i18n="rate-u" name="Rate" type="number" />
@@ -201,8 +241,15 @@ export const SheetCombat = () => (
                   i18n="damage-u"
                   style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
                 />
-                <Input i18n="damage-bonus-label" type="number" name="Damage" />
-                <RollButton name="damageRoll" childrenName="damageRollNumber" />
+                <Input i18n="damage-label" type="number" name="Damage" />
+                <RollButton
+                  data-template="damage"
+                  data-attribute="damageRollNumber"
+                  data-difficulty-value="6"
+                  data-attribute-name="damage-u"
+                  data-attribute-name-prefix-value="WeaponName"
+                  childrenName="combatRollNumber"
+                />
               </Row>
               <ResizingTextarea i18n="notes-label" name="Desc" />
             </RowDescription>

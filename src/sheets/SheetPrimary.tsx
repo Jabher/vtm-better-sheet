@@ -20,7 +20,7 @@ export const SheetPrimary = () => (
       {Object.keys(translation)
         .filter((key) => key.startsWith("discipline-name-"))
         .map((key) => (
-          <option data-i18n={key} key={key} />
+          <option key={key} data-i18n={key} />
         ))}
     </datalist>
     <datalist id="user-discipline-datalist">
@@ -78,14 +78,14 @@ export const SheetPrimary = () => (
           {/*todo max 10*/}
           <H3 i18n="talents-u" />
           {talents.map((title) => (
-            <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
+            <AttrInput key={title} i18n={`${title}-u`} from={0} to={10} name={title} />
           ))}
           <RepeatingSection name="hobbyTalentList" className="sheet-primary--hobbies">
             {() => (
               <div className="sheet-component sheet-component--attr-input">
                 <Input name="itemName" />
                 <div className="sheet-component--attr-input--dots-input">
-                  <Counter name="itemDotsNumber" from={0} to={5} renderCounterOnZero preserveZeroGap />
+                  <Counter name="itemDotsNumber" from={0} to={10} renderCounterOnZero preserveZeroGap />
                 </div>
                 <Input className="sheet-component--attr-input-spec" name="itemSpec" />
               </div>
@@ -95,14 +95,14 @@ export const SheetPrimary = () => (
         <div>
           <H3 i18n="skills-u" />
           {skills.map((title) => (
-            <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
+            <AttrInput key={title} i18n={`${title}-u`} from={0} to={10} name={title} />
           ))}
           <RepeatingSection name="hobbySkillList" className="sheet-primary--hobbies">
             {() => (
               <div className="sheet-component sheet-component--attr-input">
                 <Input name="itemName" />
                 <div className="sheet-component--attr-input--dots-input">
-                  <Counter name="itemDotsNumber" from={0} to={5} renderCounterOnZero preserveZeroGap />
+                  <Counter name="itemDotsNumber" from={0} to={10} renderCounterOnZero preserveZeroGap />
                 </div>
                 <Input className="sheet-component--attr-input-spec" name="itemSpec" />
               </div>
@@ -112,14 +112,14 @@ export const SheetPrimary = () => (
         <div>
           <H3 i18n="knowledges-u" />
           {knowledges.map((title) => (
-            <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
+            <AttrInput key={title} i18n={`${title}-u`} from={0} to={10} name={title} />
           ))}
           <RepeatingSection name="hobbyKnowledgeList" className="sheet-primary--hobbies">
             {() => (
               <div className="sheet-component sheet-component--attr-input">
                 <Input name="itemName" />
                 <div className="sheet-component--attr-input--dots-input">
-                  <Counter name="itemDotsNumber" from={0} to={5} renderCounterOnZero preserveZeroGap />
+                  <Counter name="itemDotsNumber" from={0} to={10} renderCounterOnZero preserveZeroGap />
                 </div>
                 <Input className="sheet-component--attr-input-spec" name="itemSpec" />
               </div>
@@ -210,12 +210,10 @@ export const SheetPrimary = () => (
           <SectionBody className="sheet-primary-moralpath">
             {range(1, 11)
               .reverse()
-              .map((i) => (
-                <>
-                  <input type="radio" name="attr_pathNumberComputed" value={i} key={`input_${i}`} />
-                  <ResizingTextarea name={`MoralPath${i}`} placeholder={`Moral path ${i}`} key={i} />
-                </>
-              ))}
+              .flatMap((i) => [
+                <input type="radio" name="attr_pathNumberComputed" value={i} key={`input_${i}`} />,
+                <ResizingTextarea name={`MoralPath${i}`} placeholder={`Moral path ${i}`} key={i} />,
+              ])}
           </SectionBody>
         </Section>
         <Section>
@@ -236,7 +234,6 @@ export const SheetPrimary = () => (
                   childrenName="pathNumber"
                 />
               </div>
-              <Input i18n="bearing-u" name="Bearing" style={{ width: "100%" }} />
             </SectionBody>
           </Section>
           <Section>
@@ -268,14 +265,17 @@ export const SheetPrimary = () => (
           </Section>
           <Section className="sheet-component" style={{ display: "flex", flexDirection: "column-reverse" }}>
             <SectionBody>
-              <Counter
-                from={0}
-                to={39}
-                name="BloodPool"
-                className="sheet-primary--bloodpool"
-                fade
+              <div
+                className="sheet-component sheet-component--counter sheet-primary--bloodpool sheet-component--counter-fade"
                 style={{ height: "unset" }}
-              />
+              >
+                <input type="radio" name="attr_BloodPool" value={0} defaultChecked />
+                {range(1, 101).flatMap((i) => [
+                  <input type="radio" name="attr_BloodPool" key={i} value={i} title={`${i}`} />,
+                  <input type="radio" name="attr_BloodPoolMax" key={i} value={i} title={`${i}`} />,
+                ])}
+              </div>
+
               <div style={{ display: "flex" }}>
                 <Input i18n="bloodpoolMax-u" name="BloodPoolMax" type="number" />
                 <Input i18n="pointsperturn-u" name="BloodPerTurn" type="number" />

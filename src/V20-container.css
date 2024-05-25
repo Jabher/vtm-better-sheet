@@ -4,18 +4,39 @@
     align-items: stretch;
 }
 
-.sheet::before {
-    content: '';
-    display: block;
-    background-image: url('https://s3.amazonaws.com/files.d20.io/images/228598570/MXFnEFztdj2G9ndi1slSeA/max.png?1623710565');
-    height: 100px;
-    width: 300px;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    align-self: center;
+.sheet-header.sheet-header.sheet-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas: "left center right";
+
+    .sheet-header-banner {
+        grid-area: center;
+        display: block;
+        background-image: url('https://s3.amazonaws.com/files.d20.io/images/228598570/MXFnEFztdj2G9ndi1slSeA/max.png?1623710565');
+        height: 100px;
+        width: 300px;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        align-self: center;
+    }
+
+    .sheet-component--roll-button {
+        grid-area: right;
+        justify-self: center;
+        align-self: center;
+        opacity: .1;
+    }
+
+    &:hover .sheet-component--roll-button {
+        opacity: .5;
+    }
+
+    .sheet-component--roll-button:hover {
+        opacity: 1;
+    }
 }
 
-.sheet-darkmode .sheet::before {
+.sheet-darkmode .sheet-header-banner {
     filter: invert(1) brightness(0.8);
 }

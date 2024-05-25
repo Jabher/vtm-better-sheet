@@ -27,6 +27,12 @@ export const SheetSorcery = () => (
                 name="ritualRoll"
                 style={{ fontSize: 12, width: 75 }}
               />
+              <RollButton
+                data-attribute="rollNumber"
+                data-difficulty-value="difficulty"
+                data-attribute-name-prefix-value="ritualname"
+                childrenName="rollNumber"
+              />
               <RowDescription>
                 <Row>
                   <H3 i18n="dice-pool-label" style={{ alignSelf: "center", flexBasis: 0 }} />

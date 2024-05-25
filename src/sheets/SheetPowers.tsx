@@ -70,7 +70,12 @@ export const SheetPowers = () => (
                 <AttributeSelect name="rollAttr" />
                 <SkillSelect name="rollSkill" />
                 <Input type="number" name="difficulty" defaultValue={6} i18n="difficulty-label" />
-                <RollButton name="combatRoll" childrenName="rollNumber" />
+                <RollButton
+                  data-attribute="rollNumber"
+                  data-difficulty-value="difficulty"
+                  data-attribute-name-value="ComboDisciplineName"
+                  childrenName="rollNumber"
+                />
               </Row>
               <ResizingTextarea i18n="description-label" name="itemDescription" />
             </RowDescription>

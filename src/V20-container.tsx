@@ -1,6 +1,7 @@
 import { PropsWithChildren } from "react";
 import "./V20-container.css";
 import { blurry } from "./components/utility/blurry.tsx";
+import { RollButton } from "./components/Buttons.tsx";
 
 export const V20Container = ({ children }: PropsWithChildren) => (
   <div
@@ -11,6 +12,10 @@ export const V20Container = ({ children }: PropsWithChildren) => (
       "--v20-blurry-5-20": blurry(5, 20),
     }}
   >
+    <div className="sheet-header">
+      <div className="sheet-header-banner" />
+      <RollButton name="custom" />
+    </div>
     {children}
   </div>
 );

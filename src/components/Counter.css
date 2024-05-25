@@ -107,13 +107,11 @@
     }
 
     &.sheet-component--counter-fade {
-        &:hover input {
+        &:has(:hover) input {
             opacity: .85;
         }
-        &:hover input:hover,
-        &:not(:hover) input:checked {
-            opacity: 1;
-
+        &:has(input:hover) input:hover,
+        &:not(:has(input:hover)) input:checked {
             & ~ input {
                 opacity: 0.75;
             }

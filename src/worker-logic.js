@@ -1,4 +1,4 @@
-import { fromPairs, range } from "ramda";
+import { fromPairs, range, sum } from "ramda";
 import {
   attributes,
   cars,
@@ -225,8 +225,123 @@ export const worker = () =>
     }
 
     initRolls() {
-      console.log("translation language is", getTranslationLanguage());
       const cardinalPluralizer = new Intl.PluralRules(getTranslationLanguage() || navigator.language);
+
+      const damageRollHandler = ({ value, type = "lethal", difficulty, connected = 0 }) => {
+        const [value1, value2 = "+0"] = value.split(" ");
+        const diceCount = i(value1);
+        const diceBonus = i(value2);
+        // eslint-disable-next-line sonarjs/no-nested-template-literals
+        const title = `${getTranslationByKey(`${type}-u`)} ${getTranslationByKey("damage-u").toLowerCase()}`;
+        // todo ask modifier
+        const template = [
+          `&{template:damage}`,
+          `{{rollTitle=${title}}}`,
+          `{{name=@{Name}}}`,
+          `{{connected=[[${connected}]]}}`,
+          `{{difficultyLabel=${getTranslationByKey("difficulty-label")}}}`,
+          `{{count=[[${diceCount}]]}}`,
+          `{{successes=[[0]]}}`,
+          `{{difficulty=[[0]]}}`,
+          `{{result=[[0]]}}`,
+          `{{resultNumber=[[0]]}}`,
+          // eslint-disable-next-line sonarjs/no-nested-template-literals
+          `{{diceBonus=${diceBonus ? `+${diceBonus}` : " "}}}`,
+          `{{roll=[[${diceCount}d10>6cs>10]]}}`,
+          ...range(1, diceCount + 1).map((j) => `{{dice${j}=[[0]]}}`),
+          ``,
+        ].join(" ");
+        console.log("doing damage roll", template);
+        startRoll(template, (results) => {
+          const { roll } = results.results;
+          const realDifficulty = difficulty || i(roll.expression.replace(`${diceCount}d10>`, "").replace("cs>10", ""));
+          const successes = roll.result + diceBonus;
+          const resultNumber = Math.max(0, successes);
+          const result =
+            resultNumber > 0 // eslint-disable-next-line sonarjs/no-nested-template-literals
+              ? `${getTranslationByKey("roll-damage-deals")} ${resultNumber} ${getTranslationByKey(`roll-damage-pluralize-cardinal-${cardinalPluralizer.select(resultNumber)}`)}`
+              : getTranslationByKey("roll-damage-deals-no-damage");
+          const rollData = {
+            ...fromPairs(roll.dice.sort((a, b) => a - b).map((d, j) => [`dice${j + 1}`, d])),
+            successes,
+            difficulty: realDifficulty,
+            result,
+            resultNumber,
+          };
+          console.log("finishing damage roll", rollData, results);
+          finishRoll(results.rollId, rollData);
+        });
+      };
+
+      const rollHandler = ({ value, template, difficulty, name, namePrefix, damageRoll, damageType }) => {
+        // todo support 30+dice scenario?
+        const [value1, value2 = "+0"] = value.split(" ");
+        const diceCount = i(value1);
+        const diceBonus = i(value2);
+        // eslint-disable-next-line sonarjs/no-nested-template-literals
+        let title = getTranslationByKey("dice-check-label");
+        if (name) {
+          title += `: ${name}`;
+        }
+        if (namePrefix) {
+          title += ` (${namePrefix})`;
+        }
+        // todo ask modifier
+        const difficultyTemplate = `?{${getTranslationByKey("difficulty-label")}|6 }`;
+        const modifierTemplate = `?{${getTranslationByKey("result-modifiers-label")}|0 }`;
+        const rollTemplate = [
+          `&{template:${template}}`,
+          `{{rollTitle=${title}}}`,
+          `{{name=@{Name}}}`,
+          `{{difficultyLabel=${getTranslationByKey("difficulty-label")}}}`,
+          `{{count=[[${diceCount}]]}}`,
+          `{{successes=[[0]]}}`,
+          `{{difficulty=[[0]]}}`,
+          `{{result=[[0]]}}`,
+          // eslint-disable-next-line sonarjs/no-nested-template-literals
+          `{{diceBonus=${diceBonus ? `+${diceBonus}` : " "}}}`,
+          `{{roll=[[(${diceCount} + ${modifierTemplate})d10>${i(difficulty) || difficultyTemplate}cs>10]]}}`,
+          ...range(1, diceCount + 1).map((j) => `{{dice${j}=[[0]]}}`),
+          ``,
+        ].join(" ");
+        console.log("rolling", { value, name, namePrefix }, rollTemplate);
+        startRoll(rollTemplate, (results) => {
+          const { roll } = results.results;
+          const realDifficulty = difficulty || i(roll.expression.replace(/[^>]+>/, "").replace("cs>10", ""));
+          const successes = roll.result + diceBonus;
+          const fails = roll.dice.filter((d) => d === 1).length;
+          const resultNumber = Math.max(0, successes);
+          let result;
+          if (resultNumber > 0) {
+            // eslint-disable-next-line sonarjs/no-nested-template-literals
+            result = `${resultNumber} ${getTranslationByKey(`roll-success-pluralize-cardinal-${cardinalPluralizer.select(resultNumber)}`)}`;
+          } else if (fails > 0 && successes === 0) {
+            result = getTranslationByKey("roll-critical-fail");
+          } else {
+            result = getTranslationByKey("roll-fail");
+          }
+          const rollData = {
+            ...fromPairs(roll.dice.sort((a, b) => a - b).map((d, j) => [`dice${j + 1}`, d])),
+            fails,
+            successes,
+            difficulty: realDifficulty,
+            result,
+            count: roll.dice.length,
+          };
+          console.log("finishing roll", rollData, results);
+          finishRoll(results.rollId, rollData);
+
+          if (damageRoll !== undefined && resultNumber > 0) {
+            const [damageValue, bonus = "+0"] = damageRoll.split(" ");
+            damageRollHandler({
+              value: `${i(damageValue) + i(resultNumber)} ${bonus}`,
+              type: damageType,
+              connected: 1,
+            });
+          }
+        });
+      };
+
       const eventHandler = (event, isRepeater) => {
         const attribute = event.htmlAttributes["data-attribute"];
         const attributeName = event.htmlAttributes["data-attribute-name"];
@@ -234,9 +349,22 @@ export const worker = () =>
         const attributeNamePrefix = event.htmlAttributes["data-attribute-name-prefix"];
         const attributeNamePrefixValue = event.htmlAttributes["data-attribute-name-prefix-value"];
         const difficultyValue = event.htmlAttributes["data-difficulty-value"];
+        const damageRollValue = event.htmlAttributes["data-damage-roll-value"];
+        const damageTypeValue = event.htmlAttributes["data-damage-type-value"];
+        const template = event.htmlAttributes["data-template"] ?? "attribute";
+
         console.log(event, {
-          attrs: [attribute, attributeNameValue, attributeNamePrefixValue],
+          attribute,
+          attributeName,
+          attributeNameValue,
+          attributeNamePrefix,
+          attributeNamePrefixValue,
+          difficultyValue,
+          damageRollValue,
+          damageTypeValue,
+          template,
         });
+        // todo combat rolls should consider potence boost only in damage rolls; attack rolls only consider potence number
 
         const getRequiredAttrs = (keys, cb) => {
           if (isRepeater) {
@@ -247,6 +375,8 @@ export const worker = () =>
             const localAttributeNamePrefixValue = attributeNamePrefixValue
               ? `${prefix}_${attributeNamePrefixValue}`
               : undefined;
+            const localDamageRollValue = `${prefix}_${damageRollValue}`;
+            const localDamageTypeValue = `${prefix}_${damageTypeValue}`;
             getAttrs(
               [
                 ...keys,
@@ -257,6 +387,10 @@ export const worker = () =>
                 localAttributeNamePrefixValue,
                 difficultyValue,
                 localDifficultyValue,
+                damageRollValue,
+                localDamageRollValue,
+                damageTypeValue,
+                localDamageTypeValue,
               ],
               ({
                 [difficultyValue]: difficulty,
@@ -265,6 +399,10 @@ export const worker = () =>
                 [localAttributeNameValue]: localNameValue,
                 [attributeNamePrefixValue]: namePrefixValue,
                 [localAttributeNamePrefixValue]: localNamePrefixValue,
+                [damageRollValue]: damageRoll,
+                [localDamageRollValue]: localDamageRoll,
+                [damageTypeValue]: damageType,
+                [localDamageTypeValue]: localDamageType,
                 ...attrs
               }) => {
                 const effectiveAttrs = fromPairs(
@@ -272,89 +410,128 @@ export const worker = () =>
                 );
                 const name = attributeName || nameValue || localNameValue;
                 const namePrefix = attributeNamePrefix || namePrefixValue || localNamePrefixValue;
-                cb(effectiveAttrs, localDifficulty || difficulty, name, namePrefix);
+                cb({
+                  value: effectiveAttrs[attribute],
+                  difficulty: localDifficulty || difficulty,
+                  name: getTranslationByKey(name) || name,
+                  namePrefix: getTranslationByKey(namePrefix) || namePrefix,
+                  damageRoll: damageRoll || localDamageRoll,
+                  damageType: damageType || localDamageType,
+                  template,
+                });
               }
             );
           } else {
             getAttrs(
-              [difficultyValue, attribute, attributeNameValue, attributeNamePrefixValue],
+              [
+                difficultyValue,
+                attribute,
+                attributeNameValue,
+                attributeNamePrefixValue,
+                damageRollValue,
+                damageTypeValue,
+              ],
               ({
                 [difficultyValue]: difficulty,
                 [attributeNameValue]: nameValue,
                 [attributeNamePrefixValue]: namePrefixValue,
+                [damageRollValue]: damageRoll,
+                [damageTypeValue]: damageType,
                 ...attrs
               }) => {
-                const name = getTranslationByKey(attributeName) || nameValue;
-                const prefix = getTranslationByKey(attributeNamePrefix) || namePrefixValue;
-                cb(attrs, difficulty, name, prefix);
+                cb({
+                  value: attrs[attribute],
+                  difficulty,
+                  name: getTranslationByKey(attributeName) || nameValue,
+                  namePrefix: getTranslationByKey(attributeNamePrefix) || namePrefixValue,
+                  damageRoll,
+                  damageType,
+                  template,
+                });
               }
             );
           }
         };
 
-        getRequiredAttrs([attribute], ({ [attribute]: value }, difficulty, name, prefix) => {
-          // todo support 30+dice scenario?
-          const diceCount = i(value);
-          // eslint-disable-next-line sonarjs/no-nested-template-literals
-          let title = getTranslationByKey("dice-check-label");
-          if (name) {
-            title += `: ${name}`;
-          }
-          if (prefix) {
-            title += ` (${prefix})`;
-          }
-          // todo ask modifier
-          const difficultyTemplate = `?{${getTranslationByKey("difficulty-label")}|6 }`;
-          const template = [
-            `&{template:attribute}`,
-            `{{name=@{Name}}}`,
-            `{{rollTitle=${title}}}`,
-            `{{difficultyLabel=${getTranslationByKey("difficulty-label")}}}`,
-            `{{count=[[${diceCount}]]}}`,
-            `{{successes=[[0]]}}`,
-            `{{fails=[[0]]}}`,
-            `{{difficulty=[[0]]}}`,
-            `{{result=[[0]]}}`,
-            `{{roll=[[${diceCount}d10>${i(difficulty) || difficultyTemplate}cs>10]]}}`,
-            ...range(1, diceCount + 1).map((j) => `{{dice${j}=[[0]]}}`),
-            ``,
-          ].join(" ");
-          console.log("rolling", event, { value, name, prefix }, template);
-          startRoll(template, (results) => {
-            const { roll } = results.results;
-            const difficulty = i(roll.expression.replace(`${diceCount}d10>`, "").replace("cs>10", ""));
-            const successes = roll.result;
-            const fails = roll.dice.filter((d) => d === 1).length;
-            const resultNumber = Math.max(0, successes - fails);
-            let result;
-            console.log(
-              "pluralizing roll result",
-              resultNumber,
-              cardinalPluralizer.select(resultNumber),
-              `${resultNumber} ${getTranslationByKey(`roll-success-pluralize-cardinal-${cardinalPluralizer.select(resultNumber)}`)}`
-            );
-            if (resultNumber > 0) {
-              // eslint-disable-next-line sonarjs/no-nested-template-literals
-              result = `${resultNumber} ${getTranslationByKey(`roll-success-pluralize-cardinal-${cardinalPluralizer.select(resultNumber)}`)}`;
-            } else if (fails > 0 && successes === 0) {
-              result = getTranslationByKey("roll-critical-fail");
-            } else {
-              result = getTranslationByKey("roll-fail");
-            }
-            const rollData = {
-              ...fromPairs(roll.dice.sort((a, b) => a - b).map((d, j) => [`dice${j + 1}`, d])),
-              fails,
-              successes,
-              difficulty,
-              result,
-            };
-            console.log("finishing roll", rollData, results);
-            finishRoll(results.rollId, rollData);
-          });
-        });
+        getRequiredAttrs([attribute], rollHandler);
       };
       on("clicked:roll_attribute", (e) => eventHandler(e, false));
       on("clicked:repeating_powers:roll", (e) => eventHandler(e, true));
+      on("clicked:repeating_brawlCombatDice:roll", (e) => eventHandler(e, true));
+      on("clicked:repeating_meleeCombatDice:roll", (e) => eventHandler(e, true));
+      on("clicked:repeating_rangedCombatDice:roll", (e) => eventHandler(e, true));
+      on("clicked:repeating_MeleeWeapon:roll", (e) => eventHandler(e, true));
+      on("clicked:repeating_RangedWeapon:roll", (e) => eventHandler(e, true));
+      on("clicked:repeating_ArmorShields:roll", (e) => eventHandler(e, true));
+      on("clicked:roll_initiative", (e) => {
+        console.log(e);
+        getAttrs(
+          ["initiativeAddTracker", "Dexterity", "Wits", "celerityBoost", "initiativeBonus"],
+          ({ initiativeAddTracker, Dexterity, Wits, celerityBoost, initiativeModifier }) => {
+            startRoll(
+              [
+                `@{Name}`,
+                `&{template:initiative}`,
+                `{{name=@{Name}}}`,
+                `{{roll_name=${getTranslationByKey("initiative-dice-pool-label")}}}`,
+                `{{result=[[${i(Dexterity) + i(Wits) + i(celerityBoost) + i(initiativeModifier)}+1d10${initiativeAddTracker ? " &{tracker}" : ""}]]}}`,
+              ].join(" "),
+              (results) => {
+                if (initiativeAddTracker) {
+                  setAttrs({
+                    dexteritySpent: 0,
+                    celeritySpent: 0,
+                  });
+                }
+                finishRoll(results.rollId, {});
+              }
+            );
+          }
+        );
+      });
+      on("clicked:roll_custom", (e) => {
+        const difficultyTemplate = `?{${getTranslationByKey("difficulty-label")}|6 }`;
+        const diceCountTemplate = `?{${getTranslationByKey("dice-pool-label")}|1 }`;
+        const rollTemplate = [
+          `&{template:attribute}`,
+          `{{difficultyLabel=${getTranslationByKey("difficulty-label")}}}`,
+          `{{name=@{Name}}}`,
+          `{{count=[[0]]}}`,
+          `{{successes=[[0]]}}`,
+          `{{difficulty=[[0]]}}`,
+          `{{result=[[0]]}}`,
+          `{{roll=[[(${diceCountTemplate})d10>${difficultyTemplate}cs>10]]}}`,
+          ...range(1, 30).map((j) => `{{dice${j}=[[0]]}}`),
+          ``,
+        ].join(" ");
+        startRoll(rollTemplate, (results) => {
+          console.log("rolling custom roll", rollTemplate, results);
+          const { roll } = results.results;
+          const realDifficulty = i(roll.expression.replace(/[^>]+>/, "").replace("cs>10", ""));
+          const successes = roll.result;
+          const fails = roll.dice.filter((d) => d === 1).length;
+          const resultNumber = Math.max(0, successes - fails);
+          let result;
+          if (resultNumber > 0) {
+            // eslint-disable-next-line sonarjs/no-nested-template-literals
+            result = `${resultNumber} ${getTranslationByKey(`roll-success-pluralize-cardinal-${cardinalPluralizer.select(resultNumber)}`)}`;
+          } else if (fails > 0 && successes === 0) {
+            result = getTranslationByKey("roll-critical-fail");
+          } else {
+            result = getTranslationByKey("roll-fail");
+          }
+          const rollData = {
+            ...fromPairs(roll.dice.sort((a, b) => a - b).map((d, j) => [`dice${j + 1}`, d])),
+            fails,
+            successes,
+            difficulty: realDifficulty,
+            result,
+            count: roll.dice.length,
+          };
+          console.log("finishing roll", rollData, results);
+          finishRoll(results.rollId, rollData);
+        });
+      });
     }
 
     initCombatSheet() {
@@ -536,6 +713,20 @@ export const worker = () =>
         })
       );
 
+      on("change:repeating_XP", (e) => {
+        console.log(e);
+        Roll20.getGroupAttrs("XP", ["XPGot", "XPSpent", "XPDate"], ["XPstart"], (items, { XPStart }) => {
+          const XPtotal = sum([i(XPStart), ...Object.values(items).map(({ XPGot }) => i(XPGot))]);
+          const XPspent = sum(Object.values(items).map(({ XPSpent }) => i(XPSpent)));
+          const XPRemaining = XPtotal - XPspent;
+          setAttrs({
+            XPtotal,
+            XPspent,
+            XPRemaining,
+          });
+        });
+      });
+
       for (const type of ["MeleeWeapon", "RangedWeapon"]) {
         on(`change:repeating_${type}:Equipped`, (e) => {
           const enabled = e.newValue === "on";
@@ -621,8 +812,8 @@ export const worker = () =>
           undefined, // 0
           undefined, // 1
           undefined, // 2
-          undefined, // 3
-          undefined, // 4
+          100, // 3
+          50, // 4
           40, // 5
           30, // 6
           20, // 7
@@ -641,7 +832,7 @@ export const worker = () =>
           undefined, // 1
           undefined, // 2
           undefined, // 3
-          undefined, // 4
+          10, // 4
           8, // 5
           6, // 6
           4, // 7

@@ -73,7 +73,7 @@
         }
     }
 
-    .sheet-component--attr-input--dots-input {
+    .sheet-component--attr-input--dots-input.sheet-component--attr-input--dots-input {
         &:not(:hover) input[value='5'] ~ input {
             opacity: 0;
             pointer-events: none;
@@ -102,13 +102,13 @@
                 width: auto;
             }
         }
-        .sheet-component--attr-input--dots-input {
-            &:hover input[value='5'] ~ input {
+        .sheet-component--attr-input--dots-input:hover {
+            input[value='5'] ~ input {
                 opacity: 0;
                 pointer-events: none;
             }
 
-            &:hover input {
+            input {
                 pointer-events: none;
             }
         }

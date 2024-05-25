@@ -132,9 +132,20 @@
 
     & .sheet-primary--bloodpool {
         display: grid;
-        grid-template-columns: repeat(10, 1fr);
+        grid-template-columns: repeat(11, 1fr);
         width: fit-content;
         margin: 0 auto;
+        padding-bottom: 16px;
+        input[name="attr_BloodPoolMax"] {
+            display: none;
+        }
+        input[name="attr_BloodPoolMax"]:checked ~ input {
+            display: none;
+        }
+        input[value="0"] {
+            grid-row: span 10;
+            height: min-content;
+        }
     }
 
     .sheet-primary--hobbies {

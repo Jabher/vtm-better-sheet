@@ -7,6 +7,10 @@ rolltemplate {
     display: none;
 }
 
+fieldset {
+    display: contents;
+}
+
 
 :root {
     --color-surface1: #ffffff;

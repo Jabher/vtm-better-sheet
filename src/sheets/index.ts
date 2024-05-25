@@ -8,7 +8,6 @@ import { SheetSorcery } from "./SheetSorcery.tsx";
 import { SheetInfo } from "./SheetInfo.tsx";
 import { SheetExperience } from "./SheetExperience.tsx";
 import { SheetCombat } from "./SheetCombat.tsx";
-import { SheetDice } from "./SheetDice.tsx";
 import { SheetBelongings } from "./SheetBelongings.tsx";
 
 export const sheets: Partial<Record<I18n, () => ReactNode>> = {
@@ -17,7 +16,6 @@ export const sheets: Partial<Record<I18n, () => ReactNode>> = {
   "Powers": SheetPowers,
   "rituals-label": SheetSorcery,
   "Combat": SheetCombat,
-  "Dice": SheetDice,
   "BondBoon": SheetBonds,
   "Belongings": SheetBelongings,
   "Information": SheetInfo,

@@ -1,7 +1,11 @@
-.sheet-rolltemplate-attribute {
+.sheet-rolltemplate-attribute,
+.sheet-rolltemplate-combat,
+.sheet-rolltemplate-damage,
+.sheet-rolltemplate-initiative {
     margin-left: -45px;
     margin-right: -16px;
-    padding: 32px 0 0;
+    padding: 0;
+    margin-bottom: -7px;
 
     .sheet-rollContainer {
         display: grid;
@@ -10,12 +14,15 @@
 
     .sheet-roll-layer {
         grid-area: area;
-        padding-left: 16px;
-        padding-right: 16px;
+        padding: 52px 16px 8px;
     }
 
     .sheet-dices {
         mask: linear-gradient(to right bottom, white, #222 50%, black) luminance;
+    }
+
+    .sheet-roll-bonus {
+        padding: 20px;
     }
 
     .sheet-roll-info {
@@ -42,6 +49,7 @@
         content: '';
         display: block;
         height: 1px;
+        margin-top: -1px;
         width: 100%;
         background-image: radial-gradient(rgb(92, 2, 18), transparent 75%);
         background-size: 100% 1px;
@@ -65,7 +73,7 @@
     }
 
     &:not(:first-child) {
-        margin-top: -26px;
+        margin-top: -52px;
         padding-top: 26px;
     }
 
@@ -80,7 +88,6 @@
     }
 
     .sheet-dices {
-        padding-top: 20px;
         display: flex;
         flex-wrap: wrap;
         width: 100%;
@@ -180,8 +187,9 @@
         filter: blur(0);
     }
 
-    &:hover {
+    &:not(.sheet-rolltemplate-initiative):hover {
         .sheet-dices {
+            z-index: 1;
             mask: linear-gradient(to right bottom, white, white) luminance;
         }
 
@@ -225,4 +233,35 @@
         color: #fb133e;
     }
 
+    &:has(.sheet-result-result-is-connected) {
+        .sheet-roll-info {
+            background-image: radial-gradient(ellipse at 100% 0, rgba(79, 85, 92, 0.5), rgba(79, 85, 92, 0.3) 20%, rgba(79, 85, 92, 0.1) 60%, transparent 70%);
+            justify-content: flex-start;
+            padding-top: 8px;
+        }
+
+        &.sheet-rolltemplate-darkmode .sheet-roll-info {
+            background: radial-gradient(ellipse at 100% 0, rgba(0, 0, 0, .5), rgba(0, 0, 0, .3) 20%, rgba(0, 0, 0, .1) 60%, transparent 70%);
+        }
+    }
+    .sheet-initiative {
+        font-size: 36px;
+        align-items: flex-start;
+        padding: 24px 36px;
+    }
+}
+
+.sheet-rolltemplate-damage {
+    .sheet-dices {
+        .sheet-result-critical-fail + .sheet-dice {
+            &::before {
+                border-color: rgba(166, 166, 166, 0.5);
+            }
+
+            &::after {
+                background-image: url('https://s3.amazonaws.com/files.d20.io/images/227894556/uwrVooXrY20KOzi3aYQHuw/med.png?1623426720');
+                background-size: 25%;
+            }
+        }
+    }
 }

@@ -2,4 +2,8 @@
     & .sheet-tabExp--row {
         display: flex;
     }
+
+    .sheet-element-section-heading h3 + span::before {
+        content: ": ";
+    }
 }

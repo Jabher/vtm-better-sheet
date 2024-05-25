@@ -14,10 +14,12 @@ export const SheetInfo = () => (
         <Input i18n="description-born-in-label" name="PlaceDesc" />
         <Input i18n="description-dob-label" name="DateDesc" />
         <Input i18n="description-rip-label" name="RIPDesc" />
+        <Input i18n="description-nationality-label" name="NationalityDesc" />
+      </aside>
+      <aside>
         <Input i18n="description-hair-label" name="HairDesc" />
         <Input i18n="description-eyes-label" name="EyesDesc" />
         <Input i18n="description-race-label" name="RaceDesc" />
-        <Input i18n="description-nationality-label" name="NationalityDesc" />
         <Input i18n="description-height-label" name="HeightDesc" />
         <Input i18n="description-weight-label" name="WeightDesc" />
         <Input i18n="description-sex-label" name="SexDesc" />

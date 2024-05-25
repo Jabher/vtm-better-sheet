@@ -1,6 +1,5 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useWorker, Worker } from "./useWorker.ts";
-// import "./base.css";
 
 const Roll20App = ({ children, worker }: PropsWithChildren<{ worker: Worker }>) => {
   const [isLightOS, setIslLightOS] = useState(true);
@@ -25,6 +24,16 @@ const Roll20App = ({ children, worker }: PropsWithChildren<{ worker: Worker }>) 
       </>
     );
   }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "/src/imported/base.css";
+      document.head.prepend(link);
+    }
+  }, []);
 
   return (
     <div className={isLightOS ? "" : "sheet-darkmode"} style={{ minHeight: "100vh", width: "100vw" }}>
