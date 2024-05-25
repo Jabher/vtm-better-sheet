@@ -74,21 +74,51 @@ export const SheetPrimary = () => (
           {talents.map((title) => (
             <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
           ))}
-          {/*todo 3 hobby talent*/}
+          <RepeatingSection name="hobbyTalentList" className="sheet-primary--hobbies">
+            {() => (
+              <div className="sheet-component sheet-component--attr-input">
+                <Input name="itemName" />
+                <div className="sheet-component--attr-input--dots-input">
+                  <Counter name="itemDotsNumber" from={0} to={5} renderCounterOnZero preserveZeroGap />
+                </div>
+                <Input className="sheet-component--attr-input-spec" name="itemSpec" />
+              </div>
+            )}
+          </RepeatingSection>
         </div>
         <div>
           <H3 i18n="skills-u" />
           {skills.map((title) => (
             <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
           ))}
-          {/*todo 3 hobby talent*/}
+          <RepeatingSection name="hobbySkillList" className="sheet-primary--hobbies">
+            {() => (
+              <div className="sheet-component sheet-component--attr-input">
+                <Input name="itemName" />
+                <div className="sheet-component--attr-input--dots-input">
+                  <Counter name="itemDotsNumber" from={0} to={5} renderCounterOnZero preserveZeroGap />
+                </div>
+                <Input className="sheet-component--attr-input-spec" name="itemSpec" />
+              </div>
+            )}
+          </RepeatingSection>
         </div>
         <div>
           <H3 i18n="knowledges-u" />
           {knowledges.map((title) => (
             <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
           ))}
-          {/*todo 3 hobby talent*/}
+          <RepeatingSection name="hobbyKnowledgeList" className="sheet-primary--hobbies">
+            {() => (
+              <div className="sheet-component sheet-component--attr-input">
+                <Input name="itemName" />
+                <div className="sheet-component--attr-input--dots-input">
+                  <Counter name="itemDotsNumber" from={0} to={5} renderCounterOnZero preserveZeroGap />
+                </div>
+                <Input className="sheet-component--attr-input-spec" name="itemSpec" />
+              </div>
+            )}
+          </RepeatingSection>
         </div>
       </SectionBody>
     </Section>
@@ -126,7 +156,7 @@ export const SheetPrimary = () => (
         <div>
           <H3 i18n="virtues-u" />
           <div className="sheet-primary--virtues">
-            <select className="sheet-text-fronth2" name="virtueConsName" defaultValue="Conscience">
+            <select className="select-no-appearance" name="virtueConsName" defaultValue="Conscience">
               <option value="Conscience" data-i18n="conscience-u" />
               <option value="Conviction" data-i18n="conviction-u" />
             </select>
@@ -134,7 +164,7 @@ export const SheetPrimary = () => (
               <Counter from={1} to={5} name="C_C" />
               <RollButton name="CourageRoll" childrenName="C_C" />
             </div>
-            <select className="sheet-text-fronth2" name="virtueSelfName" defaultValue="Self-Control">
+            <select className="select-no-appearance" name="virtueSelfName" defaultValue="Self-Control">
               <option value="Self-Control" data-i18n="selfcontrol-u" />
               <option value="Instinct" data-i18n="instinct-u" />
             </select>
@@ -159,7 +189,10 @@ export const SheetPrimary = () => (
             {range(1, 10)
               .reverse()
               .map((i) => (
-                <ResizingTextarea name={`MoralPath${i}`} placeholder={`Moral path ${i}`} key={i} />
+                <>
+                  <input type="radio" name="pathNumber" value={i} key={`input_${i}`} />
+                  <ResizingTextarea name={`MoralPath${i}`} placeholder={`Moral path ${i}`} key={i} />
+                </>
               ))}
           </SectionBody>
         </Section>
@@ -167,14 +200,14 @@ export const SheetPrimary = () => (
           <Section>
             <div className="sheet-element-section-heading">
               <div className="sheet-element-section-heading-humanitypaths">
-                <input type="text" name="attr_PathoEname" defaultValue={translation["humanitypath-u"]} />
-                <span name="attr_PathoEname" />
+                <input type="text" name="attr_path" defaultValue={translation["humanitypath-u"]} />
+                <span name="attr_path" />
               </div>
             </div>
             <SectionBody className="sheet-primary-humanity-path">
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={1} to={9} name="PathoE" className="sheet-primary-humanity-path--counter" />
-                <RollButton name="CourageRoll" childrenName="PathoE" />
+                <Counter from={1} to={9} name="pathNumber" className="sheet-primary-humanity-path--counter" />
+                <RollButton name="CourageRoll" childrenName="pathNumber" />
               </div>
               <Input i18n="bearing-u" name="Bearing" style={{ width: "100%" }} />
             </SectionBody>
@@ -267,13 +300,32 @@ export const SheetPrimary = () => (
           </SectionBody>
           <SectionHead i18n="movement-u" />
           <SectionBody className="sheet-primary--movement">
-            <Input i18n="dexspeed-u" type="number" name="Dexterity" defaultValue={1} readOnly />
-            <Input i18n="dexboostspeed-u" type="number" name="DexterityBoost" readOnly />
-            <Input i18n="celerityspeed-u" type="number" name="celerityBoost" />
-            <Input i18n="miscspeed-u" type="number" name="MiscSpeed" />
-            <Input i18n="walkspeed-u" type="number" name="WalkSpeed" disabled postfix="yardsmeters-u" />
-            <Input i18n="jogspeed-u" name="JogSpeed" disabled postfix="yardsmeters-u" />
-            <Input i18n="runspeed-u" name="RunSpeed" disabled postfix="yardsmeters-u" />
+            <div className="sheet-primary--speed">
+              <H5 i18n="walkspeed-u" />
+              <div>
+                <span name="attr_WalkSpeed">10</span>
+                <select className="select-no-appearance" name="attr_yardsmeters" defaultValue="meters">
+                  <option value="meters" data-i18n="meters-u" />
+                  <option value="yards" data-i18n="yards-u" />
+                </select>
+              </div>
+              <H5 i18n="jogspeed-u" />
+              <div>
+                <span name="attr_JogSpeed">10</span>
+                <select className="select-no-appearance" name="attr_yardsmeters" defaultValue="meters">
+                  <option value="meters" data-i18n="meters-u" />
+                  <option value="yards" data-i18n="yards-u" />
+                </select>
+              </div>
+              <H5 i18n="runspeed-u" />
+              <div>
+                <span name="attr_RunSpeed">10</span>
+                <select className="select-no-appearance" name="attr_yardsmeters" defaultValue="meters">
+                  <option value="meters" data-i18n="meters-u" />
+                  <option value="yards" data-i18n="yards-u" />
+                </select>
+              </div>
+            </div>
           </SectionBody>
           <Section i18n="weakness-u">
             <ResizingTextarea name="Weakness" />

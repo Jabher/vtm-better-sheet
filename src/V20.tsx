@@ -8,18 +8,24 @@ import "./fonts.css";
 import "./styles/overrides.css";
 import "./styles/globals.css";
 import { RollTemplates } from "./RollTemplates.tsx";
+import { range } from "ramda";
 
 const SHEET_TYPE_ATTR = "attr_sheet_type";
 
 export const V20 = ({ sheets }: { sheets: Partial<Record<I18n, () => ReactNode>> }) => (
   <>
-    <input type="checkbox" style={{ display: "none" }} name="attr_V20_Initialized" defaultChecked={false} />
+    <div style={{ display: "none" }}>
+      {range(1, 15).map((i) => (
+        <input key={i} name={`attr_Discipline${i}Name`} />
+      ))}
+    </div>
     <div className="sheet-toplevel-nav">
       {(Object.keys(sheets) as I18n[]).map((section, i) => (
         <label data-i18n={section} htmlFor={`${SHEET_TYPE_ATTR}_${i}`} key={`section_${i}`} />
       ))}
       <div style={{ flexGrow: 1 }}></div>
     </div>
+    <input type="checkbox" style={{ display: "none" }} name="attr_V20_Initialized" defaultChecked={false} />
     {Object.values(sheets).map((Sheet, i) => (
       <span style={{ display: "contents" }} key={i}>
         <input

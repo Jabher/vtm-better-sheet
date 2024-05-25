@@ -218,7 +218,7 @@ export const SheetCombat = () => (
             <Checkbox i18n="onq-u" className="sheet-APIcheck" name="WearingArmor" />
             <Input i18n="name2-u" name="ArmorName" />
             <Input i18n="class-u" name="ArmorClass" />
-            <Checkbox name="ArmorAgainstAggravated" i18n="armor-protects-from-aggravated-label" symbol="ecg_heart" />
+            <Checkbox name="ArmorAgainstAggravated" i18n="armor-protects-from-aggravated-label" symbol="local_police" />
             <Input i18n="rating-u" type="number" name="ArmorRating" />
             <Input i18n="penalty-u" type="number" name="ArmorPenalty" />
             <RowDescription>

@@ -25,9 +25,10 @@
     --v20-column-width: calc(var(--v20-min-viewport-width) / 3 - var(--v20-gap-horizontal) * 2);
 
     /*14,16,18px*/
-    --v20-font-size-normal: 1em;
-    --v20-font-size-large: 1.2em;
-    --v20-font-size-xl: 1.4em;
+    --v20-font-size-small: 0.9rem;
+    --v20-font-size-normal: 1rem;
+    --v20-font-size-large: 1.2rem;
+    --v20-font-size-xl: 1.4rem;
 
     --v20-blurry-10-50: unset;
     --v20-blurry-5-20: unset;

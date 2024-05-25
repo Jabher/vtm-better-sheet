@@ -11,21 +11,32 @@ export const SheetDice = () => (
   <div className="sheet-tab-content sheet-dice">
     <Section>
       <SectionHead i18n="boosts-label" />
-      <SectionBody className="sheet-3col">
-        <div>
-          <Input i18n="strength-u" name="StrengthBoost" type="number" />
-          <Input i18n="dexterity-u" name="DexterityBoost" type="number" />
-          <Input i18n="stamina-u" name="StaminaBoost" type="number" />
+      <SectionBody>
+        <div className="sheet-3col">
+          <div>
+            <Input i18n="strength-u" name="StrengthBoost" type="number" />
+            <Input i18n="dexterity-u" name="DexterityBoost" type="number" />
+            <Input i18n="stamina-u" name="StaminaBoost" type="number" />
+          </div>
+          <div>
+            <Input i18n="charisma-u" name="CharismaBoost" type="number" />
+            <Input i18n="manipulation-u" name="ManipulationBoost" type="number" />
+            <Input i18n="appearance-u" name="AppearanceBoost" type="number" />
+          </div>
+          <div>
+            <Input i18n="perception-u" name="PerceptionBoost" type="number" />
+            <Input i18n="intelligence-u" name="IntelligenceBoost" type="number" />
+            <Input i18n="wits-u" name="WitsBoost" type="number" />
+          </div>
         </div>
+
         <div>
-          <Input i18n="charisma-u" name="CharismaBoost" type="number" />
-          <Input i18n="manipulation-u" name="ManipulationBoost" type="number" />
-          <Input i18n="appearance-u" name="AppearanceBoost" type="number" />
+          <Input i18n="discipline-name-celerity" name="celerityBoost" type="number" />
+          <Input i18n="discipline-name-potence" name="potenceBoost" type="number" />
         </div>
+
         <div>
-          <Input i18n="perception-u" name="PerceptionBoost" type="number" />
-          <Input i18n="intelligence-u" name="IntelligenceBoost" type="number" />
-          <Input i18n="wits-u" name="WitsBoost" type="number" />
+          <Input i18n="runspeed-u" type="number" name="MiscSpeed" />
         </div>
       </SectionBody>
     </Section>

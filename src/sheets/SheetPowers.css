@@ -25,6 +25,7 @@
 
         & > * {
             display: inline-flex;
+            align-items: baseline;
             width: var(--v20-column-width);
             flex-grow: 1;
         }

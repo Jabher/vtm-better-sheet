@@ -35,7 +35,6 @@ textarea {
     .sheet-binput {
         color: var(--v20-color-text);
         padding: 4px 8px;
-        font-size: var(--v20-font-size-normal);
         min-height: 24px;
         min-width: 36px;
         outline: none;
@@ -44,6 +43,10 @@ textarea {
         background: transparent;
         width: 100%;
         border: none;
+
+        font-size: 12px;
+        font-weight: 200;
+        font-family: "Exo 2", serif;
     }
 
     input::placeholder {
@@ -52,6 +55,11 @@ textarea {
 
     input::-webkit-input-placeholder {
         color: rgba(128, 128, 128, .2);
+    }
+
+
+    input::-webkit-calendar-picker-indicator {
+        display:none !important;
     }
 }
 .sheet-element-input-postfix {

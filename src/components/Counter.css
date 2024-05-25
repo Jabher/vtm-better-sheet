@@ -1,8 +1,14 @@
 /* feature: visual */
 
-.sheet-component--counter {
+.sheet-component--counter.sheet-component--counter {
     position: relative;
     display: flex;
+    height: var(--v20-line-height);
+    flex-grow: 0;
+
+    .sheet-component--row-head & {
+        padding: 10px 4px 2px;
+    }
 
     & input {
         all: unset;

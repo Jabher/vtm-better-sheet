@@ -8,11 +8,11 @@
         appearance: none;
         border: rgba(128, 128, 128, 0.125) 1px solid;
         color: var(--v20-color-text);
-        padding: 4px 8px;
+        padding: 2px 4px;
         margin: 0;
         font-size: 16px;
-        height: calc(var(--v20-line-height) + 4px);
-        width: calc(var(--v20-line-height) + 4px);
+        height: calc(var(--v20-line-height) - 4px);
+        width: calc(var(--v20-line-height) - 4px);
         outline: none;
         background: transparent;
         border-radius: 2px;

@@ -34,18 +34,15 @@ html, body {
     opacity: .5;
     transition: none var(--v20-transition-duration) ease-in-out;
     border-bottom: 2px transparent solid !important;
+    border-radius: 0;
+    color: var(--v20-color-text) !important;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
     text-decoration: none !important;
-    color: var(--v20-color-text) !important;
     background: none !important;
     opacity: 1;
     border-color: var(--v20-color-visual-accent) !important;
-}
-
-.nav-tabs > li > a {
-    border-radius: 0;
 }
 
 .sheet {
@@ -55,7 +52,7 @@ html, body {
 
 .sheet-darkmode {
     color-scheme: dark;
-    --v20-color-text: #eee;
+    --v20-color-text: #ccc;
     --v20-color-background: var(--dark-surface1, #1F1F1F);
     background-color: var(--v20-color-background);
 }
@@ -101,4 +98,18 @@ select, option {
 
 .sheet-tab-content {
     flex-grow: 1;
+}
+
+.dialog label {
+    padding-right: unset;
+}
+
+.repcontrol {
+    padding-bottom: 8px;
+    .btn {
+        color: var(--v20-color-text);
+        background: var(--v20-color-background);
+        border-color: var(--v20-color-neutral);
+        box-shadow: none;
+    }
 }

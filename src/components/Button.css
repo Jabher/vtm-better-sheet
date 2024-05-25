@@ -19,6 +19,9 @@
 
     .sheet-darkmode & {
         filter: invert(1) hue-rotate(180deg);
+        & > * {
+            filter: invert(1) hue-rotate(180deg);
+        }
     }
     &:hover {
         transform: rotate(-15deg);
@@ -29,6 +32,12 @@
     }
     &::before {
         content: unset;
+    }
+
+    color: var(--v20-color-text);
+
+    span {
+        color: inherit;
     }
 }
 

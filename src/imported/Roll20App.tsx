@@ -1,23 +1,19 @@
-import { PropsWithChildren, useEffect, useMemo, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 import { useWorker, Worker } from "./useWorker.ts";
 import "./base.css";
 
 const Roll20App = ({ children, worker }: PropsWithChildren<{ worker: Worker }>) => {
-  const isLight = useMemo(
-    () => (typeof window !== "undefined" ? window.matchMedia("(prefers-color-scheme: light)").matches : true),
-    []
-  );
-
-  const [isLightOS, setIslLightOS] = useState(isLight);
+  const [isLightOS, setIslLightOS] = useState(true);
   useEffect(() => {
     const mql = window.matchMedia("(prefers-color-scheme: light)");
+    setIslLightOS(mql.matches);
     mql.addEventListener("change", () => {
       setIslLightOS(mql.matches);
     });
   }, []);
   const formRef = useWorker(worker);
 
-  if (false) {
+  if (process.env.NODE_ENV === "production") {
     return (
       <>
         <script

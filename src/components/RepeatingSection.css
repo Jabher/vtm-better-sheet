@@ -4,6 +4,10 @@
     }
 }
 
+.repitem + .repitem {
+    padding-top: 8px;
+}
+
 .characterviewer-simulated {
     /*.repitem {*/
     /*    margin-bottom: 40px;*/

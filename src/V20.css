@@ -55,6 +55,23 @@
     background-color:  var(--v20-color-background);
 }
 
+.charsheet:has(#attr_sheet_type_0:checked) label[for="attr_sheet_type_0"],
+.charsheet:has(#attr_sheet_type_1:checked) label[for="attr_sheet_type_1"],
+.charsheet:has(#attr_sheet_type_2:checked) label[for="attr_sheet_type_2"],
+.charsheet:has(#attr_sheet_type_3:checked) label[for="attr_sheet_type_3"],
+.charsheet:has(#attr_sheet_type_4:checked) label[for="attr_sheet_type_4"],
+.charsheet:has(#attr_sheet_type_5:checked) label[for="attr_sheet_type_5"],
+.charsheet:has(#attr_sheet_type_6:checked) label[for="attr_sheet_type_6"],
+.charsheet:has(#attr_sheet_type_7:checked) label[for="attr_sheet_type_7"],
+.charsheet:has(#attr_sheet_type_8:checked) label[for="attr_sheet_type_8"],
+.charsheet:has(#attr_sheet_type_9:checked) label[for="attr_sheet_type_9"],
+.charsheet:has(#attr_sheet_type_10:checked) label[for="attr_sheet_type_10"],
+.sheet-toplevel-nav label:hover
+{
+    opacity: 1;
+    border-color: var(--v20-color-visual-accent);
+}
+
 .sheet-toplevel-nav {
     display: flex;
     flex-wrap: wrap;
@@ -66,6 +83,9 @@
         width: auto;
         touch-action: auto;
         cursor: pointer;
+        opacity: .5;
+        border-bottom: 2px transparent solid;
+        margin-bottom: 0;
     }
 }
 

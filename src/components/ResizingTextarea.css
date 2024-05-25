@@ -3,6 +3,12 @@
     width: 100%;
     position: relative;
     white-space: break-spaces;
+    &, textarea, span {
+        line-height: 18px;
+        font-size: 12px;
+        font-weight: 200;
+        font-family: "Exo 2", serif;
+    }
     & .sheet-component--resizing-textarea-container {
         display: grid;
         grid-template-areas: "area";
@@ -20,12 +26,12 @@
         word-break: break-all;
         pointer-events: none;
         opacity: 0;
-        padding: 4px;
+        padding: 5px 9px;
         min-height: var(--v20-line-height);
         transition: min-height 0.1s ease-in-out;
 
         &::before, &::after {
-            content: 'z';
+            content: 'Z';
         }
     }
 

@@ -5,6 +5,10 @@
     }
     .sheet-component--row-head {
         display: flex;
+        align-items: flex-start;
+        & > .sheet-component--counter {
+            align-self: center;
+        }
         & > * {
             width: fit-content;
             flex: 1 1 fit-content;

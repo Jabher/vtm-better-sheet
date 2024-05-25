@@ -12,6 +12,7 @@ import {
 } from "./consts.ts";
 import "./custom.d.ts";
 import { WorkerLogic } from "./WorkerLogic.js";
+import { fromPairs, range } from "ramda";
 
 const Roll20 = {
   sectionIDs: (group, callback) => getSectionIDs(`repeating_${group}`, callback),
@@ -198,10 +199,15 @@ export const worker = () =>
           }
           links[`repeating_disciplines_${key}_linked`] = isBound ? "on" : "off";
         }
-        console.log("setting boosts", boosts, links);
+        const orderedDisciplines = Object.values(attrs);
+        const orderedNames = fromPairs(
+          range(1, 16).map((j) => [`Discipline${j}Name`, orderedDisciplines[j]?.name ?? ""])
+        );
+        console.log("setting boosts", boosts, links, orderedNames);
         setAttrs({
           ...boosts,
           ...links,
+          ...orderedNames,
         });
       });
 
@@ -210,7 +216,7 @@ export const worker = () =>
     }
 
     initRolls() {
-      on("clicked:roll_willpower", (eventInfo) => {
+      on("clicked:roll_willpower", () => {
         const rollExpression = `1d100!>95 + @{skill_bonus}[Bonus] + @{skill_mod}[Mod]`;
         const rollBase = `&{template:test} {{name=Test}} {{roll1=[[${rollExpression}]]}} {{downroll=[[0]]}} {{roll1name=${rollExpression}}} {{roll1mod=- [[1d100!>95]]}} {{roll1final=[[0]]}}`;
 
