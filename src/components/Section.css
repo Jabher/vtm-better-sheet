@@ -3,7 +3,7 @@
     text-align: center;
     min-height: 50px;
     box-sizing: border-box;
-    background-image: radial-gradient(var(--border-color), transparent 75%);
+    background-image: radial-gradient(var(--v20-border-color), transparent 75%);
     background-size: 100% 1px;
     background-repeat: no-repeat;
     background-position: center;
@@ -16,13 +16,14 @@
 
 .sheet-element-section-heading > * {
     padding: 10px 50px;
-    mask: var(--blurry-10-50);
-    -webkit-mask: var(--blurry-10-50);
-    mask-composite: intersect;
-    background: var(--background-color);
+    mask: var(--v20-blurry-10-50);
+    -webkit-mask: var(--v20-blurry-10-50);
+    mask-composite: subtract;
+    background: var(--v20-color-background);
 }
 
 .sheet-element-section-body {
     max-width: 1080px;
     margin: 0 auto;
+    gap: var(--v20-gap-horizontal);
 }

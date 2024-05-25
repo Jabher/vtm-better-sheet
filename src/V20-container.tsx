@@ -1,14 +1,14 @@
 import { PropsWithChildren } from "react";
 import "./V20-container.css";
-import { blurry } from "./components/utility/Blurry.tsx";
+import { blurry } from "./components/utility/blurry.tsx";
 
 export const V20Container = ({ children }: PropsWithChildren) => (
   <div
     className="sheet"
     style={{
       // @ts-expect-error types
-      "--blurry-10-50": blurry(10, 50),
-      "--blurry-5-20": blurry(5, 20),
+      "--v20-blurry-10-50": blurry(10, 50),
+      "--v20-blurry-5-20": blurry(5, 20),
     }}
   >
     <div className="sheet-header">

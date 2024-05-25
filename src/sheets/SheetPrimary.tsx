@@ -53,7 +53,7 @@ export const SheetPrimary = () => (
   <div className="sheet-tab-content sheet-primary">
     <Section>
       <SectionHead i18n="Primary" />
-      <SectionBody className="sheet-3col">
+      <SectionBody style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)'}}>
         <div>
           <Input i18n="name-u" name="attr_Name" />
           <Input i18n="player-u" name="attr_Player" />
@@ -73,7 +73,7 @@ export const SheetPrimary = () => (
     </Section>
     <Section>
       <SectionHead i18n="attributes-u" />
-      <SectionBody className="sheet-3col">
+      <SectionBody style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)'}}>
         <div>
           <H3 i18n="physical-u" />
           <AttrInput from={1} to={9} spec i18n="strength-u" name="attr_Strength" />
@@ -96,7 +96,7 @@ export const SheetPrimary = () => (
     </Section>
     <Section>
       <SectionHead i18n="abilities-u" />
-      <SectionBody className="sheet-3col">
+      <SectionBody style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)'}}>
         <div>
           <H3 i18n="talents-u" />
           {attributes.map((title) => (
@@ -144,7 +144,7 @@ export const SheetPrimary = () => (
 
     <Section>
       <SectionHead i18n="advantages-u" />
-      <SectionBody className="sheet-3col">
+      <SectionBody style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)'}}>
         <div>
           <H3 i18n="disciplines-u" />
           {range(1, 10).map((i) => (
@@ -191,7 +191,7 @@ export const SheetPrimary = () => (
       </SectionBody>
     </Section>
     <Section>
-      <SectionBody className="sheet-3col">
+      <SectionBody style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)'}}>
         <Section>
           <SectionHead i18n="pathsins-u" />
           <SectionBody className="sheet-primary-moralpath">

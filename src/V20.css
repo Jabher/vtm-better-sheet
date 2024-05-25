@@ -22,7 +22,7 @@
     --light-secondarytext: #333;
     --light-primarytext: #333;
     --dark-primarytext: #111;
-    --line-height: 30px;
+    --v20-line-height: 30px;
     --primarytext: var(--light-primarytext);
     --secondarytext: var(--light-secondarytext);
 }
@@ -52,7 +52,7 @@
 
 .charsheet {
     font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-    background-color:  var(--background-color);
+    background-color:  var(--v20-color-background);
 }
 
 .sheet-toplevel-nav {

@@ -1,39 +1,41 @@
 :root {
-    --width: 20px;
-    --skew: 60deg;
-    --crop: 30deg;
-    --border-width: 0.5px;
-    --border-color: rgb(92, 2, 18);
-    --line-height: 30px;
-    --line-large-height: 46px;
+    --v20-width: 20px;
+    --v20-skew: 60deg;
+    --v20-crop: 30deg;
+    --v20-border-width: 0.5px;
+    --v20-border-color: rgb(92, 2, 18);
 
-    --background-color: white;
+    --v20-line-height: 30px;
+    --v20-line-height-large: 46px;
+    --v20-line-padding: 4px;
+    --v20-line-inner-height: calc(var(--v20-line-height) - 2 * var(--v20-line-padding));
+    --v20-line-large-inner-height: calc(var(--v20-line-height-large) - 2 * var(--v20-line-padding));
 
-    --color-accent: rgba(117, 2, 24, 1);
-    --color-dark-primary: rgb(66, 1, 13);
-    --color-dark-primary-highlight: rgb(92, 2, 18);
-    --gap-horizontal: 16px;
-    --gap-vertical: 8px;
-    --color: #111;
+    --v20-color-background: white;
+    --v20-color-visual-accent: rgba(117, 2, 24, 1);
+
+    --v20-gap-horizontal: 16px;
+    --v20-gap-vertical: 8px;
+    --v20-color-text: #111;
 
     /*14,16,18px*/
-    --font-size-normal: 1em;
-    --font-size-large: 1.2em;
-    --font-size-xl: 1.4em;
+    --v20-font-size-normal: 1em;
+    --v20-font-size-large: 1.2em;
+    --v20-font-size-xl: 1.4em;
 
-    --blurry-10-50: unset;
-    --blurry-5-20: unset;
-    --neuromorph-box-shadow: inset 3px 3px 6px #e6e6e6,
+    --v20-blurry-10-50: unset;
+    --v20-blurry-5-20: unset;
+    --v20-neuromorph-box-shadow: inset 3px 3px 6px #e6e6e6,
     inset -3px -3px 6px #ffffff;
-    --neuromorph-box-shadow-active: inset 3px 3px 6px #cccccc,
+    --v20-neuromorph-box-shadow-active: inset 3px 3px 6px #cccccc,
     inset -3px -3px 6px #ffffff;
 
-    --color-neutral: rgba(127, 127, 127, .5);
+    --v20-color-neutral: rgba(127, 127, 127, .5);
 }
 
 @media screen and (max-device-pixel-ratio: 1) {
     :root {
-        --border-width: 1px;
-        --border-color: rgba(117, 2, 24, .5);
+        --v20-border-width: 1px;
+        --v20-border-color: rgba(117, 2, 24, .5);
     }
 }

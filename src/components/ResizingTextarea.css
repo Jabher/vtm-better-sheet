@@ -50,9 +50,9 @@
         transition: color 0.5s;
         white-space: nowrap;
         padding: 5px 20px;
-        mask: var(--blurry-5-20);
-        mask-composite: intersect;
-        background: var(--background-color);
+        mask: var(--v20-blurry-5-20);
+        mask-composite: subtract;
+        background: var(--v20-color-background);
     }
 
     padding: 8px 4px;

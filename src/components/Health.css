@@ -29,8 +29,8 @@
         top: calc(var(--padding) * -1);
         pointer-events: none;
         display: block;
-        width: var(--border-width);
-        background-color: var(--border-color);
+        width: var(--v20-border-width);
+        background-color: var(--v20-border-color);
         height: calc(100% + var(--padding) * 2);
     }
 

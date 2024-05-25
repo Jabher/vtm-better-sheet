@@ -1,8 +1,8 @@
 .sheet-component--roll-button {
     &:empty {
         background-size: contain;
-        width: var(--line-large-height);
-        height: var(--line-large-height);
+        width: var(--v20-line-height-large);
+        height: var(--v20-line-height-large);
         border: none;
         transition: transform 0.15s ease-in-out;
         background: transparent url('/public/dice.png') no-repeat center;

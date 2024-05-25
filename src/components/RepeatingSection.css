@@ -17,19 +17,19 @@
     & button.btn {
         outline: none !important;
         padding: 8px 16px;
-        color: var(--color);
+        color: var(--v20-color-text);
         border-radius: 8px;
-        background: var(--background-color);
-        box-shadow: var(--neuromorph-box-shadow);
+        background: var(--v20-color-background);
+        box-shadow: var(--v20-neuromorph-box-shadow);
         text-shadow: none;
         border-color: transparent;
         transition: box-shadow 0.25s ease-in-out;
 
         &:hover {
-            background: var(--background-color);
-            color: var(--color);
+            background: var(--v20-color-background);
+            color: var(--v20-color-text);
             border-color: transparent;
-            box-shadow: var(--neuromorph-box-shadow-active);
+            box-shadow: var(--v20-neuromorph-box-shadow-active);
         }
     }
 }
@@ -70,7 +70,7 @@
     & .repcontrol_del, & .repcontrol_del {
         position: relative;
         z-index: 2;
-        background-color: var(--border-color);
+        background-color: var(--v20-border-color);
         backdrop-filter: grayscale(100%) blur(1.5px) brightness(50%);
         border: none;
         text-shadow: none;

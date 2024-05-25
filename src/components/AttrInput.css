@@ -42,7 +42,7 @@
         }
 
         &:hover div {
-            background: var(--background-color);
+            background: var(--v20-color-background);
         }
 
         &:hover div:after {
