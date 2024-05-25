@@ -4,7 +4,7 @@ import { useWorker, Worker } from "./useWorker.ts";
 import "./base.css";
 
 const Roll20App = ({ children, worker }: PropsWithChildren<{ worker: Worker }>) => {
-  const isLightOS = useMediaQuery("(prefers-color-scheme: light)");
+  const isLightOS = useMediaQuery("(prefers-color-scheme: light)") || true;
   const formRef = useWorker(worker);
 
   if (process.env.NODE_ENV == "production") {

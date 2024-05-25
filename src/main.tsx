@@ -3,7 +3,8 @@ import Roll20App from "./imported/Roll20App.tsx";
 import { V20 } from "./V20.tsx";
 import { V20Container } from "./V20-container.tsx";
 import { sheets } from "./sheets";
-import { worker } from "./worker-logic.ts";
+// @ts-expect-error roll20
+import { worker } from "./worker-logic.js";
 
 export const createRoot = ViteReactSSG(
   <Roll20App worker={worker}>

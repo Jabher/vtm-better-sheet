@@ -15,33 +15,17 @@ export const SheetBonds = () => (
             <div style={{ marginBottom: 40 }}>
               <div className="sheet-tabBBond--grid-relations">
                 <Input i18n="who-label" name="attr_boundToName" />
-                <SelectInput name="attr_ratingBond" defaultValue={0} i18n="to-him-label">
-                  <option value={0} style={{ color: "Black" }}>
-                    No Blood Bond
-                  </option>
-                  <option value={1} style={{ color: "LightCoral" }}>
-                    First Drink
-                  </option>
-                  <option value={2} style={{ color: "LightCoral" }}>
-                    Second Drink
-                  </option>
-                  <option value={3} style={{ color: "Crimson" }}>
-                    Full Blood Bond
-                  </option>
+                <SelectInput name="attr_ratingBond" i18n="to-him-label">
+                  <option value={0}>---</option>
+                  <option value={1} style={{ color: "LightCoral" }} data-i18n="bond-1-label" />
+                  <option value={2} style={{ color: "LightCoral" }} data-i18n="bond-2-label" />
+                  <option value={3} style={{ color: "Crimson" }} data-i18n="bond-3-label" />
                 </SelectInput>
-                <SelectInput name="attr_reverseRatingBond" defaultValue={0} i18n="to-me-label">
-                  <option value={0} style={{ color: "Black" }}>
-                    No Blood Bond
-                  </option>
-                  <option value={1} style={{ color: "LightCoral" }}>
-                    First Drink
-                  </option>
-                  <option value={2} style={{ color: "LightCoral" }}>
-                    Second Drink
-                  </option>
-                  <option value={3} style={{ color: "Crimson" }}>
-                    Full Blood Bond
-                  </option>
+                <SelectInput name="attr_reverseRatingBond" i18n="to-me-label">
+                  <option value={0}>---</option>
+                  <option value={1} style={{ color: "LightCoral" }} data-i18n="bond-1-label" />
+                  <option value={2} style={{ color: "LightCoral" }} data-i18n="bond-2-label" />
+                  <option value={3} style={{ color: "Crimson" }} data-i18n="bond-3-label" />
                 </SelectInput>
               </div>
               <ResizingTextarea i18n="description-label" name="attr_bounddesc" />
@@ -92,6 +76,7 @@ export const SheetBonds = () => (
       </SectionBody>
     </Section>
     <Section>
+      {/*todo секции мои долги + долги мне?*/}
       <SectionHead i18n="boons-label" />
       <SectionBody>
         <RepeatingSection name="Boons">

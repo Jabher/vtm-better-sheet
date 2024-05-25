@@ -2,7 +2,7 @@ import { Section, SectionBody, SectionHead } from "../components/Section.tsx";
 import { RepeatingSection } from "../components/RepeatingSection.tsx";
 import { Input } from "../components/Input.tsx";
 import "./SheetExperience.css";
-import {ResizingTextarea, Textarea} from "../components/ResizingTextarea.tsx";
+import { Textarea } from "../components/ResizingTextarea.tsx";
 
 export const SheetExperience = () => (
   <div className="sheet-tab-content sheet-tabExp">

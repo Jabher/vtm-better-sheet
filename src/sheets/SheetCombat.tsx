@@ -5,11 +5,32 @@ import { RepeatingSection } from "../components/RepeatingSection.tsx";
 import { Input } from "../components/Input.tsx";
 import "./SheetCombat.css";
 import { ResizingTextarea } from "../components/ResizingTextarea.tsx";
-import { cars } from "../consts.ts";
+import { cars, ConcealType, DamageType } from "../consts.ts";
 import { SelectInput } from "../components/SelectInput.tsx";
 
 export const SheetCombat = () => (
   <div className="sheet-colrow sheet-tab-content sheet-tabCombat">
+    <datalist id="melee-weapon-datalist">
+      <option data-i18n="weapon-melee-sap-label" />
+      <option data-i18n="weapon-melee-club-label" />
+      <option data-i18n="weapon-melee-knife-label" />
+      <option data-i18n="weapon-melee-sword-label" />
+      <option data-i18n="weapon-melee-axe-label" />
+      <option data-i18n="weapon-melee-stake-label" />
+    </datalist>
+    <datalist id="ranged-weapon-datalist">
+      <option data-i18n="weapon-ranged-light-revolver-label" />
+      <option data-i18n="weapon-ranged-heavy-revolver-label" />
+      <option data-i18n="weapon-ranged-light-pistol-label" />
+      <option data-i18n="weapon-ranged-heavy-pistol-label" />
+      <option data-i18n="weapon-ranged-rifle-label" />
+      <option data-i18n="weapon-ranged-light-smg-label" />
+      <option data-i18n="weapon-ranged-heavy-smg-label" />
+      <option data-i18n="weapon-ranged-assault-label" />
+      <option data-i18n="weapon-ranged-shotgun-label" />
+      <option data-i18n="weapon-ranged-shotgun-semiauto-label" />
+      <option data-i18n="weapon-ranged-shotgun-crossbow-label" />
+    </datalist>
     <Section>
       <SectionHead i18n="meleeweapons-u" />
       <SectionBody>
@@ -18,15 +39,20 @@ export const SheetCombat = () => (
             <section className="sheet-tabCombat--item">
               <div className="sheet-tabCombat--item-row">
                 <Input i18n="name2-u" name="attr_MeleeWeaponName" />
-                <Input i18n="type-u" name="attr_MeleeWeaponType" />
-                <Input i18n="minstr-u" type="number" name="attr_MeleeWeaponMinimumStrength" defaultValue={0} />
-                <Input i18n="damage-u" type="number" name="attr_MeleeWeaponDamage" defaultValue={0} />
-                <SelectInput i18n="type-u" name="attr_MeleeWeaponLethality" defaultValue={0}>
-                  <option value={0} data-i18n="bashing-u" />
-                  <option value={2} data-i18n="lethal-u" />
-                  <option value={3} data-i18n="aggravated-u" />
+                <Input i18n="type-u" name="attr_MeleeWeaponType" list="melee-weapon-datalist" />
+                {/*<Input i18n="minstr-u" type="number" name="attr_MeleeWeaponMinimumStrength" />*/}
+                <Input i18n="damage-u" type="number" name="attr_MeleeWeaponDamage" />
+                <SelectInput i18n="type-u" name="attr_MeleeWeaponLethality">
+                  <option value={DamageType.Bashing} data-i18n="bashing-u" />
+                  <option value={DamageType.Lethal} data-i18n="lethal-u" />
+                  <option value={DamageType.Aggravated} data-i18n="aggravated-u" />
                 </SelectInput>
-                <Input i18n="conceal-u" name="attr_MeleeWeaponConceal" />
+                <SelectInput i18n="conceal-u" name="attr_MeleeWeaponConceal">
+                  <option value={ConcealType.Pocket} data-i18n="weapon-conceal-pocket-label" />
+                  <option value={ConcealType.Jacket} data-i18n="weapon-conceal-jacket-label" />
+                  <option value={ConcealType.Trench} data-i18n="weapon-conceal-trench-label" />
+                  <option value={ConcealType.Impossible} data-i18n="weapon-conceal-impossible-label" />
+                </SelectInput>
               </div>
               <ResizingTextarea i18n="notes-label" name="attr_MeleeWeaponDesc" />
             </section>
@@ -38,23 +64,28 @@ export const SheetCombat = () => (
     <Section>
       <SectionHead i18n="rangedweapons-u" />
       <SectionBody>
-        <RepeatingSection name="MeleeWeapons">
+        <RepeatingSection name="RangedWeapons">
           {() => (
             <section className="sheet-tabCombat--item">
               <div>
                 <Input i18n="name2-u" name="attr_RangedWeaponName" />
-                <Input i18n="type-u" name="attr_RangedWeaponType" />
-                <Input i18n="minstr-u" type="number" name="attr_RangedWeaponMinimumStrength" />
+                <Input i18n="type-u" name="attr_RangedWeaponType" list="ranged-weapon-datalist" />
+                {/*<Input i18n="minstr-u" type="number" name="attr_RangedWeaponMinimumStrength" />*/}
                 <Input i18n="damage-u" type="number" name="attr_RangedWeaponDamage" />
-                <SelectInput i18n="type-u" name="attr_MeleeWeaponLethality" defaultValue={0}>
+                <SelectInput i18n="type-u" name="attr_RangedWeaponLethality" defaultValue={0}>
                   <option value={0} data-i18n="bashing-u" />
                   <option value={2} data-i18n="lethal-u" />
                   <option value={3} data-i18n="aggravated-u" />
                 </SelectInput>
                 <Input i18n="range-u" name="attr_RangedWeaponRange" type="number" />
                 <Input i18n="rate-u" name="attr_RangedWeaponRate" type="number" />
-                <Input i18n="conceal-u" name="attr_RangedWeaponClip" type="number" />
-                <Input i18n="conceal-u" name="attr_RangedWeaponConceal" />
+                <Input i18n="clip-u" name="attr_RangedWeaponClip" type="number" />
+                <SelectInput i18n="conceal-u" name="RangedWeaponConceal">
+                  <option value={ConcealType.Pocket} data-i18n="weapon-conceal-pocket-label" />
+                  <option value={ConcealType.Jacket} data-i18n="weapon-conceal-jacket-label" />
+                  <option value={ConcealType.Trench} data-i18n="weapon-conceal-trench-label" />
+                  <option value={ConcealType.Impossible} data-i18n="weapon-conceal-impossible-label" />
+                </SelectInput>
               </div>
               <ResizingTextarea i18n="notes-label" name="attr_RangedWeaponDesc" />
             </section>

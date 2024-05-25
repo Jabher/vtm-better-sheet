@@ -31,5 +31,9 @@ export const SheetInfo = () => (
         <ResizingTextarea name="attr_history" style={{ width: "100%" }} />
       </SectionBody>
     </Section>
+    <SectionHead i18n="notes-u" />
+    <SectionBody style={{ margin: 0, flexGrow: 1, display: "flex", flexDirection: "column" }}>
+      <textarea name="attr_othernotes" className="sheet-gear" style={{ width: "100%", minHeight: 200, flexGrow: 1 }} />
+    </SectionBody>
   </div>
 );

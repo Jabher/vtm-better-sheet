@@ -4,7 +4,6 @@ import { H5 } from "./globals/Headings.tsx";
 import "./AttrInput.css";
 import { Input } from "./Input.tsx";
 import { Counter } from "./Counter.tsx";
-import { Boost } from "./Boost.tsx";
 
 export const AttrInput = ({
   i18n,
@@ -23,15 +22,9 @@ export const AttrInput = ({
     })}
   >
     <H5 i18n={i18n} className="sheet-component--attr-input--title" />
-    <Counter
-      name={name}
-      from={from}
-      to={to}
-      renderCounterOnZero
-      preserveZeroGap
-      className="sheet-component--attr-input--dots-input"
-    />
-    <Input name={`${name}_Spec`} className="sheet-component--attr-input--spec" />
-    {/*<Boost name={name} className="sheet-component--attr-input--title" />*/}
+    <div className="sheet-component--attr-input--dots-input">
+      <Counter name={name} from={from} to={to} renderCounterOnZero preserveZeroGap />
+    </div>
+    <Input className="sheet-component--attr-input-spec" name={`${name}_Spec`} />
   </div>
 );

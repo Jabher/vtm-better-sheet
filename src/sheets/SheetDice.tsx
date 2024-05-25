@@ -6,6 +6,7 @@ import { DisciplineSelect } from "../components/DisciplineSelect.tsx";
 import { AbilitySelect, AttributeSelect } from "../components/AttributeSelect.tsx";
 import { SelectInput } from "../components/SelectInput.tsx";
 import { RepeatingSection } from "../components/RepeatingSection.tsx";
+import { Checkbox } from "../components/Checkbox.tsx";
 
 export const SheetDice = () => (
   <div className="sheet-tab-content sheet-dice">
@@ -33,22 +34,16 @@ export const SheetDice = () => (
       <SectionHead i18n="initiative-dice-pool-label" />
       <SectionBody className="sheet-colrow sheet-table">
         <div className="sheet-dice--repeating-line">
-          <AttributeSelect name="attr_attribute1Roll" />
-          <AttributeSelect name="attr_attribute2Roll" />
+          <AttributeSelect name="attr_attribute1Roll" defaultValue="@{Dexterity}+@{DexterityBoost}" />
+          <AttributeSelect name="attr_attribute2Roll" defaultValue="@{Wits}+@{WitsBoost}" />
           <DisciplineSelect name="attr_initiativedisciplineRoll" />
           <Input type="number" name="attr_modNumber" i18n="result-modifiers-label" />
-          <SelectInput name="attr_initiativeuseHealth">
-            <option value="@{Health}">Yes</option>
-            <option value={0}>No</option>
-          </SelectInput>
+          <Checkbox name="attr_initiativeuseHealth" i18n="use-health-minus-label" symbol="ecg_heart" />
           <Input type="number" name="attr_initrollDiff" defaultValue={6} i18n="difficulty-label" />
-          <SelectInput name="attr_initiativeaddTracker" className="sheet-center-select" defaultValue={0}>
-            <option value="&{tracker}">Yes</option>
-            <option value=" ">No</option>
-          </SelectInput>
+          <Checkbox name="attr_initiativeaddTracker" i18n="use-initiative-label" symbol="low_priority" />
           <RollButton
-              name="initiativeRoll"
-              value="&{template:wodinitiative} {{name=@{Name}}} {{roll_name=Initiative}} {{attr1=Attribute 1}} {{attr1_num=@{attribute1Roll}}} {{attr2=Attribute 2}} {{attr2_num=@{attribute2Roll}}} {{pwr=Celerity}} {{pwr_num=@{initiativedisciplineRoll}}} {{mod_num=@{modNumber}}} {{hp_mod=@{initiativeuseHealth}}} {{result=[[[[@{attribute1Roll}+@{attribute2Roll}+@{initiativedisciplineRoll}+@{modNumber}+@{initiativeuseHealth}]]+[[1d10]] @{initiativeaddTracker}]]}} "
+            name="initiativeRoll"
+            value="&{template:wodinitiative} {{name=@{Name}}} {{roll_name=Initiative}} {{attr1=Attribute 1}} {{attr1_num=@{attribute1Roll}}} {{attr2=Attribute 2}} {{attr2_num=@{attribute2Roll}}} {{pwr=Celerity}} {{pwr_num=@{initiativedisciplineRoll}}} {{mod_num=@{modNumber}}} {{hp_mod=@{initiativeuseHealth}}} {{result=[[[[@{attribute1Roll}+@{attribute2Roll}+@{initiativedisciplineRoll}+@{modNumber}+@{initiativeuseHealth}]]+[[1d10]] @{initiativeaddTracker}]]}} "
           />
         </div>
       </SectionBody>
