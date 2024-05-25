@@ -592,6 +592,12 @@ export const worker = () =>
         getAttrs(
           ["initiativeAddTracker", "Dexterity", "Wits", "celerityBoost", "initiativeBonus"],
           ({ initiativeAddTracker, Dexterity, Wits, celerityBoost, initiativeModifier }) => {
+            if (initiativeAddTracker) {
+              setAttrs({
+                dexteritySpent: 0,
+                celeritySpent: 0,
+              });
+            }
             startRoll(
               [
                 `@{Name}`,
@@ -601,12 +607,6 @@ export const worker = () =>
                 `{{result=[[${i(Dexterity) + i(Wits) + i(celerityBoost) + i(initiativeModifier)}+1d10${initiativeAddTracker ? " &{tracker}" : ""}]]}}`,
               ].join(" "),
               (results) => {
-                if (initiativeAddTracker) {
-                  setAttrs({
-                    dexteritySpent: 0,
-                    celeritySpent: 0,
-                  });
-                }
                 finishRoll(results.rollId, {});
               }
             );
