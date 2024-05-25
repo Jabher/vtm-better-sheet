@@ -1,9 +1,9 @@
 import cn from "classnames";
-import { H5 } from "./globals/Headings.tsx";
 import { I18n } from "../types.ts";
+import { H5 } from "./globals/Headings.tsx";
 import "./AttrInput.css";
 import { Input } from "./Input.tsx";
-import { Counter, CounterValue } from "./Counter.tsx";
+import { Counter } from "./Counter.tsx";
 
 export const AttrInput = ({
   i18n,
@@ -27,6 +27,6 @@ export const AttrInput = ({
       <Counter name={name} from={from} to={to} />
     </div>
     <H5 i18n={i18n} className="sheet-component--attr-input--title" />
-    <CounterValue className="sheet-component--attr-input--counter-value" />
+    <span className="sheet-component--attr-input--counter-value" name={name} />
   </div>
 );

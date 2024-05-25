@@ -10,6 +10,7 @@ export const Counter = ({
   className,
   fade,
   dotStyle,
+  preserveZeroGap = true,
   ...rest
 }: DOMProps<
   "div",
@@ -18,13 +19,13 @@ export const Counter = ({
     to: number;
     name: string;
     fade?: boolean;
+    preserveZeroGap?: boolean;
     dotStyle?: "circle" | "square";
   }
 >) => (
   <div
     className={cn("sheet-component sheet-component--counter", className, {
-      "sheet-component--counter-startsFrom-0": from == 0,
-      "sheet-component--counter-startsFrom-1": from == 1,
+      "sheet-component--counter-preserve-zero-gap": preserveZeroGap,
       "sheet-component--counter-fade": fade,
       "sheet-component--counter-style-box": dotStyle == "square",
     })}
@@ -32,28 +33,10 @@ export const Counter = ({
   >
     {
       /*for counting selectors*/
-      from >= 1 ? (
-        <label style={{ display: "none" }} />
-      ) : (
-        <>
-          <label className="sheet-component--counter--label-zero">
-            <input type="radio" name={name} value={0} defaultChecked={from == 0} />
-          </label>
-        </>
-      )
+      from >= 1 ? null : <input type="radio" name={name} value={0} defaultChecked={from == 0} />
     }
     {range(1, to + 1).map((i) => (
-      <>
-        <label title={to < 10 ? undefined : `${i}`}>
-          <input type="radio" name={name} value={i} defaultChecked={i == from} />
-        </label>
-      </>
+      <input type="radio" name={name} key={i} value={i} defaultChecked={i == from} title={to < 10 ? "" : `${i}`} />
     ))}
-  </div>
-);
-
-export const CounterValue = ({ className, children, ...rest }: DOMProps<"div">) => (
-  <div className={cn(className, "sheet-component--counter-value")} {...rest}>
-    {children}
   </div>
 );

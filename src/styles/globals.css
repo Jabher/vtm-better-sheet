@@ -13,6 +13,7 @@
 
     --v20-color-background: white;
     --v20-color-visual-accent: rgba(117, 2, 24, 1);
+    --v20-common-border-color: rgba(77, 77, 77, .3);
 
     --v20-gap-horizontal: 16px;
     --v20-gap-vertical: 8px;
