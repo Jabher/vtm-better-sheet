@@ -7,6 +7,8 @@ import {Counter} from "../components/Counter.tsx";
 import translation from '../translation.json'
 import "./SheetPrimary.css";
 import {Health} from "../components/Health.tsx";
+import {blurry} from "../components/utility/Blurry.tsx";
+import {ResizingTextarea} from "../components/ResizingTextarea.tsx";
 
 const attributes = [
     "alertness",
@@ -171,41 +173,66 @@ export const SheetPrimary = () => <div className="sheet-tab-content sheet-primar
         <SectionBody className="sheet-3col">
             <Section>
                 <SectionHead i18n="pathsins-u"/>
-                <SectionBody>
+                <SectionBody className="sheet-primary-moralpath">
                     {range(1, 10).reverse().map(i => <>
-                <textarea
-                    className="sheet-primary-moralpath"
-                    name={`attr_MoralPath${i}`}
-                    placeholder={`Moral path ${i}`}
-                />
+                        <ResizingTextarea
+                            name={`attr_MoralPath${i}`}
+                            placeholder={`Moral path ${i}`}
+                        />
                     </>)}
                 </SectionBody>
             </Section>
             <Section>
                 <Section>
-                    <SectionHead i18n="humanitypath-u"/>
+                    <div className="sheet-element-section-heading sheet-element-section-heading-humanitypaths">
+                        <input type="text" name="attr_PathoEname" defaultValue={translation['humanitypath-u']} style={{
+                            ...blurry(10, 50, 10, 50, false),
+                        }}/>
+                    </div>
                     <SectionBody className="sheet-primary-humanity-path">
-                        <H4 i18n="humanitypath-u">:</H4>
-                        <Input name="attr_PathoEname"/>
-                        <Counter from={1} to={9} name="attr_PathoE" className="sheet-primary-humanity-path--counter"/>
-                        <H4 i18n="bearing-u"></H4>
-                        <Input name='attr_Bearing'/>
+                        <Counter from={1} to={9} name="attr_PathoE"
+                                 className="sheet-primary-humanity-path--counter"/>
+                        <Input i18n="bearing-u" name='attr_Bearing' style={{width: '100%'}}/>
                     </SectionBody>
                 </Section>
                 <Section>
-                    <SectionHead i18n="willpower-u"/>
+                    <SectionHead i18n="willpower-u">
+                        <span style={{padding: '0px 8px', opacity: 0.5}}>
+                        <span
+                            // @ts-ignore
+                            name="attr_Willpower_Used"
+                        />
+                        /
+                        <span
+                            // @ts-ignore
+                            name="attr_Willpower"
+                        />
+                        </span>
+                    </SectionHead>
                     <SectionBody style={{display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
                         <Counter from={1} to={9} name="attr_Willpower"/>
                         <Counter from={0} to={9} name="attr_Willpower_Used" dotStyle="square"/>
                     </SectionBody>
                 </Section>
-                <SectionHead i18n="bloodpool-u"/>
+                <Section className="sheet-component" style={{display: 'flex', flexDirection: 'column-reverse'}}>
+                    <SectionBody>
+                        <Counter from={0} to={39} name="attr_BloodPool" className="sheet-primary--bloodpool" fade/>
+                    </SectionBody>
+                    <SectionHead i18n="bloodpool-u">
+
+                        <span
+                            // @ts-ignore
+                            name="attr_BloodPool"
+                            style={{padding: '0px 8px', opacity: 0.5}}
+                        />
+                    </SectionHead>
+                </Section>
             </Section>
             <Section>
                 <SectionHead i18n="health-u"/>
                 <SectionBody>
-                    <div className="sheet-primary--health-extra">
-                        <H4 i18n="extrabruised-u"/>
+                    <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'center'}}>
+                        <H5 i18n="extrabruised-u" style={{textAlign: 'left', flexGrow: 1}}/>
                         <Health name="attr_BruisedExtra1"/>
                         <Health name="attr_BruisedExtra2"/>
                         <Health name="attr_BruisedExtra3"/>
@@ -260,45 +287,30 @@ export const SheetPrimary = () => <div className="sheet-tab-content sheet-primar
                     </div>
                 </SectionBody>
                 <SectionHead i18n="movement-u"/>
-                <SectionBody>
-                    <H5 i18n="dexspeed-u"/>
-                    <input type="number" name="attr_Dexterity" style={{width: 45}} defaultValue={1} readOnly/>
-                    <H5 i18n="dexboostspeed-u"/>
-                    <input type="number" name="attr_DexterityBoost" style={{width: 45}} defaultValue={0} readOnly/>
-                    <H5 i18n="celerityspeed-u"/>
-                    <input type="number" name="attr_CeleritySpeed" style={{width: 45}} defaultValue={0}/>
-                    <H5 i18n='miscspeed-u'></H5>
-                    <input type="number" name="attr_MiscSpeed" style={{width: 45}} defaultValue={0}/>
-                    <H5 i18n="walkspeed-u"></H5>
-                    <input className="speedoutput" type="text" name="attr_WalkSpeed" defaultValue={7} disabled/>
-                    <span data-i18n="yardsmeters-u">Yards/Meters</span>
-                    <h5>
-                        <span data-i18n="walkspeed-u">Walk Speed </span>
-                    </h5>
-                    <h5>
-                        <span data-i18n="jogspeed-u">Jog Speed </span>
-                        <input
-                            className="speedoutput"
-                            type="text"
-                            name="attr_JogSpeed"
-                            defaultValue="12+@{Dexterity}+@{DexterityBoost}+@{CeleritySpeed}+@{MiscSpeed}"
-                            disabled
-                        />
-                        <span data-i18n="yardsmeters-u">Yards/Meters</span>
-                    </h5>
-                    <h5>
-                        <span data-i18n="runspeed-u">Run Speed </span>
-                        <input
-                            className="speedoutput"
-                            type="text"
-                            name="attr_RunSpeed"
-                            defaultValue="20+(3*@{Dexterity}+@{DexterityBoost}+@{CeleritySpeed}+@{MiscSpeed})"
-                            disabled
-                        />
-                        <span data-i18n="yardsmeters-u">Yards/Meters</span>
-                    </h5>
+                <SectionBody className="sheet-primary--movement">
+                    <Input i18n="dexspeed-u" type="number" name="attr_Dexterity" defaultValue={1} readOnly/>
+                    <Input i18n="dexboostspeed-u" type="number" name="attr_DexterityBoost" defaultValue={0} readOnly/>
+                    <Input i18n="celerityspeed-u" type="number" name="attr_CeleritySpeed" defaultValue={0}/>
+                    <Input i18n='miscspeed-u' type="number" name="attr_MiscSpeed" defaultValue={0}/>
+                    <Input i18n="walkspeed-u" className="speedoutput" type="text" name="attr_WalkSpeed" defaultValue={7}
+                           disabled
+                           postfix="yardsmeters-u"/>
+                    <Input
+                        i18n="jogspeed-u"
+                        name="attr_JogSpeed"
+                        defaultValue="10"
+                        disabled
+                        postfix="yardsmeters-u"
+                    />
+                    <Input
+                        i18n="runspeed-u"
+                        name="attr_RunSpeed"
+                        defaultValue="10"
+                        disabled
+                        postfix="yardsmeters-u"
+                    />
                 </SectionBody>
-                <SectionHead i18n="weakness-u"></SectionHead>
+                <SectionHead i18n="weakness-u"/>
                 <SectionBody>
                     <textarea
                         name="attr_Weakness"

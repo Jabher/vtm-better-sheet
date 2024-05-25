@@ -4,25 +4,54 @@
     padding: 2px 4px;
 }
 
+textarea {
+    background: transparent;
+    resize: none;
+    border: rgba(128, 128, 128, 0.125) 1px solid;
+    &:disabled {
+        border-color: rgba(128, 128, 128, 0.05);
+    }
+}
+
+.sheet-element-input-container {
+    border: rgba(128, 128, 128, 0.125) 1px solid;
+    border-radius: 4px;
+    display: flex;
+    white-space: nowrap;
+    align-items: center;
+}
+
+.sheet-element-input-container:has(input:disabled) {
+    border-color: rgba(128, 128, 128, 0.05);
+}
+
 .sheet-element-input input {
     padding: 4px 8px;
     font-size: 16px;
     min-height: 24px;
+    min-width: 36px;
     outline: none;
     transition: background 0.5s;
     margin: 0;
     background: transparent;
     width: 100%;
+    border: none;
+}
+
+.sheet-element-input input:disabled {
+    border-color: rgba(128, 128, 128, 0.05);
 }
 
 .sheet-element-input input::placeholder {
-    color: rgba(128,128,128,.2);
+    color: rgba(128, 128, 128, .2);
 }
+
 .sheet-element-input input::-webkit-input-placeholder {
-    color: rgba(128,128,128,.2);
+    color: rgba(128, 128, 128, .2);
 }
 
 .sheet-element-input label {
+    pointer-events: none;
     display: inline-block;
     width: min-content;
     position: absolute;
@@ -33,10 +62,7 @@
     cursor: text;
     color: var(--secondarytext);
     transition: color 0.5s;
-}
-
-.sheet-element-input:has(label) {
-    padding: 6px 0;
+    white-space: nowrap;
 }
 
 .sheet-element-input:has(label) {
@@ -50,4 +76,18 @@
 
 .sheet-element-input input:focus + label {
     color: var(--primarytext);
+}
+
+.sheet-element-input-postfix {
+    padding: 4px 8px;
+}
+
+input.sheet-element-input-readonly[disabled] {
+    border: none;
+    outline: none;
+    background-color: transparent;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 50px;
 }

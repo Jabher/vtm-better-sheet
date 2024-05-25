@@ -3,7 +3,13 @@ import './Counter.css'
 import {DOMProps} from "../types.ts";
 import cn from "classnames";
 
-export const Counter = ({from = 1, to, name, className, fade, dotStyle, ...rest}: DOMProps<'div', { from?: 0 | 1, to: number, name: string, fade?: boolean, dotStyle?: 'circle' | 'square' }>) =>
+export const Counter = ({from = 1, to, name, className, fade, dotStyle, ...rest}: DOMProps<'div', {
+    from?: 0 | 1,
+    to: number,
+    name: string,
+    fade?: boolean,
+    dotStyle?: 'circle' | 'square'
+}>) =>
     <div
         className={cn("sheet-component sheet-component--counter", className, {
             "sheet-component--counter-startsFrom-0": from == 0,
@@ -16,14 +22,16 @@ export const Counter = ({from = 1, to, name, className, fade, dotStyle, ...rest}
         {
             /*for counting selectors*/
             from >= 1 ? <label style={{display: "none"}}/> : <>
-                <input type="radio" name={name} id={`${name}_0`} value={0}/>
-                <label htmlFor={`${name}_0`} className="sheet-component--counter--label-zero"/>
+                <label className="sheet-component--counter--label-zero">
+                    <input type="radio" name={name} value={0}/>
+                </label>
             </>
         }
         {
             range(1, to + 1).map(i => <>
-                <input type="radio" name={name} id={`${name}_${i}`} value={i} defaultChecked={i == 1}/>
-                <label htmlFor={`${name}_${i}`}/>
+                <label title={to < 10 ? undefined : `${i}`}>
+                    <input type="radio" name={name} value={i} defaultChecked={i == 1}/>
+                </label>
             </>)
         }
     </div>

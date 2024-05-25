@@ -2,11 +2,11 @@
 .sheet-component--counter-value {
     height: 100%;
     vertical-align: middle;
+    display: flex;
+    align-items: center;
 
     &::before {
         content: counter(dots-value);
-        height: 100%;
-        vertical-align: middle;
     }
 }
 
@@ -19,11 +19,11 @@
 }
 
 .sheet-component--counter {
-    & input:not([value="0"]) + label {
+    & label:has(input:not([value="0"])) {
         counter-increment: dots-value;
     }
 
-    & input:checked ~ input + label {
+    & label:has(input:checked) ~ label {
         counter-increment: none;
     }
 }
@@ -67,9 +67,9 @@
         width: 12px;
         height: 12px;
         margin: 0 1px;
-        border: solid 1px rgba(128,128,128, .25);
-        background: rgba(128,128,128, .1);
-        box-shadow: 0 0 5px rgba(128,128,128, .25) inset;
+        border: solid 1px rgba(128, 128, 128, .1);
+        background: rgba(128, 128, 128, .1);
+        box-shadow: 0 0 5px rgba(128, 128, 128, .1) inset;
     }
 
     &:not(:hover) label.sheet-component--counter--label-zero::before {
@@ -89,23 +89,30 @@
         content: "X";
     }
 
-    & input[value="0"]:checked {
-        & + label.sheet-component--counter--label-zero::before {
-            opacity: 1;
-        }
+    & label.sheet-component--counter--label-zero:has(input:checked)::before {
+        opacity: 1;
+    }
 
-        & ~ label:not(.sheet-component--counter--label-zero) {
-            opacity: .1;
-        }
+    & label.sheet-component--counter--label-zero:has(input:checked) ~ label {
+        opacity: .1;
     }
 
     & label.sheet-component--counter--label-zero:is(:hover)::before {
         opacity: 1;
     }
 
+    &.sheet-component--counter-fade:hover:has(label:hover) {
+        & label {
+            opacity: 0.75;
+        }
+    }
+
     /* todo do we need it? */
-    &.sheet-component--counter-fade:not(:hover) input:not([value="0"]):checked,
+
+    &.sheet-component--counter-fade:not(:hover) label:has(input:not([value="0"]):checked),
     &.sheet-component--counter-fade:hover label:hover {
+        opacity: .85;
+
         & ~ label {
             opacity: 0.75;
         }
@@ -143,11 +150,11 @@
         }
     }
 
-    & input:checked + label ~ label:before {
+    &:not(.sheet-component--counter-style-box) label:has(input:checked) ~ label:before {
         content: '⚪';
     }
 
-    &.sheet-component--counter-style-box input:checked + label ~ label:before {
+    &.sheet-component--counter-style-box label:has(input:checked) ~ label:before {
         content: ' ';
     }
 

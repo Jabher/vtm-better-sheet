@@ -1,0 +1,22 @@
+.sheet-tabCombat {
+    & .sheet-tabCombat--item {
+        & > * {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    & .sheet-tabCombat--havens {
+        & .sheet-tabCombat--havens-header {
+            display: grid;
+            grid-template-columns: 1fr 154px 154px 154px;
+            justify-content: flex-start;
+            align-items: flex-start;
+            & * {
+                text-align: start;
+                padding: 0 14px;
+            }
+        }
+    }
+}

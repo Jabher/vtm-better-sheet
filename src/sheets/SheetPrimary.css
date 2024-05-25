@@ -15,34 +15,31 @@
             cursor: pointer;
             padding: 0;
         }
+
         & * {
-            height: 28px;
-            line-height: 28px;
+            height: var(--line-height);
+            line-height: var(--line-height);
             font-size: 13px;
             text-align: right;
             width: 100%;
         }
     }
 
-    & textarea.sheet-primary-moralpath {
-        width: 100%;
-        outline: none;
-        background: none;
-        height: 44px;
-        vertical-align: top;
-        resize: none;
-        margin: 2px 4px;
+    & .sheet-primary-moralpath {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    & .sheet-primary-moralpath textarea {
     }
 
     & .sheet-primary-humanity-path {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-        "humanitypath-counter humanitypath-counter"
-        "humanitypath-title humanitypath-input"
-        "humanitypath-bearing-title humanitypath-bearing-input";
+        display: flex;
+        flex-direction: column;
         justify-items: end;
         align-items: center;
+
         & .sheet-primary-humanity-path--counter {
             grid-area: humanitypath-counter;
             justify-self: center;
@@ -51,15 +48,64 @@
 
     & .sheet-primary--health-extra {
         display: flex;
+        align-items: center;
+        justify-content: space-between;
     }
 
     & .sheet-primary--health-main > div {
         width: 100%;
         display: flex;
         justify-content: flex-end;
+
         & > :first-child {
             flex: 1 1 auto;
             text-align: start;
         }
+    }
+
+    & .sheet-primary--movement {
+        h4, h5, h6 {
+            text-align: left;
+        }
+
+        label {
+            font-size: 12px;
+            white-space: nowrap;
+        }
+    }
+
+    & .sheet-element-section-heading-humanitypaths {
+        display: flex;
+        align-items: center;
+
+        input {
+            flex: 0 1 auto;
+            width: 100%;
+            text-align: center;
+
+            &:not(:focus) {
+                padding: 10px 20px;
+                width: min-content;
+            }
+
+            background: rgba(255, 255, 255, .25);
+            outline: none;
+            border: none;
+            appearance: none;
+            text-align: center;
+            vertical-align: center;
+            line-height: 27px;
+            font-size: 18px;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    & .sheet-primary--bloodpool {
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        width: fit-content;
+        margin: 0 auto;
     }
 }

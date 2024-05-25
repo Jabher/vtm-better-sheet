@@ -1,0 +1,62 @@
+.sheet-component--resizing-textarea {
+    width: 100%;
+    position: relative;
+    & .sheet-component--resizing-textarea-container {
+        display: grid;
+        grid-template-areas: "area";
+
+        & > * {
+            grid-area: area;
+        }
+    }
+    & .sheet-component--resizing-textarea-container {
+        width: 100%;
+    }
+    & textarea {
+        width: 100%;
+        min-height: 30px;
+        height: 100%;
+        outline: none;
+        background: none;
+        vertical-align: top;
+        margin-bottom: 0;
+        padding: 4px 8px;
+    }
+    & span {
+        width: 100%;
+        word-break: break-all;
+        pointer-events: none;
+        opacity: 0;
+        padding: 4px;
+
+        &::after {
+            content: 'z';
+            font-size: 0;
+        }
+    }
+
+
+    & label {
+        pointer-events: none;
+        display: inline-block;
+        width: min-content;
+        position: absolute;
+        left: -4px;
+        top: -6px;
+        margin: 0;
+        backdrop-filter: blur(5px);
+        cursor: text;
+        color: var(--secondarytext);
+        transition: color 0.5s;
+        white-space: nowrap;
+    }
+
+    padding: 8px 4px;
+    &:has(label) {
+        padding: 10px 4px 2px;
+
+        & textarea {
+            padding: 4px 16px;
+        }
+    }
+}

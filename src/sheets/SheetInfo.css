@@ -1,0 +1,16 @@
+.sheet-tabInfo {
+    & textarea {
+        outline: none;
+    }
+
+    & .sheet-element-section-body {
+        display: flex;
+        & aside {
+            width: 200px;
+        }
+        & > textarea {
+            margin: 10px 10px 0 10px;
+            height: unset;
+        }
+    }
+}

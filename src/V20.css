@@ -5,23 +5,22 @@
 .sheet-3col {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 16px;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.sheet-3col > * {
+    overflow: hidden;
+    flex: 0 0 auto;
 }
 
 :root {
     --light-secondarytext: #333;
     --light-primarytext: #333;
     --dark-primarytext: #111;
+    --line-height: 30px;
     --primarytext: var(--light-primarytext);
     --secondarytext: var(--light-secondarytext);
-}
-
-.sheet-utility-hidden-input-radio {
-    display: none !important;
-}
-
-.sheet-utility-hidden-input-radio:not(:checked) + * {
-    display: none;
 }
 
 .sheet-darkmode {
@@ -54,4 +53,26 @@
 
 .sheet-toplevel-nav {
     display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: space-between;
+
+    & label {
+        display: inline-block;
+        width: auto;
+        touch-action: auto;
+        cursor: pointer;
+    }
+}
+
+.sheet-utility-hidden-input-radio {
+    display: none !important;
+}
+
+.sheet-utility-hidden-input-radio:not(:checked) + * {
+    display: none;
+}
+
+input, textarea {
+    outline: none;
 }

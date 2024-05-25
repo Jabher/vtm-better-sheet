@@ -42,18 +42,19 @@ export const V20 = () => <V20Container>
         <div className="sheet-toplevel-nav">
             {
                 (Object.keys(sheets) as I18n[]).map((section, i) =>
-                    <label className="sheet-component sheet-component--button" data-i18n={section}
+                    <label data-i18n={section}
                            htmlFor={`${SHEET_TYPE_ATTR}_${i}`}>
                         {translation[section]}
                     </label>
                 )
             }
+            <div style={{flexGrow: 1}}></div>
         </div>
-        <div className="clear"/>
         {
             Object.values(sheets).map((Sheet, i) => <>
                 <input id={`${SHEET_TYPE_ATTR}_${i}`} type="radio" value={i} defaultChecked={i == 0}
-                       className={"sheet-utility-hidden-input-radio"}/>
+                       name="attr_sheet_type"
+                       className="sheet-utility-hidden-input-radio sheet-utility--page-selector"/>
                 <Sheet/>
             </>)
         }

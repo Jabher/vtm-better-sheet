@@ -1,0 +1,17 @@
+.sheet-dice {
+    & .sheet-attributes > div {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        justify-content: center;
+        align-items: center;
+        & > h3 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            & > input {
+                font-size: inherit;
+            }
+        }
+    }
+}

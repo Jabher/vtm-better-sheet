@@ -1,0 +1,9 @@
+.sheet-component--health select {
+    width: 22px;
+    height: 22px;
+    appearance: none;
+    outline: none;
+    margin: 4px;
+    font-size: 17px;
+    border: rgba(128, 128, 128, 0.125) 1px solid;
+}

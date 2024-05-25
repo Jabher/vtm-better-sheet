@@ -19,8 +19,6 @@ export const AttrInput = ({i18n, name, from = 0, to}: {
     <div className="sheet-component--attr-input--dots-input">
         <Counter name={name} from={from} to={to}/>
     </div>
-    <div className="sheet-component--attr-input--title">
-        <H5 i18n={i18n}/>
-        <CounterValue/>
-    </div>
+    <H5 i18n={i18n} className="sheet-component--attr-input--title"/>
+    <CounterValue className="sheet-component--attr-input--counter-value"/>
 </div>
