@@ -120,6 +120,7 @@
 	"bearing-u": "Bearing:",
 	"willpower-u": "Willpower",
 	"bloodpool-u": "Blood Pool",
+	"bloodpoolMax-u": "Max Blood Pool",
 	"pointsperturn-u": "Points Per Turn",
 	"dicepools-u": "Dice Pools",
 	"attributeability-u": "<b >Attribute &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ability</b >",

@@ -219,7 +219,7 @@ export const SheetPrimary = () => (
           <Section>
             <div className="sheet-element-section-heading">
               <div className="sheet-element-section-heading-humanitypaths">
-                <input type="text" name="attr_path" defaultValue={translation["humanitypath-u"]} />
+                <input type="text" name="attr_path" />
                 <span name="attr_path" />
               </div>
             </div>

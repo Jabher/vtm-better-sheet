@@ -221,9 +221,11 @@ export const worker = () =>
           ...range(1, 11).map((i) => `Back${i}`),
           ...range(1, 11).map((i) => `Back${i}Name`),
           ...Object.keys(attrs),
+          "path"
         ],
         (state) => {
           console.log("old state", state);
+          attrs['path'] ||= getTranslationByKey("humanitypath-u")
           {
             const disciplines = [];
             for (const i of range(1, 11)) {
