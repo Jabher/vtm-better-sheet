@@ -19,7 +19,7 @@ export const RollButton = ({
     // @ts-expect-error button type
     type="action"
     className={cn("sheet-component sheet-component--roll-button", className)}
-    name={`act_roll_${name}`}
+    name={name ? `act_roll_${name}` : `act_roll`}
     {...rest}
   >
     {childrenName ? <span name={`attr_${childrenName}`} /> : null}

@@ -33,23 +33,20 @@ export const AttributeSelect = ({
 
 export const SkillSelect = ({ name, ...rest }: DOMProps<"select">) => (
   <SelectInput name={name} defaultValue={0} i18n="ability-u" {...rest}>
-    <optgroup label="Attributes">
-      {talents.map((key) => (
-        <option key={key} value={`@{${key}}`} data-i18n={`${key}-u`} />
-      ))}
-    </optgroup>
-    <optgroup label="Skills">
-      {skills.map((key) => (
-        <option key={key} value={`@{${key}}`} data-i18n={`${key}-u`} />
-      ))}
-    </optgroup>
-    <optgroup label="Knowledges">
-      {knowledges.map((key) => (
-        <option key={key} value={`@{${key}}`} data-i18n={`${key}-u`} />
-      ))}
-    </optgroup>
-    <optgroup label="Other">
-      <option value={0}>---</option>
-    </optgroup>
+    <option disabled data-i18n="talents-u"></option>
+    {talents.map((key) => (
+      <option key={key} value={key} data-i18n={`${key}-u`} />
+    ))}
+    <option disabled data-i18n="skills-u"></option>
+    {skills.map((key) => (
+      <option key={key} value={key} data-i18n={`${key}-u`} />
+    ))}
+    <option disabled data-i18n="knowledges-u"></option>
+    {knowledges.map((key) => (
+      <option key={key} value={key} data-i18n={`${key}-u`} />
+    ))}
+    <option value={0} disabled>
+      ---
+    </option>
   </SelectInput>
 );

@@ -44,7 +44,7 @@ export const SheetPrimary = () => (
         <div>
           <Input i18n="clan-u" name="Clan" />
           <Input i18n="sire-u" name="Sire" />
-          <Input i18n="generation-u" name="Generation" type="number" />
+          <Input i18n="generation-u" name="Generation" type="number" defaultValue={13} />
         </div>
       </SectionBody>
     </Section>
@@ -53,21 +53,21 @@ export const SheetPrimary = () => (
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div>
           <H3 i18n="physical-u" />
-          <AttrInput from={1} to={9} i18n="strength-u" name="Strength" />
-          <AttrInput from={1} to={9} i18n="dexterity-u" name="Dexterity" />
-          <AttrInput from={1} to={9} i18n="stamina-u" name="Stamina" />
+          <AttrInput from={1} to={10} i18n="strength-u" name="Strength" />
+          <AttrInput from={1} to={10} i18n="dexterity-u" name="Dexterity" />
+          <AttrInput from={1} to={10} i18n="stamina-u" name="Stamina" />
         </div>
         <div>
           <H3 i18n="social-u" />
-          <AttrInput from={1} to={9} i18n="charisma-u" name="Charisma" />
-          <AttrInput from={1} to={9} i18n="manipulation-u" name="Manipulation" />
-          <AttrInput from={1} to={9} i18n="appearance-u" name="Appearance" />
+          <AttrInput from={1} to={10} i18n="charisma-u" name="Charisma" />
+          <AttrInput from={1} to={10} i18n="manipulation-u" name="Manipulation" />
+          <AttrInput from={1} to={10} i18n="appearance-u" name="Appearance" />
         </div>
         <div>
           <H3 i18n="mental-u" />
-          <AttrInput from={1} to={9} i18n="perception-u" name="Perception" />
-          <AttrInput from={1} to={9} i18n="intelligence-u" name="Intelligence" />
-          <AttrInput from={1} to={9} i18n="wits-u" name="Wits" />
+          <AttrInput from={1} to={10} i18n="perception-u" name="Perception" />
+          <AttrInput from={1} to={10} i18n="intelligence-u" name="Intelligence" />
+          <AttrInput from={1} to={10} i18n="wits-u" name="Wits" />
         </div>
       </SectionBody>
     </Section>
@@ -75,6 +75,7 @@ export const SheetPrimary = () => (
       <SectionHead i18n="abilities-u" />
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div>
+          {/*todo max 10*/}
           <H3 i18n="talents-u" />
           {talents.map((title) => (
             <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
@@ -137,7 +138,7 @@ export const SheetPrimary = () => (
             {() => (
               <Row>
                 <Input name="name" list="discipline-datalist" />
-                <Counter fade from={0} to={9} name="points" />
+                <Counter fade from={0} to={10} name="points" />
                 <span className="sheet-component--attr-input-linked">
                   <input type="checkbox" name="attr_linked" defaultChecked={true} />
                   <span className="material-symbols-outlined sheet-component--attr-input-linked-icon">share</span>
@@ -153,7 +154,7 @@ export const SheetPrimary = () => (
             {() => (
               <div style={{ display: "flex" }}>
                 <Input name={`name`} />
-                <Counter fade from={0} to={9} name={`points`} />
+                <Counter fade from={0} to={10} name={`points`} />
               </div>
             )}
           </RepeatingSection>
@@ -161,26 +162,42 @@ export const SheetPrimary = () => (
         <div>
           <H3 i18n="virtues-u" />
           <div className="sheet-primary--virtues">
-            <select className="select-no-appearance" name="virtueConsName" defaultValue="Conscience">
+            {/*todo fix rolls*/}
+            <select className="select-no-appearance" name="attr_virtueConsName" defaultValue="Conscience">
               <option value="Conscience" data-i18n="conscience-u" />
               <option value="Conviction" data-i18n="conviction-u" />
             </select>
             <div className="sheet-primary--counter-with-roll">
               <Counter from={1} to={5} name="C_C" />
-              <RollButton name="CourageRoll" childrenName="C_C" />
+              <RollButton
+                name="attribute"
+                data-attribute="C_C"
+                data-attribute-name-value="virtueConsName"
+                childrenName="C_C"
+              />
             </div>
-            <select className="select-no-appearance" name="virtueSelfName" defaultValue="Self-Control">
+            <select className="select-no-appearance" name="attr_virtueSelfName" defaultValue="Self-Control">
               <option value="Self-Control" data-i18n="selfcontrol-u" />
               <option value="Instinct" data-i18n="instinct-u" />
             </select>
             <div className="sheet-primary--counter-with-roll">
               <Counter from={1} to={5} name="S_I" />
-              <RollButton name="CourageRoll" childrenName="S_I" />
+              <RollButton
+                name="attribute"
+                data-attribute="S_I"
+                data-attribute-name-value="virtueSelfName"
+                childrenName="S_I"
+              />
             </div>
             <H4 i18n="courage-u" />
             <div className="sheet-primary--counter-with-roll">
               <Counter from={1} to={5} name="Courage" />
-              <RollButton name="CourageRoll" childrenName="Courage" />
+              <RollButton
+                name="attribute"
+                data-attribute="Courage"
+                data-attribute-name="courage-u"
+                childrenName="Courage"
+              />
             </div>
           </div>
         </div>
@@ -191,7 +208,7 @@ export const SheetPrimary = () => (
         <Section>
           <SectionHead i18n="pathsins-u" />
           <SectionBody className="sheet-primary-moralpath">
-            {range(1, 10)
+            {range(1, 11)
               .reverse()
               .map((i) => (
                 <>
@@ -211,8 +228,13 @@ export const SheetPrimary = () => (
             </div>
             <SectionBody className="sheet-primary-humanity-path">
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={1} to={9} name="pathNumber" className="sheet-primary-humanity-path--counter" />
-                <RollButton name="CourageRoll" childrenName="pathNumber" />
+                <Counter from={1} to={10} name="pathNumber" className="sheet-primary-humanity-path--counter" />
+                <RollButton
+                  name="attribute"
+                  data-attribute="pathNumber"
+                  data-attribute-name-value="path"
+                  childrenName="pathNumber"
+                />
               </div>
               <Input i18n="bearing-u" name="Bearing" style={{ width: "100%" }} />
             </SectionBody>
@@ -225,12 +247,22 @@ export const SheetPrimary = () => (
             </SectionHead>
             <SectionBody style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={1} to={9} name="Willpower" />
-                <RollButton name="willpower" childrenName="willpowerRoll" />
+                <Counter from={1} to={10} name="Willpower" />
+                <RollButton
+                  name="attribute"
+                  data-attribute="Willpower"
+                  data-attribute-name="willpower-u"
+                  childrenName="willpowerRoll"
+                />
               </div>
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={0} to={9} name="willpowerUsed" dotStyle="square" style={{ alignItems: "center" }} />
-                <RollButton name="willpowerUsed" childrenName="willpowerUsed" />
+                <Counter from={0} to={10} name="willpowerUsed" dotStyle="square" style={{ alignItems: "center" }} />
+                <RollButton
+                  name="attribute"
+                  data-attribute="willpowerUsed"
+                  data-attribute-name="willpower-current-u"
+                  childrenName="willpowerUsed"
+                />
               </div>
             </SectionBody>
           </Section>

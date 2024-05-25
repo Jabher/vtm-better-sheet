@@ -5,32 +5,30 @@ import { Input } from "../components/Input.tsx";
 import "./SheetBelongings.css";
 import { ResizingTextarea } from "../components/ResizingTextarea.tsx";
 import { cars } from "../consts.ts";
-import { SelectInput } from "../components/SelectInput.tsx";
 import { Row, RowDescription } from "../components/Row.tsx";
 import { Labelled } from "../components/Labelled.tsx";
 
 export const SheetBelongings = () => (
   <div className="sheet-colrow sheet-tab-content sheet-tabCombat">
+    <datalist id="vehicle-datalist">
+      {Object.keys(cars).map((name) => (
+        <option data-i18n={`vehicle-type-${name as keyof typeof cars}-label` as const} key={name} />
+      ))}
+    </datalist>
     <Section i18n="vehicles-label">
       <RepeatingSection name="Vehicles">
         {() => (
           // todo roll ловкость или смекалка + вожде‐ ние
           <Row>
             <Input i18n="name-u" name="VehicleName" />
-            <SelectInput i18n="vehicle-type-label" name="Type" defaultValue="Car">
-              {Object.keys(cars).map((name) => (
-                <option
-                  data-i18n={`vehicle-type-${name as keyof typeof cars}-label` as const}
-                  value={name}
-                  key={name}
-                />
-              ))}
-            </SelectInput>
-            <Input i18n="vehicle-safe-speed-label" name="SafeSpeed" />
-            <Input i18n="vehicle-max-speed-label" name="MaxSpeed" />
-            <Input i18n="vehicle-maneuver-label" type="number" name="Maneuver" />
-            <Input i18n="vehicle-passengers-label" type="number" name="Passengers" />
+            <Input i18n="vehicle-type-label" name="Type" list="vehicle-datalist" />
             <RowDescription>
+              <Row>
+                <Input i18n="vehicle-safe-speed-label" name="SafeSpeed" />
+                <Input i18n="vehicle-max-speed-label" name="MaxSpeed" />
+                <Input i18n="vehicle-maneuver-label" type="number" name="Maneuver" />
+                <Input i18n="vehicle-passengers-label" type="number" name="Passengers" />
+              </Row>
               <ResizingTextarea i18n="notes-u" name="VehicleDesc" />
             </RowDescription>
           </Row>

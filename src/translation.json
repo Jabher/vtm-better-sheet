@@ -114,7 +114,7 @@
 	"backgrounds-u": "Дополнения",
 	"virtues-u": "Добродетели",
 	"conscience-u": "Сознательность",
-	"conviction-u": "Conviction",
+	"conviction-u": "Решимость",
 	"selfcontrol-u": "Самоконтроль",
 	"instinct-u": "Инстинкты",
 	"courage-u": "Храбрость",
@@ -125,6 +125,7 @@
 	"humanitypath-u": "Человечность/Путь",
 	"bearing-u": "Опора",
 	"willpower-u": "Сила воли",
+	"willpower-current-u": "Текущая сила воли",
 	"bloodpool-u": "Запас крови",
 	"bloodpoolMax-u": "Максимум крови",
 	"pointsperturn-u": "Максимум за ход",
@@ -292,5 +293,15 @@
 	"roll-success-pluralize-cardinal-two": "успеха",
 	"roll-success-pluralize-cardinal-few": "успеха",
 	"roll-success-pluralize-cardinal-many": "успехов",
-	"roll-success-pluralize-cardinal-other": "успехов"
+	"roll-success-pluralize-cardinal-other": "успехов",
+	"humanitysins-10": "Эгоистичные помыслы",
+	"humanitysins-9": "Эгоистичные поступки",
+	"humanitysins-8": "Причинение вреда другому существу (в том числе случайное)",
+	"humanitysins-7": "Воровство",
+	"humanitysins-6": "Непредумышленные преступления (осушение сосуда из‐за сильного голода)",
+	"humanitysins-5": "Умышленное уничтожение чужой собственности",
+	"humanitysins-4": "Преступления в состоянии аффекта (убийство или осушение сосуда в приступе ярости)",
+	"humanitysins-3": "Предумышленные преступления (преднамеренное убийство или осушение сосуда)",
+	"humanitysins-2": "Бессмысленные преступления (бездумные убийства, питание не ради насыщения)",
+	"humanitysins-1": "Самые гнусные и изуверские преступления"
 }

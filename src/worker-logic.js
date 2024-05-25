@@ -4,6 +4,7 @@ import {
   cars,
   DamageType,
   defenceManeuvers,
+  knowledges,
   meleeManeuvers,
   meleeWeapons,
   rangedManeuvers,
@@ -128,8 +129,6 @@ const declareRepeatingDependency = ({ groupName, extraKeys, globalDependencies }
   on(
     [
       ...globalDependencies.map((attr) => `change:${attr}`),
-      ...Object.keys(talents).map((name) => `change:${name}`),
-      ...Object.keys(skills).map((name) => `change:${name}`),
       ...extraKeys.map((key) => `change:repeating_${groupName}:${key}`),
     ].join(" "),
     compute
@@ -147,6 +146,16 @@ export const worker = () =>
         [`repeating_backgrounds_${generateRowID()}_name`]: "",
         [`repeating_backgrounds_${generateRowID()}_name`]: "",
         [`repeating_backgrounds_${generateRowID()}_name`]: "",
+        MoralPath10: getTranslationByKey("humanitysins-10"),
+        MoralPath9: getTranslationByKey("humanitysins-9"),
+        MoralPath8: getTranslationByKey("humanitysins-8"),
+        MoralPath7: getTranslationByKey("humanitysins-7"),
+        MoralPath6: getTranslationByKey("humanitysins-6"),
+        MoralPath5: getTranslationByKey("humanitysins-5"),
+        MoralPath4: getTranslationByKey("humanitysins-4"),
+        MoralPath3: getTranslationByKey("humanitysins-3"),
+        MoralPath2: getTranslationByKey("humanitysins-2"),
+        MoralPath1: getTranslationByKey("humanitysins-1"),
       };
 
       for (const [key, [attr, skill]] of Object.entries(defenceManeuvers)) {
@@ -218,11 +227,83 @@ export const worker = () =>
     initRolls() {
       console.log("translation language is", getTranslationLanguage());
       const cardinalPluralizer = new Intl.PluralRules(getTranslationLanguage() || navigator.language);
-      on("clicked:roll_willpower", () => {
-        getAttrs(["Willpower"], ({ Willpower }) => {
-          // todo support 30+dice scenario
-          const diceCount = i(Willpower);
-          const title = `${getTranslationByKey("dice-check-label")}: ${getTranslationByKey("willpower-u")}`;
+      const eventHandler = (event, isRepeater) => {
+        const attribute = event.htmlAttributes["data-attribute"];
+        const attributeName = event.htmlAttributes["data-attribute-name"];
+        const attributeNameValue = event.htmlAttributes["data-attribute-name-value"];
+        const attributeNamePrefix = event.htmlAttributes["data-attribute-name-prefix"];
+        const attributeNamePrefixValue = event.htmlAttributes["data-attribute-name-prefix-value"];
+        const difficultyValue = event.htmlAttributes["data-difficulty-value"];
+        console.log(event, {
+          attrs: [attribute, attributeNameValue, attributeNamePrefixValue],
+        });
+
+        const getRequiredAttrs = (keys, cb) => {
+          if (isRepeater) {
+            const [, group, itemID] = event.triggerName.split("_");
+            const prefix = `repeating_${group}_${itemID}`;
+            const localAttributeNameValue = attributeNameValue ? `${prefix}_${attributeNameValue}` : undefined;
+            const localDifficultyValue = attributeNameValue ? `${prefix}_${difficultyValue}` : undefined;
+            const localAttributeNamePrefixValue = attributeNamePrefixValue
+              ? `${prefix}_${attributeNamePrefixValue}`
+              : undefined;
+            getAttrs(
+              [
+                ...keys,
+                ...keys.map((key) => `${prefix}_${key}`),
+                attributeNameValue,
+                attributeNamePrefixValue,
+                localAttributeNameValue,
+                localAttributeNamePrefixValue,
+                difficultyValue,
+                localDifficultyValue,
+              ],
+              ({
+                [difficultyValue]: difficulty,
+                [localDifficultyValue]: localDifficulty,
+                [attributeNameValue]: nameValue,
+                [localAttributeNameValue]: localNameValue,
+                [attributeNamePrefixValue]: namePrefixValue,
+                [localAttributeNamePrefixValue]: localNamePrefixValue,
+                ...attrs
+              }) => {
+                const effectiveAttrs = fromPairs(
+                  Object.entries(attrs).map(([key, value]) => [key.replace(`${prefix}_`, ""), value])
+                );
+                const name = attributeName || nameValue || localNameValue;
+                const namePrefix = attributeNamePrefix || namePrefixValue || localNamePrefixValue;
+                cb(effectiveAttrs, localDifficulty || difficulty, name, namePrefix);
+              }
+            );
+          } else {
+            getAttrs(
+              [difficultyValue, attribute, attributeNameValue, attributeNamePrefixValue],
+              ({
+                [difficultyValue]: difficulty,
+                [attributeNameValue]: nameValue,
+                [attributeNamePrefixValue]: namePrefixValue,
+                ...attrs
+              }) => {
+                const name = getTranslationByKey(attributeName) || nameValue;
+                const prefix = getTranslationByKey(attributeNamePrefix) || namePrefixValue;
+                cb(attrs, difficulty, name, prefix);
+              }
+            );
+          }
+        };
+
+        getRequiredAttrs([attribute], ({ [attribute]: value }, difficulty, name, prefix) => {
+          // todo support 30+dice scenario?
+          const diceCount = i(value);
+          // eslint-disable-next-line sonarjs/no-nested-template-literals
+          let title = getTranslationByKey("dice-check-label");
+          if (name) {
+            title += `: ${name}`;
+          }
+          if (prefix) {
+            title += ` (${prefix})`;
+          }
+          // todo ask modifier
           const difficultyTemplate = `?{${getTranslationByKey("difficulty-label")}|6 }`;
           const template = [
             `&{template:attribute}`,
@@ -234,11 +315,11 @@ export const worker = () =>
             `{{fails=[[0]]}}`,
             `{{difficulty=[[0]]}}`,
             `{{result=[[0]]}}`,
-            `{{roll=[[${diceCount}d10>${difficultyTemplate}cs>10]]}}`,
+            `{{roll=[[${diceCount}d10>${i(difficulty) || difficultyTemplate}cs>10]]}}`,
             ...range(1, diceCount + 1).map((j) => `{{dice${j}=[[0]]}}`),
             ``,
           ].join(" ");
-          console.log("rolling willpower", template);
+          console.log("rolling", event, { value, name, prefix }, template);
           startRoll(template, (results) => {
             const { roll } = results.results;
             const difficulty = i(roll.expression.replace(`${diceCount}d10>`, "").replace("cs>10", ""));
@@ -271,11 +352,13 @@ export const worker = () =>
             finishRoll(results.rollId, rollData);
           });
         });
-      });
+      };
+      on("clicked:roll_attribute", (e) => eventHandler(e, false));
+      on("clicked:repeating_powers:roll", (e) => eventHandler(e, true));
     }
 
     initCombatSheet() {
-      const attributesWithBoosts = [
+      const defaultGlobalDependencies = [
         ...attributes,
         "celerityBoost",
         "celeritySpent",
@@ -283,6 +366,9 @@ export const worker = () =>
         "potenceSpent",
         "useHealthInCombat",
         "Health",
+        ...talents,
+        ...skills,
+        ...knowledges,
       ];
 
       // eslint-disable-next-line unicorn/consistent-function-scoping
@@ -333,7 +419,7 @@ export const worker = () =>
         {
           groupName: "brawlCombatDice",
           extraKeys: ["rollAttr", "rollSkill"],
-          globalDependencies: attributesWithBoosts,
+          globalDependencies: defaultGlobalDependencies,
         },
         ({ rollAttr, rollSkill }, state) => ({
           combatRollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
@@ -344,7 +430,7 @@ export const worker = () =>
         {
           groupName: "powers",
           extraKeys: ["rollAttr", "rollSkill"],
-          globalDependencies: attributesWithBoosts,
+          globalDependencies: defaultGlobalDependencies,
         },
         ({ rollAttr, rollSkill }, state) => ({
           rollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
@@ -355,7 +441,7 @@ export const worker = () =>
         {
           groupName: "combinationPowers",
           extraKeys: ["rollAttr", "rollSkill"],
-          globalDependencies: attributesWithBoosts,
+          globalDependencies: defaultGlobalDependencies,
         },
         ({ rollAttr, rollSkill }, state) => ({
           rollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
@@ -366,7 +452,7 @@ export const worker = () =>
         {
           groupName: "meleeCombatDice",
           extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageAttr", "damageBonus"],
-          globalDependencies: [...attributesWithBoosts, "CurrentMeleeWeaponDamage"],
+          globalDependencies: [...defaultGlobalDependencies, "CurrentMeleeWeaponDamage"],
         },
         ({ rollAttr, rollSkill, rollAccuracy, damageAttr, damageBonus }, { CurrentMeleeWeaponDamage, ...state }) => ({
           combatRollNumber: roll(
@@ -387,7 +473,7 @@ export const worker = () =>
         {
           groupName: "rangedCombatDice",
           extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageBonus"],
-          globalDependencies: [...attributesWithBoosts, "CurrentRangedWeaponDamage"],
+          globalDependencies: [...defaultGlobalDependencies, "CurrentRangedWeaponDamage"],
         },
         ({ rollAttr, rollSkill, rollAccuracy, damageBonus }, { CurrentRangedWeaponDamage, ...state }) => ({
           combatRollNumber: roll(
@@ -404,7 +490,7 @@ export const worker = () =>
         {
           groupName: "MeleeWeapon",
           extraKeys: ["Damage", "damageAttr", "BrawlFlag"],
-          globalDependencies: attributesWithBoosts,
+          globalDependencies: defaultGlobalDependencies,
         },
         ({ Damage, damageAttr, BrawlFlag }, state) => ({
           combatRollNumber: roll(
@@ -421,7 +507,7 @@ export const worker = () =>
         {
           groupName: "RangedWeapon",
           extraKeys: ["rollAccuracy", "Damage"],
-          globalDependencies: attributesWithBoosts,
+          globalDependencies: defaultGlobalDependencies,
         },
         ({ rollAccuracy, Damage }, $) => ({
           combatRollNumber: roll($, "Dexterity", $.useHealthInCombat, (attr) => attr + i($.firearms) + i(rollAccuracy)),
@@ -433,7 +519,7 @@ export const worker = () =>
         {
           groupName: "powers",
           extraKeys: ["rollAttr", "rollSkill", "rollUseHealth"],
-          globalDependencies: attributesWithBoosts,
+          globalDependencies: defaultGlobalDependencies,
         },
         ({ rollAttr, rollSkill, rollUseHealth }, $) => ({
           rollNumber: roll($, rollAttr, rollUseHealth, (attr) => attr + i($[rollSkill])),
@@ -443,7 +529,7 @@ export const worker = () =>
         {
           groupName: "combinationPowers",
           extraKeys: ["rollAttr", "rollSkill", "rollUseHealth"],
-          globalDependencies: attributesWithBoosts,
+          globalDependencies: defaultGlobalDependencies,
         },
         ({ rollAttr, rollSkill, rollUseHealth }, $) => ({
           rollNumber: roll($, rollAttr, rollUseHealth, (attr) => attr + i($[rollSkill])),
