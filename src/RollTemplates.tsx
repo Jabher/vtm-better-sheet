@@ -1,3 +1,20 @@
+export const RollTemplates = () => (
+  <div
+    dangerouslySetInnerHTML={{
+      __html: `
+<rolltemplate class="sheet-rolltemplate-wodAttribute">
+    <div class="regularContainer">
+        <div class="regularHeaderContainer">
+            {{name}} rolls{{#roll_name}} {{roll_name}}{{/roll_name}}
+        </div>
+        <div class="regularAttr">
+            {{#attr}} {{attr}}({{attr_num}}) {{/attr}}
+        </div>
+        <div>
+            <div class="regularResult">{{result}} Successes</div>
+        </div>
+    </div>
+</rolltemplate>
 <rolltemplate class="sheet-rolltemplate-wod">
     <div class="regularContainer">
         <div class="regularHeaderContainer">
@@ -145,3 +162,7 @@
         </div>
     </div>
 </rolltemplate>
+    `,
+    }}
+  />
+);

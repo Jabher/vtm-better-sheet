@@ -1,3 +1,5 @@
+import { I18n } from "./types.ts";
+
 export const cars = {
   bus: [95, 160, 3],
   suv: [110, 185, 6],
@@ -17,7 +19,19 @@ export const cars = {
   semi: [110, 175, 4],
   vagon: [120, 200, 6],
 } as const;
+
 export const attributes = [
+  "Strength",
+  "Dexterity",
+  "Stamina",
+  "Charisma",
+  "Manipulation",
+  "Appearance",
+  "Perception",
+  "Intelligence",
+  "Wits",
+] as const;
+export const talents = [
   "alertness",
   "athletics",
   "awareness",
@@ -54,6 +68,22 @@ export const knowledges = [
   "technology",
 ] as const;
 
+type Talent = (typeof talents)[number];
+type Skill = (typeof skills)[number];
+// type Knowledge = (typeof knowledges)[number];
+
+enum Attribute {
+  Strength = "Strength",
+  Dexterity = "Dexterity",
+  Stamina = "Stamina",
+  Charisma = "Charisma",
+  Manipulation = "Manipulation",
+  Appearance = "Appearance",
+  Perception = "Perception",
+  Intelligence = "Intelligence",
+  Wits = "Wits",
+}
+
 export enum DamageType {
   Bashing = 0,
   Lethal = 2,
@@ -67,7 +97,15 @@ export enum ConcealType {
   Impossible = 3,
 }
 
-export const meleeWeapons: Record<string, [damage: number, type: DamageType, conceal: ConcealType]> = {
+type Prefix<P extends string, P2 extends string = ""> = {
+  [key in I18n]: key extends `${P}${infer V}${P2}` ? V : never;
+}[I18n];
+
+export const meleeWeapons: Record<
+  Prefix<`weapon-melee-`, "-label">,
+  [damage: number, type: DamageType, conceal: ConcealType]
+> = {
+  barehand: [0, DamageType.Bashing, ConcealType.Pocket],
   sap: [+1, DamageType.Bashing, ConcealType.Pocket],
   club: [+2, DamageType.Bashing, ConcealType.Trench],
   knife: [+1, DamageType.Lethal, ConcealType.Jacket],
@@ -78,7 +116,7 @@ export const meleeWeapons: Record<string, [damage: number, type: DamageType, con
 
 // todo ranged shoot modes
 export const rangedWeapons: Record<
-  string,
+  Prefix<`weapon-ranged-`, "-label">,
   [damage: number, range: number, speed: number, ammo: string, conceal: ConcealType]
 > = {
   "light-revolver": [4, 12, 3, "6", ConcealType.Pocket],
@@ -92,4 +130,41 @@ export const rangedWeapons: Record<
   "shotgun": [8, 20, 1, "5+1", ConcealType.Trench],
   "shotgun-semiauto": [8, 20, 3, "6+1", ConcealType.Trench],
   "shotgun-crossbow": [5, 20, 1, "1", ConcealType.Trench],
+};
+
+export const defenceManeuvers: Record<Prefix<`maneuver-defence-`>, [attribute: Attribute, skill: Talent | Skill]> = {
+  block: [Attribute.Dexterity, "brawl"],
+  parry: [Attribute.Dexterity, "melee"],
+  evasion: [Attribute.Dexterity, "athletics"],
+};
+
+export const meleeManeuvers: Record<
+  Prefix<`maneuver-melee-`>,
+  [
+    attribute: Attribute,
+    skill: Talent | Skill,
+    accuracy: number,
+    complexity: number,
+    damageAttribute?: Attribute,
+    damageExtra?: number,
+  ]
+> = {
+  throw: [Attribute.Strength, "brawl", 0, +1, Attribute.Strength, +1],
+  grapple: [Attribute.Strength, "brawl", 0, 0],
+  clinch: [Attribute.Strength, "brawl", 0, 0, Attribute.Strength],
+  sweeping: [Attribute.Dexterity, "melee", 0, +1, Attribute.Strength],
+  disarm: [Attribute.Strength, "melee", 0, +1],
+  claws: [Attribute.Dexterity, "brawl", 0, 0, Attribute.Strength, +1],
+  foot: [Attribute.Strength, "brawl", 0, +1, Attribute.Strength, +1],
+  bite: [Attribute.Dexterity, "brawl", 1, 0, Attribute.Strength, +1],
+};
+
+export const rangedManeuvers: Record<
+  Prefix<`maneuver-ranged-`>,
+  [attribute: Attribute, skill: Talent | Skill, accuracy: number | null, difficulty: number]
+> = {
+  quickfire: [Attribute.Dexterity, "firearms", null, 0],
+  longburst: [Attribute.Dexterity, "firearms", +10, +2],
+  shortburst: [Attribute.Dexterity, "firearms", +2, +1],
+  shelling: [Attribute.Dexterity, "firearms", +10, +2],
 };

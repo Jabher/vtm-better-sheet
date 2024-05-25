@@ -1,4 +1,8 @@
 export class WorkerLogic {
+  static getRepeatingKey = (attribute) => {
+    return attribute.replace(new RegExp("_" + attribute + "$", "i"), "");
+  };
+
   dependencies = {};
   repeatingDefaults = {};
 
@@ -12,15 +16,16 @@ export class WorkerLogic {
 
   constructor() {
     console.debug("initializing worker", this);
-    on("sheet:opened", async (e) => {
+    on("sheet:opened", (e) => {
       console.debug("sheet opened", e);
-      getAttrs(["V20_NotInitialized"], ({ V20_NotInitialized }) => {
-        console.debug("V20_NotInitialized", V20_NotInitialized);
-        if (V20_NotInitialized) {
+      getAttrs(["V20_Initialized"], ({ V20_Initialized }) => {
+        console.debug("V20_Initialized", V20_Initialized);
+        // noinspection EqualityComparisonWithCoercionJS
+        if (!V20_Initialized || V20_Initialized == "0") {
           console.debug("initializing worker first load");
           this.initFirstTime(() => {
             setAttrs({
-              notInitialized: false,
+              V20_Initialized: true,
             });
             console.debug("initializing worker listeners");
             this._initInternal();
@@ -41,8 +46,8 @@ export class WorkerLogic {
         new Proxy(
           {},
           {
-            get: (target, key) => {
-              if (discoveredDependencies[key]) {
+            get: (_, key) => {
+              if (key in discoveredDependencies) {
                 console.debug("got already used dependency", propkey, key, discoveredDependencies[key]);
                 return discoveredDependencies[key];
               }
@@ -81,9 +86,10 @@ export class WorkerLogic {
           return;
         }
         console.debug("analyzed all dependencies", dependencyKeys);
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         for (const [key, dependencies] of Object.entries(dependencyKeys)) {
           console.debug("registering", key, dependencies);
-          on(dependencies.map((p) => `change:${p}`).join(" "), (e) => {
+          on(dependencies.map((p) => `change:${p}`).join(" "), (_e) => {
             getAttrs(dependencies, (attrs) => {
               console.debug("doing autocalc", dependencies, attrs, this.dependencies[key](attrs));
               setAttrs({
@@ -103,11 +109,11 @@ export class WorkerLogic {
       for (const [triggerKey, fn] of Object.entries(triggers)) {
         console.debug("registering repeater", key, triggerKey);
         on(`change:repeating_${key}:${triggerKey}`, (eventInfo) => {
-          const prefix = eventInfo.sourceAttribute.replace(new RegExp("_" + triggerKey + "$", "i"), "");
+          const prefix = WorkerLogic.getRepeatingKey(eventInfo.sourceAttribute);
           const result = fn(eventInfo.newValue);
           console.debug("updating repeating key for", key, triggerKey, eventInfo.newValue, result);
           if (result) {
-            setAttrs(Object.fromEntries(Object.entries(result).map(([key, value]) => [`${prefix}_${key}`, value])));
+            setAttrs(Object.fromEntries(Object.entries(result).map(([key2, value]) => [`${prefix}_${key2}`, value])));
           }
         });
       }

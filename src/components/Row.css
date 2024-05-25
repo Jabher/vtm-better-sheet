@@ -1,5 +1,8 @@
 .sheet-component--row {
     display: block;
+    & + .sheet-component--row {
+        padding-top: var(--v20-line-height-large);
+    }
     .sheet-component--row-head {
         display: flex;
         & > * {
@@ -8,13 +11,14 @@
         }
         .sheet-component--row-description-toggler {
             flex: 0;
-            align-self: flex-end;
+            padding-top: 6px;
+            align-self: flex-start;
             appearance: none;
             background: transparent;
             color: var(--v20-color-text);
             border: none;
             width: min-content;
-            height: 100%;
+            height: min-content;
             &::after {
                 content: 'expand_content'
             }

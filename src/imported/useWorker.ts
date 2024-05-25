@@ -53,6 +53,7 @@ export const useWorker = (worker: Worker) => {
     // @ts-expect-error roll20
     globalThis.getTranslationByKey = (key: string) => translation[key];
     globalThis.getActiveCharacterId = () => "test";
+    globalThis.generateRowID = () => Math.random().toString();
 
     const updateInputs = (attrs: Record<string, string | number>) => {
       for (const [key, value] of Object.entries(attrs)) {
@@ -109,8 +110,7 @@ export const useWorker = (worker: Worker) => {
       updateInputs(attrs);
       updateValues(attrs);
       Object.assign(state, attrs);
-      if (cb instanceof Function)
-        cb();
+      if (cb instanceof Function) cb();
     };
     worker();
     for (const callback of eventListeners["sheet:opened"] || []) {
@@ -124,7 +124,7 @@ export const useWorker = (worker: Worker) => {
     const changingPool = new Set<string>();
     let isUpdating = false;
     for (const eventName of ["input", "change"]) {
-      form.addEventListener(eventName, async (e) => {
+      form.addEventListener(eventName, (e) => {
         const { name: attrName, value } = e.target as HTMLInputElement;
         if (!attrName.startsWith("attr_")) {
           return;

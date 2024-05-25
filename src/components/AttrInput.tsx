@@ -5,17 +5,7 @@ import "./AttrInput.css";
 import { Input } from "./Input.tsx";
 import { Counter } from "./Counter.tsx";
 
-export const AttrInput = ({
-  i18n,
-  name,
-  from = 0,
-  to,
-}: {
-  i18n: I18n;
-  from: 0 | 1;
-  to: number;
-  name: `attr_${string}`;
-}) => (
+export const AttrInput = ({ i18n, name, from = 0, to }: { i18n: I18n; from: 0 | 1; to: number; name: string }) => (
   <div
     className={cn("sheet-component sheet-component--attr-input", {
       "sheet-component--attr-input-expanding": to > 5,

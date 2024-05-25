@@ -1,7 +1,7 @@
 import cn from "classnames";
 import { DOMProps, I18n } from "../types.ts";
 import "./ResizingTextarea.css";
-import {Labelled} from "./Labelled.tsx";
+import { Labelled } from "./Labelled.tsx";
 
 export const ResizingTextarea = ({
   name,

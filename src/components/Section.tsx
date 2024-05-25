@@ -4,11 +4,17 @@ import { PropsWithChildren } from "react";
 import { DOMProps, I18n } from "../types.ts";
 import { H3 } from "./globals/Headings.tsx";
 
-export const Section = ({ children, className, ...rest }: DOMProps<"div">) => (
-  <div className={cn("sheet-element-section", className)} {...rest}>
-    {children}
-  </div>
-);
+export const Section = ({ children, className, i18n, ...rest }: DOMProps<"div", { i18n?: I18n }>) =>
+  i18n ? (
+    <div className={cn("sheet-element-section", className)} {...rest}>
+      <SectionHead i18n={i18n} />
+      <SectionBody>{children}</SectionBody>
+    </div>
+  ) : (
+    <div className={cn("sheet-element-section", className)} {...rest}>
+      {children}
+    </div>
+  );
 
 export const SectionHead = ({
   i18n,

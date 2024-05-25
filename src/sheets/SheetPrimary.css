@@ -27,6 +27,13 @@
         display: flex;
         flex-direction: column;
         align-items: stretch;
+
+        input[type="radio"] {
+            display: none;
+        }
+        input[type="radio"]:checked + * {
+            background: red;
+        }
     }
 
     & .sheet-primary-moralpath textarea {

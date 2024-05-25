@@ -3,6 +3,10 @@
 *         DEFINE ROLL20 GRIMOIRE COLORS
 *
 */
+rolltemplate {
+    display: none;
+}
+
 
 :root {
     --color-surface1: #ffffff;

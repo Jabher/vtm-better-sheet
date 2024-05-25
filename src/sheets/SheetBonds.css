@@ -1,16 +1,3 @@
 .sheet-tabBBond {
-    & .sheet-tabBBond--grid-relations {
-        display: grid;
-        grid-template-columns: 1fr 160px 160px;
-        align-items: center;
-        grid-gap: 16px;
 
-        & * {
-            text-align: start;
-        }
-
-        & select {
-            width: 160px;
-        }
-    }
 }

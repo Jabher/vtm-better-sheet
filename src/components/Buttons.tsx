@@ -8,14 +8,21 @@ export const ActionButton = ({ children, name, ...rest }: DOMProps<"input">) => 
   </button>
 );
 
-export const RollButton = ({ children, className, name, ...rest }: DOMProps<"input">) => (
+export const RollButton = ({
+  children,
+  className,
+  childrenName,
+  name,
+  ...rest
+}: DOMProps<"input", { childrenName?: string }>) => (
   <button
     // @ts-expect-error button type
-    type="roll"
+    type="action"
     className={cn("sheet-component sheet-component--roll-button", className)}
-    name={`roll_${name}`}
+    name={`act_roll_${name}`}
     {...rest}
   >
+    {childrenName ? <span name={`attr_${childrenName}`} /> : null}
     {children}
   </button>
 );

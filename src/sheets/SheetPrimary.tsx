@@ -9,29 +9,36 @@ import "./SheetPrimary.css";
 import { Health } from "../components/Health.tsx";
 import { ResizingTextarea } from "../components/ResizingTextarea.tsx";
 import { SquareRadio } from "../components/SquareRadio.tsx";
-import { attributes, knowledges, skills } from "../consts.ts";
+import { talents, knowledges, skills } from "../consts.ts";
 import { RollButton } from "../components/Buttons.tsx";
 import { RepeatingSection } from "../components/RepeatingSection.tsx";
 
 export const SheetPrimary = () => (
   <div className="sheet-tab-content sheet-primary">
+    <datalist id="discipline-datalist">
+      {Object.keys(translation)
+        .filter((key) => key.startsWith("discipline-name-"))
+        .map((key) => (
+          <option data-i18n={key} key={key} />
+        ))}
+    </datalist>
     <Section>
       <SectionHead i18n="Primary" />
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div>
-          <Input i18n="name-u" name="attr_Name" />
-          <Input i18n="player-u" name="attr_Player" />
-          <Input i18n="chronicle-u" name="attr_Chronicle" />
+          <Input i18n="name-u" name="Name" />
+          <Input i18n="player-u" name="Player" />
+          <Input i18n="chronicle-u" name="Chronicle" />
         </div>
         <div>
-          <Input i18n="nature-u" name="attr_Nature" />
-          <Input i18n="demeanor-u" name="attr_Demeanor" />
-          <Input i18n="concept-u" name="attr_Concept" />
+          <Input i18n="nature-u" name="Nature" />
+          <Input i18n="demeanor-u" name="Demeanor" />
+          <Input i18n="concept-u" name="Concept" />
         </div>
         <div>
-          <Input i18n="clan-u" name="attr_Clan" />
-          <Input i18n="sire-u" name="attr_Sire" />
-          <Input i18n="generation-u" name="attr_Generation" type="number" />
+          <Input i18n="clan-u" name="Clan" />
+          <Input i18n="sire-u" name="Sire" />
+          <Input i18n="generation-u" name="Generation" type="number" />
         </div>
       </SectionBody>
     </Section>
@@ -40,21 +47,21 @@ export const SheetPrimary = () => (
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div>
           <H3 i18n="physical-u" />
-          <AttrInput from={1} to={9} i18n="strength-u" name="attr_Strength" />
-          <AttrInput from={1} to={9} i18n="dexterity-u" name="attr_Dexterity" />
-          <AttrInput from={1} to={9} i18n="stamina-u" name="attr_Stamina" />
+          <AttrInput from={1} to={9} i18n="strength-u" name="Strength" />
+          <AttrInput from={1} to={9} i18n="dexterity-u" name="Dexterity" />
+          <AttrInput from={1} to={9} i18n="stamina-u" name="Stamina" />
         </div>
         <div>
           <H3 i18n="social-u" />
-          <AttrInput from={1} to={9} i18n="charisma-u" name="attr_Charisma" />
-          <AttrInput from={1} to={9} i18n="manipulation-u" name="attr_Manipulation" />
-          <AttrInput from={1} to={9} i18n="appearance-u" name="attr_Appearance" />
+          <AttrInput from={1} to={9} i18n="charisma-u" name="Charisma" />
+          <AttrInput from={1} to={9} i18n="manipulation-u" name="Manipulation" />
+          <AttrInput from={1} to={9} i18n="appearance-u" name="Appearance" />
         </div>
         <div>
           <H3 i18n="mental-u" />
-          <AttrInput from={1} to={9} i18n="perception-u" name="attr_Perception" />
-          <AttrInput from={1} to={9} i18n="intelligence-u" name="attr_Intelligence" />
-          <AttrInput from={1} to={9} i18n="wits-u" name="attr_Wits" />
+          <AttrInput from={1} to={9} i18n="perception-u" name="Perception" />
+          <AttrInput from={1} to={9} i18n="intelligence-u" name="Intelligence" />
+          <AttrInput from={1} to={9} i18n="wits-u" name="Wits" />
         </div>
       </SectionBody>
     </Section>
@@ -63,40 +70,22 @@ export const SheetPrimary = () => (
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div>
           <H3 i18n="talents-u" />
-          {attributes.map((title) => (
-            <AttrInput
-              key={title}
-              i18n={`${title}-u`}
-              from={0}
-              to={5}
-              name={`attr_${title[0].toUpperCase()}${title.slice(1)}`}
-            />
+          {talents.map((title) => (
+            <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
           ))}
           {/*todo 3 hobby talent*/}
         </div>
         <div>
           <H3 i18n="skills-u" />
           {skills.map((title) => (
-            <AttrInput
-              key={title}
-              i18n={`${title}-u`}
-              from={0}
-              to={5}
-              name={`attr_${title[0].toUpperCase()}${title.slice(1)}`}
-            />
+            <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
           ))}
           {/*todo 3 hobby talent*/}
         </div>
         <div>
           <H3 i18n="knowledges-u" />
           {knowledges.map((title) => (
-            <AttrInput
-              key={title}
-              i18n={`${title}-u`}
-              from={0}
-              to={5}
-              name={`attr_${title[0].toUpperCase()}${title.slice(1)}`}
-            />
+            <AttrInput key={title} i18n={`${title}-u`} from={0} to={5} name={title} />
           ))}
           {/*todo 3 hobby talent*/}
         </div>
@@ -108,51 +97,22 @@ export const SheetPrimary = () => (
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div>
           <H3 i18n="disciplines-u" />
-          {range(1, 10).map((i) => (
-            <div style={{ display: "flex" }} key={i}>
-              <Input
-                name={`attr_Discipline${i}Name`}
-                placeholder={`Discipline ${i}`}
-                defaultValue={
-                  [
-                    "Animalism",
-                    "Auspex",
-                    "Celerity",
-                    "Dominate",
-                    "Fortitude",
-                    "Obfuscate",
-                    "Oblivion",
-                    "Potence",
-                    "Presence",
-                    "Protean",
-                  ][i]
-                }
-              />
-              <Counter fade from={0} to={9} name={`attr_Discipline${i}`} />
-            </div>
-          ))}
-          <RepeatingSection name="extraDisciplines">
+          <RepeatingSection name="disciplines">
             {() => (
               <div style={{ display: "flex" }}>
-                <Input name={`attr_DisciplineName`} />
-                <Counter fade from={0} to={9} name={`attr_Discipline`} />
+                <Input name={`name`} list="discipline-datalist" />
+                <Counter fade from={0} to={9} name={`points`} />
               </div>
             )}
           </RepeatingSection>
         </div>
         <div>
           <H3 i18n="backgrounds-u" />
-          {range(1, 10).map((i) => (
-            <div style={{ display: "flex" }} key={i}>
-              <Input name={`attr_Back${i}Name`} placeholder={`Background ${i}`} />
-              <Counter fade from={0} to={9} name={`attr_Back${i}`} />
-            </div>
-          ))}
-          <RepeatingSection name="extraBackgrounds">
+          <RepeatingSection name="backgrounds">
             {() => (
               <div style={{ display: "flex" }}>
-                <Input name={`attr_BackgroundName`} />
-                <Counter fade from={0} to={9} name={`attr_Background`} />
+                <Input name={`name`} />
+                <Counter fade from={0} to={9} name={`points`} />
               </div>
             )}
           </RepeatingSection>
@@ -160,35 +120,26 @@ export const SheetPrimary = () => (
         <div>
           <H3 i18n="virtues-u" />
           <div className="sheet-primary--virtues">
-            <select className="sheet-text-fronth2" name="attr_virtueConsName" defaultValue="Conscience">
+            <select className="sheet-text-fronth2" name="virtueConsName" defaultValue="Conscience">
               <option value="Conscience" data-i18n="conscience-u" />
               <option value="Conviction" data-i18n="conviction-u" />
             </select>
             <div className="sheet-primary--counter-with-roll">
-              <Counter from={1} to={5} name="attr_C_C" />
-              <RollButton
-                name="CourageRoll"
-                value="&{template:wod} {{name=@{Name}}} {{roll_name=Courage}} {{attr=Courage}} {{attr_num=@{Courage}}} {{result=[[{@{Courage}d10sd}>@{CourageDiff}f1]]}} "
-              />
+              <Counter from={1} to={5} name="C_C" />
+              <RollButton name="CourageRoll" childrenName="C_C" />
             </div>
-            <select className="sheet-text-fronth2" name="attr_virtueSelfName" defaultValue="Self-Control">
+            <select className="sheet-text-fronth2" name="virtueSelfName" defaultValue="Self-Control">
               <option value="Self-Control" data-i18n="selfcontrol-u" />
               <option value="Instinct" data-i18n="instinct-u" />
             </select>
             <div className="sheet-primary--counter-with-roll">
-              <Counter from={1} to={5} name="attr_S_I" />
-              <RollButton
-                name="CourageRoll"
-                value="&{template:wod} {{name=@{Name}}} {{roll_name=Courage}} {{attr=Courage}} {{attr_num=@{Courage}}} {{result=[[{@{Courage}d10sd}>@{CourageDiff}f1]]}} "
-              />
+              <Counter from={1} to={5} name="S_I" />
+              <RollButton name="CourageRoll" childrenName="S_I" />
             </div>
             <H4 i18n="courage-u" />
             <div className="sheet-primary--counter-with-roll">
-              <Counter from={1} to={5} name="attr_Courage" />
-              <RollButton
-                name="CourageRoll"
-                value="&{template:wod} {{name=@{Name}}} {{roll_name=Courage}} {{attr=Courage}} {{attr_num=@{Courage}}} {{result=[[{@{Courage}d10sd}>@{CourageDiff}f1]]}} "
-              />
+              <Counter from={1} to={5} name="Courage" />
+              <RollButton name="CourageRoll" childrenName="Courage" />
             </div>
           </div>
         </div>
@@ -202,7 +153,7 @@ export const SheetPrimary = () => (
             {range(1, 10)
               .reverse()
               .map((i) => (
-                <ResizingTextarea name={`attr_MoralPath${i}`} placeholder={`Moral path ${i}`} key={i} />
+                <ResizingTextarea name={`MoralPath${i}`} placeholder={`Moral path ${i}`} key={i} />
               ))}
           </SectionBody>
         </Section>
@@ -210,20 +161,16 @@ export const SheetPrimary = () => (
           <Section>
             <div className="sheet-element-section-heading">
               <div className="sheet-element-section-heading-humanitypaths">
-                {/*todo initializer*/}
                 <input type="text" name="attr_PathoEname" defaultValue={translation["humanitypath-u"]} />
-                <span name="attr_PathoEname"></span>
+                <span name="attr_PathoEname" />
               </div>
             </div>
             <SectionBody className="sheet-primary-humanity-path">
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={1} to={9} name="attr_PathoE" className="sheet-primary-humanity-path--counter" />
-                <RollButton
-                  name="CourageRoll"
-                  value="&{template:wod} {{name=@{Name}}} {{roll_name=Courage}} {{attr=Courage}} {{attr_num=@{Courage}}} {{result=[[{@{Courage}d10sd}>@{CourageDiff}f1]]}} "
-                />
+                <Counter from={1} to={9} name="PathoE" className="sheet-primary-humanity-path--counter" />
+                <RollButton name="CourageRoll" childrenName="PathoE" />
               </div>
-              <Input i18n="bearing-u" name="attr_Bearing" style={{ width: "100%" }} />
+              <Input i18n="bearing-u" name="Bearing" style={{ width: "100%" }} />
             </SectionBody>
           </Section>
           <Section>
@@ -234,24 +181,18 @@ export const SheetPrimary = () => (
             </SectionHead>
             <SectionBody style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={1} to={9} name="attr_Willpower" />
-                <RollButton
-                  name="CourageRoll"
-                  value="&{template:wod} {{name=@{Name}}} {{roll_name=Courage}} {{attr=Courage}} {{attr_num=@{Courage}}} {{result=[[{@{Courage}d10sd}>@{CourageDiff}f1]]}} "
-                />
+                <Counter from={1} to={9} name="Willpower" />
+                <RollButton name="willpower" childrenName="willpowerRoll" />
               </div>
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={0} to={9} name="attr_Willpower_Used" dotStyle="square" />
-                <RollButton
-                  name="CourageRoll"
-                  value="&{template:wod} {{name=@{Name}}} {{roll_name=Courage}} {{attr=Courage}} {{attr_num=@{Courage}}} {{result=[[{@{Courage}d10sd}>@{CourageDiff}f1]]}} "
-                />
+                <Counter from={0} to={9} name="Willpower_Used" dotStyle="square" />
+                <RollButton name="willpowerUsed" childrenName="willpowerUsedRoll" />
               </div>
             </SectionBody>
           </Section>
           <Section className="sheet-component" style={{ display: "flex", flexDirection: "column-reverse" }}>
             <SectionBody>
-              <Counter from={0} to={39} name="attr_BloodPool" className="sheet-primary--bloodpool" fade />
+              <Counter from={0} to={39} name="BloodPool" className="sheet-primary--bloodpool" fade />
             </SectionBody>
             <SectionHead i18n="bloodpool-u">
               <span name="attr_BloodPool" style={{ padding: "0px 8px", opacity: 0.5 }} />
@@ -270,76 +211,67 @@ export const SheetPrimary = () => (
               }}
             >
               <H5 i18n="extrabruised-u" style={{ textAlign: "left", flexGrow: 1 }} />
-              <Health name="attr_BruisedExtra1" />
-              <Health name="attr_BruisedExtra2" />
-              <Health name="attr_BruisedExtra3" />
-              <Health name="attr_BruisedExtra4" />
-              <Health name="attr_BruisedExtra5" />
-              <Health name="attr_BruisedExtra6" />
-              <Health name="attr_BruisedExtra7" />
-              <Health name="attr_BruisedExtra8" />
-              <Health name="attr_BruisedExtra9" />
-              <Health name="attr_BruisedExtra10" />
-              <Health name="attr_BruisedExtra11" />
-              <Health name="attr_BruisedExtra12" />
+              <Health name="BruisedExtra1" />
+              <Health name="BruisedExtra2" />
+              <Health name="BruisedExtra3" />
+              <Health name="BruisedExtra4" />
+              <Health name="BruisedExtra5" />
+              <Health name="BruisedExtra6" />
+              <Health name="BruisedExtra7" />
+              <Health name="BruisedExtra8" />
+              <Health name="BruisedExtra9" />
+              <Health name="BruisedExtra10" />
+              <Health name="BruisedExtra11" />
+              <Health name="BruisedExtra12" />
             </div>
             <div className="sheet-primary--health-main">
               <div>
                 <H5 i18n={"bruised-u"} />
-                <SquareRadio name="attr_Health" value={0} defaultChecked />
-                <Health name="attr_Bruised" />
+                <SquareRadio name="Health" value={0} defaultChecked />
+                <Health name="Bruised" />
               </div>
               <div>
                 <H5 i18n={"hurt-u"} />
-                <SquareRadio name="attr_Health" value={-1} />
-                <Health name="attr_Hurt" />
+                <SquareRadio name="Health" value={-1} />
+                <Health name="Hurt" />
               </div>
               <div>
                 <H5 i18n={"injured-u"} />
-                <Health name="attr_Injured" />
+                <Health name="Injured" />
               </div>
               <div>
                 <H5 i18n={"wounded-u"} />
-                <SquareRadio name="attr_Health" value={-2} />
-                <Health name="attr_Wounded" />
+                <SquareRadio name="Health" value={-2} />
+                <Health name="Wounded" />
               </div>
               <div>
                 <H5 i18n={"mauled-u"} />
-                <Health name="attr_Mauled" />
+                <Health name="Mauled" />
               </div>
               <div>
                 <H5 i18n={"crippled-u"} />
-                <SquareRadio name="attr_Health" value={-5} />
-                <Health name="attr_Crippled" />
+                <SquareRadio name="Health" value={-5} />
+                <Health name="Crippled" />
               </div>
               <div>
                 <H5 i18n={"incapacitated-u"} />
-                <Health name="attr_Incapacitated" />
+                <Health name="Incapacitated" />
               </div>
             </div>
           </SectionBody>
           <SectionHead i18n="movement-u" />
           <SectionBody className="sheet-primary--movement">
-            <Input i18n="dexspeed-u" type="number" name="attr_Dexterity" defaultValue={1} readOnly />
-            <Input i18n="dexboostspeed-u" type="number" name="attr_DexterityBoost" readOnly />
-            <Input i18n="celerityspeed-u" type="number" name="attr_CeleritySpeed" />
-            <Input i18n="miscspeed-u" type="number" name="attr_MiscSpeed" />
-            <Input
-              i18n="walkspeed-u"
-              type="number"
-              name="attr_WalkSpeed"
-              defaultValue={7}
-              disabled
-              postfix="yardsmeters-u"
-            />
-            {/*todo replace with span - sheetworkers do not support input[disabled]*/}
-            <Input i18n="jogspeed-u" name="attr_JogSpeed" disabled postfix="yardsmeters-u" />
-            <Input i18n="runspeed-u" name="attr_RunSpeed" disabled postfix="yardsmeters-u" />
+            <Input i18n="dexspeed-u" type="number" name="Dexterity" defaultValue={1} readOnly />
+            <Input i18n="dexboostspeed-u" type="number" name="DexterityBoost" readOnly />
+            <Input i18n="celerityspeed-u" type="number" name="celerityBoost" />
+            <Input i18n="miscspeed-u" type="number" name="MiscSpeed" />
+            <Input i18n="walkspeed-u" type="number" name="WalkSpeed" disabled postfix="yardsmeters-u" />
+            <Input i18n="jogspeed-u" name="JogSpeed" disabled postfix="yardsmeters-u" />
+            <Input i18n="runspeed-u" name="RunSpeed" disabled postfix="yardsmeters-u" />
           </SectionBody>
-          <SectionHead i18n="weakness-u" />
-          <SectionBody>
-            <textarea name="attr_Weakness" style={{ width: "95%", height: 70 }} defaultValue={""} />
-          </SectionBody>
+          <Section i18n="weakness-u">
+            <ResizingTextarea name="Weakness" />
+          </Section>
         </Section>
       </SectionBody>
     </Section>

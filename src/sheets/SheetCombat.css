@@ -1,4 +1,5 @@
 .sheet-tabCombat {
+
     & .sheet-tabCombat--item {
         & + .sheet-tabCombat--item {
             padding-top: 40px;
