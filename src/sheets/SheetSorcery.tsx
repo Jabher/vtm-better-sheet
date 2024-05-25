@@ -23,11 +23,6 @@ export const SheetSorcery = () => (
               <AttributeSelect name="ritualAW" />
               <SkillSelect name="ritualAbility" />
               <RollButton
-                className="sheet-custom-button sheet-vampire-button"
-                name="ritualRoll"
-                style={{ fontSize: 12, width: 75 }}
-              />
-              <RollButton
                 data-attribute="rollNumber"
                 data-difficulty-value="difficulty"
                 data-attribute-name-prefix-value="ritualname"

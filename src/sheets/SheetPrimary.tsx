@@ -24,7 +24,7 @@ export const SheetPrimary = () => (
         ))}
     </datalist>
     <datalist id="user-discipline-datalist">
-      {range(1, 16).map((i) => (
+      {range(0, 21).map((i) => (
         <option key={i} name={`attr_Discipline${i}Name`} />
       ))}
     </datalist>
@@ -75,7 +75,6 @@ export const SheetPrimary = () => (
       <SectionHead i18n="abilities-u" />
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
         <div>
-          {/*todo max 10*/}
           <H3 i18n="talents-u" />
           {talents.map((title) => (
             <AttrInput key={title} i18n={`${title}-u`} from={0} to={10} name={title} />
@@ -153,8 +152,8 @@ export const SheetPrimary = () => (
           <RepeatingSection name="backgrounds">
             {() => (
               <div style={{ display: "flex" }}>
-                <Input name={`name`} />
-                <Counter fade from={0} to={10} name={`points`} />
+                <Input name="name" />
+                <Counter fade from={0} to={10} name="points" />
               </div>
             )}
           </RepeatingSection>

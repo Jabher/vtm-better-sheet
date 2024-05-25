@@ -15,7 +15,7 @@ const SHEET_TYPE_ATTR = "attr_sheet_type";
 export const V20 = ({ sheets }: { sheets: Partial<Record<I18n, () => ReactNode>> }) => (
   <>
     <div style={{ display: "none" }}>
-      {range(1, 15).map((i) => (
+      {range(0, 15).map((i) => (
         <input key={i} name={`attr_Discipline${i}Name`} />
       ))}
     </div>

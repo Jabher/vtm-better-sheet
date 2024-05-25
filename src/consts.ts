@@ -103,9 +103,9 @@ type Prefix<P extends string, P2 extends string = ""> = {
 
 export const meleeWeapons: Record<
   Prefix<`weapon-melee-`, "-label">,
-  [damage: number, type: DamageType, conceal: ConcealType]
+  [damage: number, type: DamageType, conceal: ConcealType, isBrawl?: boolean]
 > = {
-  fists: [0, DamageType.Bashing, ConcealType.Pocket],
+  fists: [0, DamageType.Bashing, ConcealType.Pocket, true],
   sap: [+1, DamageType.Bashing, ConcealType.Pocket],
   club: [+2, DamageType.Bashing, ConcealType.Trench],
   knife: [+1, DamageType.Lethal, ConcealType.Jacket],

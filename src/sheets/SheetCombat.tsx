@@ -51,8 +51,9 @@ export const SheetCombat = () => (
       <Section i18n="combat-dice-pools-label" style={{ flex: "1 1 min-content" }}>
         <Row style={{ justifyContent: "center" }}>
           <Checkbox name="useHealthInCombat" i18n="use-health-minus-label" symbol="ecg_heart" />
-          {/*todo use var*/}
+          <input type="checkbox" className="sheet-tabCombat--checkbox-consealer" name="attr_celerityLinked" />
           <Input name="celeritySpent" type="number" i18n="use-celerity-minus-label" />
+          <input type="checkbox" className="sheet-tabCombat--checkbox-consealer" name="attr_potenceLinked" />
           <Input name="potenceSpent" type="number" i18n="use-potence-minus-label" />
         </Row>
       </Section>
@@ -62,7 +63,7 @@ export const SheetCombat = () => (
       <RepeatingSection name="brawlCombatDice">
         {() => (
           <Row>
-            <Input i18n="name-u" name="rollName" className="sheet-inputname" />
+            <Input i18n="name-u" name="rollname" className="sheet-inputname" />
             <AttributeSelect name="rollAttr" />
             <SkillSelect name="rollSkill" />
             <Input type="number" name="difficulty" defaultValue={6} i18n="difficulty-label" />
@@ -70,7 +71,7 @@ export const SheetCombat = () => (
               data-template="combat"
               data-attribute="combatRollNumber"
               data-difficulty-value="difficulty"
-              data-attribute-name-value="rollName"
+              data-attribute-name-value="rollname"
               childrenName="combatRollNumber"
             />
             <RowDescription>
@@ -89,9 +90,9 @@ export const SheetCombat = () => (
         <RepeatingSection name="meleeCombatDice">
           {() => (
             <Row>
-              <Input i18n="name-u" name="rollName" className="sheet-inputname" />
+              <Input i18n="name-u" name="rollname" className="sheet-inputname" />
               <AttributeSelect name="rollAttr" />
-              <SkillSelect name="rollSkill" />
+              <SkillSelect name="rollSkill" options={["brawl", "melee"]} />
               <Input type="number" name="rollAccuracy" defaultValue={0} i18n="accuracy-label" />
               <Input type="number" name="rollDifficulty" defaultValue={6} i18n="difficulty-label" />
               <RollButton
@@ -99,7 +100,7 @@ export const SheetCombat = () => (
                 data-attribute="combatRollNumber"
                 data-difficulty-value="rollDifficulty"
                 data-attribute-name-prefix-value="CurrentMeleeWeaponName"
-                data-attribute-name-value="rollName"
+                data-attribute-name-value="rollname"
                 data-damage-type-value="CurrentMeleeWeaponLethality"
                 data-damage-roll-value="damageRollNumber"
                 childrenName="combatRollNumber"
@@ -129,9 +130,9 @@ export const SheetCombat = () => (
         <RepeatingSection name="rangedCombatDice">
           {() => (
             <Row>
-              <Input i18n="name-u" name="rollName" className="sheet-inputname" />
-              <AttributeSelect name="rollAtrr" />
-              <SkillSelect name="rollSkill" />
+              <Input i18n="name-u" name="rollname" className="sheet-inputname" />
+              <AttributeSelect name="rollAttr" />
+              <SkillSelect name="rollSkill" options={["firearms"]} />
               <Input type="number" name="rollAccuracy" defaultValue={0} i18n="accuracy-label" />
               <Input type="number" name="rollDifficulty" defaultValue={6} i18n="difficulty-label" />
               <RollButton
@@ -139,7 +140,7 @@ export const SheetCombat = () => (
                 data-attribute="combatRollNumber"
                 data-difficulty-value="rollDifficulty"
                 data-attribute-name-prefix-value="CurrentRangedWeaponName"
-                data-attribute-name-value="rollName"
+                data-attribute-name-value="rollname"
                 data-damage-type-value="CurrentRangedWeaponLethality"
                 data-damage-roll-value="damageRollNumber"
                 childrenName="combatRollNumber"
@@ -167,7 +168,7 @@ export const SheetCombat = () => (
             <Checkbox i18n="onq-u" className="sheet-APIcheck" name="Equipped" />
             <Input i18n="name2-u" name="WeaponName" />
             <Input i18n="type-u" name="Type" list="melee-weapon-datalist" />
-            <Checkbox i18n="weapon-is-brawl-label" symbol="back_hand" name="BrawlFlag" />
+            <SkillSelect name="rollSkill" options={["brawl", "melee"]} />
             <SelectInput i18n="type-u" name="Lethality">
               <option value={DamageType.Bashing} data-i18n="bashing-u" />
               <option value={DamageType.Lethal} data-i18n="lethal-u" />

@@ -13,9 +13,9 @@ import {
   talents,
 } from "./consts.ts";
 import "./custom.d.ts";
-import { WorkerLogic } from "./WorkerLogic.js";
+import { WorkerLogicBase } from "./WorkerLogicBase.js";
 
-const Roll20 = {
+const util = {
   sectionIDs: (group, callback) => getSectionIDs(`repeating_${group}`, callback),
   resetRepeatingField: () => {
     try {
@@ -43,7 +43,7 @@ const Roll20 = {
         ...ids.flatMap((groupID) => keys.map((key) => `repeating_${group}_${groupID}_${key}`)),
       ];
       getAttrs(queryKeys, (attrs) => {
-        console.log("getGroupAttrs parsing", queryKeys, attrs, group, keys, globalKeys);
+        console.log("getGroupAttrs parsing", group, attrs, queryKeys, keys, globalKeys);
         const globalAttrs = {};
         const groupedAttrs = {};
         for (const [key, value] of Object.entries(attrs)) {
@@ -74,6 +74,120 @@ const Roll20 = {
     console.log("setting group attrs", group, attrs, globalAttrs, resultingAttrs);
     setAttrs(resultingAttrs);
   },
+
+  runAndOn: (events, callback) => {
+    callback();
+    on(events.map((event) => (event.includes(":") ? event : `change:${event}`)).join(" "), callback);
+  },
+  onListChange: (group, props, cb) => {
+    util.runAndOn(
+      [`repeating_${group}`, `remove:repeating_${group}`, ...props.map((p) => `repeating_${group}_${p}`)],
+      (e) => {
+        util.sectionIDs(group, (idarray) => {
+          console.log("computing onListChange", group, props, idarray, e);
+          const keys = idarray.flatMap((id) => props.map((prop) => `repeating_${group}_${id}_${prop}`));
+          util.resetRepeatingField();
+          const result = Object.fromEntries(idarray.map((id) => [id, {}]));
+          getAttrs(keys, (attrs) => {
+            for (const [key, value] of Object.entries(attrs)) {
+              const id = idarray.find((sectionID) => key.startsWith(`repeating_${group}_${sectionID}`));
+              result[id][key.replace(`repeating_${group}_${id}_`, "")] = value;
+            }
+            console.log("applying onListChange", keys, attrs, result);
+            cb(result);
+          });
+        });
+      }
+    );
+  },
+  onListValueChange: (groupName, extraKeys, globalDependencies, getter) => {
+    util.runAndOn([...globalDependencies, ...extraKeys.map((key) => `repeating_${groupName}:${key}`)], (e) => {
+      console.log("declareRepeatingDependency triggered", e, groupName, extraKeys);
+      util.getGroupAttrs(groupName, extraKeys, globalDependencies, (groupedAttrs, globalAttrs) => {
+        console.log("declareRepeatingDependency state", groupName, groupedAttrs, globalAttrs);
+        for (const [id, attrs] of Object.entries(groupedAttrs)) {
+          console.log("declareRepeatingDependency updating group", groupName, attrs, globalAttrs, {
+            [id]: getter(attrs, globalAttrs),
+          });
+          util.setGroupAttrs(groupName, {
+            [id]: getter(attrs, globalAttrs),
+          });
+        }
+      });
+    });
+  },
+};
+
+const rolls = {
+  getPureAttrs: ($) => ({
+    ...$,
+    Strength: i($.Strength) + i($.potenceBoost),
+    Dexterity: i($.Dexterity) + i($.celerityBoost),
+    Stamina: i($.Stamina),
+    Charisma: i($.Charisma),
+    Manipulation: i($.Manipulation),
+    Appearance: i($.Appearance),
+    Perception: i($.Perception),
+    Intelligence: i($.Intelligence),
+    Wits: i($.Wits),
+  }),
+  getDamageAttrs: ($) => ({
+    ...$,
+    Strength: i($.Strength) + Math.max(0, i($.potenceBoost) - i($.potenceSpent)),
+    Dexterity: i($.Dexterity) + Math.max(0, i($.celerityBoost) - i($.celeritySpent)),
+    Stamina: i($.Stamina),
+    Charisma: i($.Charisma),
+    Manipulation: i($.Manipulation),
+    Appearance: i($.Appearance),
+    Perception: i($.Perception),
+    Intelligence: i($.Intelligence),
+    Wits: i($.Wits),
+  }),
+  getCombatAttrs: ($) => ({
+    ...$,
+    Strength: i($.Strength) + Math.max(0, i($.potenceBoost)),
+    Dexterity: i($.Dexterity) + Math.max(0, i($.celerityBoost) - i($.celeritySpent)),
+    Stamina: i($.Stamina),
+    Charisma: i($.Charisma),
+    Manipulation: i($.Manipulation),
+    Appearance: i($.Appearance),
+    Perception: i($.Perception),
+    Intelligence: i($.Intelligence),
+    Wits: i($.Wits),
+  }),
+
+  dices: (state, rollAttr, useHealth, getter) => {
+    const attrs = rolls.getPureAttrs(state);
+    const healthModifier = useHealth === "on" ? i(state.Health) : 0;
+    const potenceBonus = i(state.potenceSpent);
+    const value = getter(attrs[rollAttr], attrs);
+    return Number.isNaN(value)
+      ? " "
+      : [
+          Math.max(0, getter(attrs[rollAttr], attrs) + healthModifier),
+          potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
+        ].join("");
+  },
+
+  combatDices: (state, rollAttr, getter) => {
+    const attrs = rolls.getCombatAttrs(state);
+    const healthModifier = state.useHealthInCombat === "on" ? i(state.Health) : 0;
+    const value = getter(attrs[rollAttr], attrs);
+    return Number.isNaN(value) ? " " : [Math.max(0, getter(attrs[rollAttr], attrs) + healthModifier)].join("");
+  },
+
+  damageDices: (state, rollAttr, getter) => {
+    const attrs = rolls.getDamageAttrs(state);
+    const healthModifier = state.useHealthInCombat === "on" ? i(state.Health) : 0;
+    const potenceBonus = i(state.potenceSpent);
+    const value = getter(attrs[rollAttr], attrs);
+    return Number.isNaN(value)
+      ? " "
+      : [
+          Math.max(0, value + (rollAttr === "Strength" ? healthModifier : 0)),
+          potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
+        ].join("");
+  },
 };
 
 const i = (val) => {
@@ -83,69 +197,11 @@ const i = (val) => {
   return Number.parseInt(val) || 0;
 };
 
-const onRepeatingChange = (group, props, cb) => {
-  const compute = (e) => {
-    Roll20.sectionIDs(group, (idarray) => {
-      console.log("computing onRepeatingChange", group, props, idarray, e);
-      const keys = idarray.flatMap((id) => props.map((prop) => `repeating_${group}_${id}_${prop}`));
-      Roll20.resetRepeatingField();
-      getAttrs(keys, (attrs) => {
-        const result = Object.fromEntries(idarray.map((id) => [id, {}]));
-        console.log("applying onRepeatingChange", keys, attrs);
-        for (const [key, value] of Object.entries(attrs)) {
-          console.log("searching for key", key, idarray, value);
-          const id = idarray.find((sectionID) => key.startsWith(`repeating_${group}_${sectionID}`));
-          result[id][key.replace(`repeating_${group}_${id}_`, "")] = value;
-        }
-        cb(result);
-      });
-    });
-  };
-  on(
-    [
-      `change:repeating_${group}`,
-      `remove:repeating_${group}`,
-      ...props.map((p) => `change:repeating_${group}_${p}`),
-    ].join(" "),
-    compute
-  );
-  compute();
-};
-const declareRepeatingDependency = ({ groupName, extraKeys, globalDependencies }, getter) => {
-  const compute = (e) => {
-    console.log("declareRepeatingDependency triggered", e, groupName, extraKeys);
-    Roll20.getGroupAttrs(groupName, extraKeys, globalDependencies, (groupedAttrs, globalAttrs) => {
-      console.log("declareRepeatingDependency state", groupedAttrs, globalAttrs);
-      for (const [id, attrs] of Object.entries(groupedAttrs)) {
-        console.log("declareRepeatingDependency updating group", groupName, attrs, globalAttrs, {
-          [id]: getter(attrs, globalAttrs),
-        });
-        Roll20.setGroupAttrs(groupName, {
-          [id]: getter(attrs, globalAttrs),
-        });
-      }
-    });
-  };
-  on(
-    [
-      ...globalDependencies.map((attr) => `change:${attr}`),
-      ...extraKeys.map((key) => `change:repeating_${groupName}:${key}`),
-    ].join(" "),
-    compute
-  );
-  compute();
-};
-
 export const worker = () =>
-  new (class extends WorkerLogic {
+  new (class extends WorkerLogicBase {
+    language = getTranslationLanguage() || navigator.language;
     initFirstTime(cb) {
       const attrs = {
-        [`repeating_disciplines_${generateRowID()}_name`]: "",
-        [`repeating_disciplines_${generateRowID()}_name`]: "",
-        [`repeating_disciplines_${generateRowID()}_name`]: "",
-        [`repeating_backgrounds_${generateRowID()}_name`]: "",
-        [`repeating_backgrounds_${generateRowID()}_name`]: "",
-        [`repeating_backgrounds_${generateRowID()}_name`]: "",
         MoralPath10: getTranslationByKey("humanitysins-10"),
         MoralPath9: getTranslationByKey("humanitysins-9"),
         MoralPath8: getTranslationByKey("humanitysins-8"),
@@ -158,35 +214,98 @@ export const worker = () =>
         MoralPath1: getTranslationByKey("humanitysins-1"),
       };
 
-      for (const [key, [attr, skill]] of Object.entries(defenceManeuvers)) {
-        const rowID = `repeating_brawlCombatDice_${generateRowID()}`;
-        attrs[`${rowID}_rollName`] = getTranslationByKey(`maneuver-defence-${key}`);
-        attrs[`${rowID}_rollAttr`] = attr;
-        attrs[`${rowID}_rollSkill`] = skill;
-      }
-      for (const [key, [attr, skill, accuracy, difficulty, damageAttr = 0, damageBonus = 0]] of Object.entries(
-        meleeManeuvers
-      )) {
-        const rowID = `repeating_meleeCombatDice_${generateRowID()}`;
-        attrs[`${rowID}_rollName`] = getTranslationByKey(`maneuver-melee-${key}`);
-        attrs[`${rowID}_rollAttr`] = attr;
-        attrs[`${rowID}_rollSkill`] = skill;
-        attrs[`${rowID}_rollDifficulty`] = Number(difficulty) + 6;
-        attrs[`${rowID}_rollAccuracy`] = accuracy || "";
-        attrs[`${rowID}_damageAttr`] = damageAttr;
-        attrs[`${rowID}_damageBonus`] = damageBonus;
-      }
-      for (const [key, [attr, skill, accuracy, difficulty]] of Object.entries(rangedManeuvers)) {
-        const rowID = `repeating_rangedCombatDice_${generateRowID()}`;
-        attrs[`${rowID}_rollName`] = getTranslationByKey(`maneuver-ranged-${key}`);
-        attrs[`${rowID}_rollAttr`] = attr;
-        attrs[`${rowID}_rollSkill`] = skill;
-        attrs[`${rowID}_rollAccuracy`] = accuracy || "";
-        attrs[`${rowID}_rollDifficulty`] = Number(difficulty) + 6;
-      }
-      console.log("setting initial attrs", attrs);
-      setAttrs(attrs);
-      cb();
+      getAttrs(
+        [
+          ...range(1, 11).map((i) => `Discipline${i}`),
+          ...range(1, 11).map((i) => `Discipline${i}Name`),
+          ...range(1, 11).map((i) => `Back${i}`),
+          ...range(1, 11).map((i) => `Back${i}Name`),
+          ...Object.keys(attrs),
+        ],
+        (state) => {
+          console.log("old state", state);
+          {
+            const disciplines = [];
+            for (const i of range(1, 11)) {
+              if (state[`Discipline${i}`] || state[`Discipline${i}Name`]) {
+                disciplines.push({ name: state[`Discipline${i}Name`] || "", level: state[`Discipline${i}`] || 0 });
+              }
+            }
+            while (disciplines.length < 3) {
+              disciplines.push({ name: "", level: 0 });
+            }
+            for (const { name, level } of disciplines) {
+              const rowId = generateRowID();
+              attrs[`repeating_disciplines_${rowId}_name`] = name;
+              attrs[`repeating_disciplines_${rowId}_points`] = level;
+            }
+          }
+          {
+            const backgrounds = [];
+            for (const i of range(1, 11)) {
+              if (state[`Back${i}`] || state[`Back${i}Name`]) {
+                backgrounds.push({ name: state[`Back${i}Name`] || "", level: state[`Back${i}`] || 0 });
+              }
+            }
+            while (backgrounds.length < 3) {
+              backgrounds.push({ name: "", level: 0 });
+            }
+            for (const { name, level } of backgrounds) {
+              const rowId = generateRowID();
+              attrs[`repeating_backgrounds_${rowId}_name`] = name;
+              attrs[`repeating_backgrounds_${rowId}_points`] = level;
+            }
+          }
+          {
+            const hasMoralPath = range(1, 11).some((i) => state[`MoralPath${i}`]);
+            if (hasMoralPath) {
+              for (const i of range(1, 11)) {
+                attrs[`MoralPath${i}`] = state[`MoralPath${i}`] || "";
+              }
+            }
+          }
+
+          for (const [key, [attr, skill]] of Object.entries(defenceManeuvers)) {
+            const rowID = `repeating_brawlCombatDice_${generateRowID()}`;
+            attrs[`${rowID}_rollname`] = getTranslationByKey(`maneuver-defence-${key}`);
+            attrs[`${rowID}_rollAttr`] = attr;
+            attrs[`${rowID}_rollSkill`] = skill;
+          }
+          for (const [key, [attr, skill, accuracy, difficulty, damageAttr = 0, damageBonus = 0]] of Object.entries(
+            meleeManeuvers
+          )) {
+            const rowID = `repeating_meleeCombatDice_${generateRowID()}`;
+            attrs[`${rowID}_rollname`] = getTranslationByKey(`maneuver-melee-${key}`);
+            attrs[`${rowID}_rollAttr`] = attr;
+            attrs[`${rowID}_rollSkill`] = skill;
+            attrs[`${rowID}_rollDifficulty`] = Number(difficulty) + 6;
+            attrs[`${rowID}_rollAccuracy`] = accuracy || "";
+            attrs[`${rowID}_damageAttr`] = damageAttr;
+            attrs[`${rowID}_damageBonus`] = damageBonus;
+          }
+          for (const [key, [attr, skill, accuracy, difficulty]] of Object.entries(rangedManeuvers)) {
+            const rowID = `repeating_rangedCombatDice_${generateRowID()}`;
+            attrs[`${rowID}_rollname`] = getTranslationByKey(`maneuver-ranged-${key}`);
+            attrs[`${rowID}_rollAttr`] = attr;
+            attrs[`${rowID}_rollSkill`] = skill;
+            attrs[`${rowID}_rollAccuracy`] = accuracy || "";
+            attrs[`${rowID}_rollDifficulty`] = Number(difficulty) + 6;
+          }
+          {
+            const rowID = `repeating_MeleeWeapon_${generateRowID()}`;
+            const weapon = util.findIntl(meleeWeapons, "fists", "weapon-melee");
+            attrs[`${rowID}_Type`] = getTranslationByKey("weapon-melee-fists-label");
+            attrs[`${rowID}_Damage`] = weapon[0];
+            attrs[`${rowID}_Lethality`] = weapon[1];
+            attrs[`${rowID}_Conceal`] = weapon[2];
+            attrs[`${rowID}_damageAttr`] = "Strength";
+            attrs[`${rowID}_rollSkill`] = "brawl";
+          }
+          console.log("setting initial attrs", attrs);
+          setAttrs(attrs);
+          cb();
+        }
+      );
     }
 
     init() {
@@ -197,20 +316,24 @@ export const worker = () =>
       ]);
       const resolveName = (name) => boundDisciplineNames.find((keys) => keys.includes(name.toLowerCase()))?.[0];
 
-      onRepeatingChange("disciplines", ["name", "points"], (attrs) => {
+      util.onListChange("disciplines", ["name", "points"], (attrs) => {
         const boosts = {};
+        for (const discipline of boundDisciplines) {
+          boosts[`${discipline}Linked`] = "off";
+        }
         const links = {};
         for (const [key, { name, points = 0 }] of Object.entries(attrs)) {
           const resolvedName = resolveName(name);
           const isBound = boundDisciplines.has(resolvedName);
           if (isBound) {
             boosts[`${resolvedName}Boost`] = points ?? 0;
+            boosts[`${resolvedName}Linked`] = "on";
           }
           links[`repeating_disciplines_${key}_linked`] = isBound ? "on" : "off";
         }
         const orderedDisciplines = Object.values(attrs);
         const orderedNames = fromPairs(
-          range(1, 16).map((j) => [`Discipline${j}Name`, orderedDisciplines[j]?.name ?? ""])
+          range(0, 21).map((j) => [`Discipline${j}Name`, orderedDisciplines[j]?.name ?? ""])
         );
         console.log("setting boosts", boosts, links, orderedNames);
         setAttrs({
@@ -225,9 +348,9 @@ export const worker = () =>
     }
 
     initRolls() {
-      const cardinalPluralizer = new Intl.PluralRules(getTranslationLanguage() || navigator.language);
+      const cardinalPluralizer = new Intl.PluralRules(this.language);
 
-      const damageRollHandler = ({ value, type = "lethal", difficulty, connected = 0 }) => {
+      const damageRollHandler = ({ value, type = "lethal", difficulty = 6, connected = 0 }) => {
         const [value1, value2 = "+0"] = value.split(" ");
         const diceCount = i(value1);
         const diceBonus = i(value2);
@@ -242,19 +365,19 @@ export const worker = () =>
           `{{difficultyLabel=${getTranslationByKey("difficulty-label")}}}`,
           `{{count=[[${diceCount}]]}}`,
           `{{successes=[[0]]}}`,
+          `{{fails=[[0]]}}`,
           `{{difficulty=[[0]]}}`,
           `{{result=[[0]]}}`,
           `{{resultNumber=[[0]]}}`,
           // eslint-disable-next-line sonarjs/no-nested-template-literals
           `{{diceBonus=${diceBonus ? `+${diceBonus}` : " "}}}`,
-          `{{roll=[[${diceCount}d10>6cs>10]]}}`,
+          `{{roll=[[${diceCount}d10>${difficulty}cs>10]]}}`,
           ...range(1, diceCount + 1).map((j) => `{{dice${j}=[[0]]}}`),
           ``,
         ].join(" ");
         console.log("doing damage roll", template);
         startRoll(template, (results) => {
           const { roll } = results.results;
-          const realDifficulty = difficulty || i(roll.expression.replace(`${diceCount}d10>`, "").replace("cs>10", ""));
           const successes = roll.result + diceBonus;
           const resultNumber = Math.max(0, successes);
           const result =
@@ -264,7 +387,7 @@ export const worker = () =>
           const rollData = {
             ...fromPairs(roll.dice.sort((a, b) => a - b).map((d, j) => [`dice${j + 1}`, d])),
             successes,
-            difficulty: realDifficulty,
+            difficulty,
             result,
             resultNumber,
           };
@@ -274,7 +397,6 @@ export const worker = () =>
       };
 
       const rollHandler = ({ value, template, difficulty, name, namePrefix, damageRoll, damageType }) => {
-        // todo support 30+dice scenario?
         const [value1, value2 = "+0"] = value.split(" ");
         const diceCount = i(value1);
         const diceBonus = i(value2);
@@ -286,7 +408,6 @@ export const worker = () =>
         if (namePrefix) {
           title += ` (${namePrefix})`;
         }
-        // todo ask modifier
         const difficultyTemplate = `?{${getTranslationByKey("difficulty-label")}|6 }`;
         const modifierTemplate = `?{${getTranslationByKey("result-modifiers-label")}|0 }`;
         const rollTemplate = [
@@ -296,6 +417,7 @@ export const worker = () =>
           `{{difficultyLabel=${getTranslationByKey("difficulty-label")}}}`,
           `{{count=[[${diceCount}]]}}`,
           `{{successes=[[0]]}}`,
+          `{{fails=[[0]]}}`,
           `{{difficulty=[[0]]}}`,
           `{{result=[[0]]}}`,
           // eslint-disable-next-line sonarjs/no-nested-template-literals
@@ -442,7 +564,7 @@ export const worker = () =>
                 cb({
                   value: attrs[attribute],
                   difficulty,
-                  name: getTranslationByKey(attributeName) || nameValue,
+                  name: getTranslationByKey(attributeName) || getTranslationByKey(nameValue) || nameValue,
                   namePrefix: getTranslationByKey(attributeNamePrefix) || namePrefixValue,
                   damageRoll,
                   damageType,
@@ -498,10 +620,11 @@ export const worker = () =>
           `{{name=@{Name}}}`,
           `{{count=[[0]]}}`,
           `{{successes=[[0]]}}`,
+          `{{fails=[[0]]}}`,
           `{{difficulty=[[0]]}}`,
           `{{result=[[0]]}}`,
           `{{roll=[[(${diceCountTemplate})d10>${difficultyTemplate}cs>10]]}}`,
-          ...range(1, 30).map((j) => `{{dice${j}=[[0]]}}`),
+          ...range(1, 51).map((j) => `{{dice${j}=[[0]]}}`),
           ``,
         ].join(" ");
         startRoll(rollTemplate, (results) => {
@@ -536,109 +659,35 @@ export const worker = () =>
 
     initCombatSheet() {
       const defaultGlobalDependencies = [
-        ...attributes,
         "celerityBoost",
         "celeritySpent",
         "potenceBoost",
         "potenceSpent",
-        "useHealthInCombat",
         "Health",
+        ...attributes,
         ...talents,
         ...skills,
         ...knowledges,
       ];
 
-      // eslint-disable-next-line unicorn/consistent-function-scoping
-      const getRollAttrs = ($) => ({
-        ...$,
-        Strength: i($.Strength) + Math.max(0, i($.potenceBoost) - i($.potenceSpent)),
-        Dexterity: i($.Dexterity) + Math.max(0, i($.celerityBoost) - i($.celeritySpent)),
-        Stamina: i($.Stamina),
-        Charisma: i($.Charisma),
-        Manipulation: i($.Manipulation),
-        Appearance: i($.Appearance),
-        Perception: i($.Perception),
-        Intelligence: i($.Intelligence),
-        Wits: i($.Wits),
-      });
+      const onCombatChange = (groupName, extraKeys, getter) =>
+        util.onListValueChange(
+          groupName,
+          extraKeys,
+          [...defaultGlobalDependencies, "useHealthInCombat", "CurrentMeleeWeaponDamage", "CurrentRangedWeaponDamage"],
+          getter
+        );
 
-      const roll = (state, rollAttr, useHealth, getter) => {
-        const attrs = getRollAttrs(state);
-        const healthModifier = useHealth === "on" ? i(state.Health) : 0;
-        const potenceBonus = i(state.potenceSpent);
-        const value = getter(attrs[rollAttr], attrs);
-        // todo use celerity
-        if (Number.isNaN(value)) {
-          return " ";
-        }
-        return [
-          Math.max(0, getter(attrs[rollAttr], attrs) + healthModifier),
-          potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
-        ].join("");
-      };
+      onCombatChange("brawlCombatDice", ["rollAttr", "rollSkill"], ({ rollAttr, rollSkill }, state) => ({
+        combatRollNumber: rolls.combatDices(state, rollAttr, (attr) => attr + i(state[rollSkill])),
+      }));
 
-      const damageRoll = (state, rollAttr, getter) => {
-        const attrs = getRollAttrs(state);
-        const healthModifier = state.useHealthInCombat === "on" ? i(state.Health) : 0;
-        const potenceBonus = i(state.potenceSpent);
-        const value = getter(attrs[rollAttr], attrs);
-        // todo use celerity
-        if (Number.isNaN(value)) {
-          return " ";
-        }
-        return [
-          Math.max(0, value + (rollAttr === "Strength" ? healthModifier : 0)),
-          potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
-        ].join("");
-      };
-
-      declareRepeatingDependency(
-        {
-          groupName: "brawlCombatDice",
-          extraKeys: ["rollAttr", "rollSkill"],
-          globalDependencies: defaultGlobalDependencies,
-        },
-        ({ rollAttr, rollSkill }, state) => ({
-          combatRollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
-        })
-      );
-
-      declareRepeatingDependency(
-        {
-          groupName: "powers",
-          extraKeys: ["rollAttr", "rollSkill"],
-          globalDependencies: defaultGlobalDependencies,
-        },
-        ({ rollAttr, rollSkill }, state) => ({
-          rollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
-        })
-      );
-
-      declareRepeatingDependency(
-        {
-          groupName: "combinationPowers",
-          extraKeys: ["rollAttr", "rollSkill"],
-          globalDependencies: defaultGlobalDependencies,
-        },
-        ({ rollAttr, rollSkill }, state) => ({
-          rollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
-        })
-      );
-
-      declareRepeatingDependency(
-        {
-          groupName: "meleeCombatDice",
-          extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageAttr", "damageBonus"],
-          globalDependencies: [...defaultGlobalDependencies, "CurrentMeleeWeaponDamage"],
-        },
+      onCombatChange(
+        "meleeCombatDice",
+        ["rollAccuracy", "rollAttr", "rollSkill", "damageAttr", "damageBonus"],
         ({ rollAttr, rollSkill, rollAccuracy, damageAttr, damageBonus }, { CurrentMeleeWeaponDamage, ...state }) => ({
-          combatRollNumber: roll(
-            state,
-            rollAttr,
-            state.useHealthInCombat,
-            (attribute) => attribute + i(state[rollSkill]) + i(rollAccuracy)
-          ),
-          damageRollNumber: damageRoll(
+          combatRollNumber: rolls.combatDices(state, rollAttr, (attr) => attr + i(state[rollSkill]) + i(rollAccuracy)),
+          damageRollNumber: rolls.damageDices(
             state,
             damageAttr,
             (attr) => attr + i(damageBonus) + i(CurrentMeleeWeaponDamage)
@@ -646,76 +695,73 @@ export const worker = () =>
         })
       );
 
-      declareRepeatingDependency(
-        {
-          groupName: "rangedCombatDice",
-          extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageBonus"],
-          globalDependencies: [...defaultGlobalDependencies, "CurrentRangedWeaponDamage"],
-        },
+      onCombatChange(
+        "rangedCombatDice",
+        ["rollAccuracy", "rollAttr", "rollSkill", "damageBonus"],
         ({ rollAttr, rollSkill, rollAccuracy, damageBonus }, { CurrentRangedWeaponDamage, ...state }) => ({
-          combatRollNumber: roll(
-            state,
-            rollAttr,
-            state.useHealthInCombat,
-            (attr) => attr + i(state[rollSkill]) + i(rollAccuracy)
-          ),
-          damageRollNumber: damageRoll(state, "", () => i(damageBonus) + i(CurrentRangedWeaponDamage)),
+          combatRollNumber: rolls.combatDices(state, rollAttr, (attr) => attr + i(state[rollSkill]) + i(rollAccuracy)),
+          damageRollNumber: rolls.damageDices(state, "", () => i(damageBonus) + i(CurrentRangedWeaponDamage)),
         })
       );
 
-      declareRepeatingDependency(
-        {
-          groupName: "MeleeWeapon",
-          extraKeys: ["Damage", "damageAttr", "BrawlFlag"],
-          globalDependencies: defaultGlobalDependencies,
-        },
+      onCombatChange(
+        "MeleeWeapon",
+        ["Damage", "damageAttr", "BrawlFlag"],
         ({ Damage, damageAttr, BrawlFlag }, state) => ({
-          combatRollNumber: roll(
+          combatRollNumber: rolls.combatDices(
             state,
             "Dexterity",
-            state.useHealthInCombat,
             (attr) => attr + i(BrawlFlag === "on" ? state.brawl : state.melee)
           ),
-          damageRollNumber: damageRoll(state, damageAttr, (attr) => attr + i(Damage)),
+          damageRollNumber: rolls.damageDices(state, damageAttr, (attr) => attr + i(Damage)),
         })
       );
 
-      declareRepeatingDependency(
-        {
-          groupName: "RangedWeapon",
-          extraKeys: ["rollAccuracy", "Damage"],
-          globalDependencies: defaultGlobalDependencies,
-        },
-        ({ rollAccuracy, Damage }, $) => ({
-          combatRollNumber: roll($, "Dexterity", $.useHealthInCombat, (attr) => attr + i($.firearms) + i(rollAccuracy)),
-          damageRollNumber: damageRoll($, "Strength", () => i(Damage)),
+      onCombatChange("RangedWeapon", ["rollAccuracy", "Damage"], ({ rollAccuracy, Damage }, state) => ({
+        combatRollNumber: rolls.combatDices(state, "Dexterity", (attr) => attr + i(state.firearms) + i(rollAccuracy)),
+        damageRollNumber: rolls.damageDices(state, "Strength", () => i(Damage)),
+      }));
+
+      util.onListValueChange(
+        "powers",
+        ["rollAttr", "rollSkill", "rollUseHealth"],
+        defaultGlobalDependencies,
+        ({ rollAttr, rollSkill, rollUseHealth }, state) => ({
+          rollNumber: rolls.dices(state, rollAttr, rollUseHealth, (attr) => attr + i(state[rollSkill])),
+        })
+      );
+      util.onListValueChange(
+        "rituals",
+        ["ritualAW", "ritualAbility", "ritualuseHealth"],
+        defaultGlobalDependencies,
+        ({ ritualAW, ritualAbility, ritualuseHealth }, state) => ({
+          rollNumber: rolls.dices(state, ritualAW, ritualuseHealth, (attr) => attr + i(state[ritualAbility])),
+        })
+      );
+      util.onListValueChange(
+        "combinationPowers",
+        ["rollAttr", "rollSkill", "rollUseHealth"],
+        defaultGlobalDependencies,
+        ({ rollAttr, rollSkill, rollUseHealth }, state) => ({
+          rollNumber: rolls.dices(state, rollAttr, rollUseHealth, (attr) => attr + i(state[rollSkill])),
         })
       );
 
-      declareRepeatingDependency(
-        {
-          groupName: "powers",
-          extraKeys: ["rollAttr", "rollSkill", "rollUseHealth"],
-          globalDependencies: defaultGlobalDependencies,
-        },
-        ({ rollAttr, rollSkill, rollUseHealth }, $) => ({
-          rollNumber: roll($, rollAttr, rollUseHealth, (attr) => attr + i($[rollSkill])),
-        })
-      );
-      declareRepeatingDependency(
-        {
-          groupName: "combinationPowers",
-          extraKeys: ["rollAttr", "rollSkill", "rollUseHealth"],
-          globalDependencies: defaultGlobalDependencies,
-        },
-        ({ rollAttr, rollSkill, rollUseHealth }, $) => ({
-          rollNumber: roll($, rollAttr, rollUseHealth, (attr) => attr + i($[rollSkill])),
-        })
-      );
+      util.onListChange("XP", ["XPDate"], (groupItems) => {
+        console.log("xp dates", groupItems);
+        const now = new Date();
+        util.setGroupAttrs(
+          "XP",
+          Object.fromEntries(
+            Object.entries(groupItems)
+              .filter(([, { XPDate }]) => !XPDate)
+              .map(([key]) => [key, { XPDate: new Intl.DateTimeFormat(this.language).format(new Date()) }])
+          )
+        );
+      });
 
-      on("change:repeating_XP", (e) => {
-        console.log(e);
-        Roll20.getGroupAttrs("XP", ["XPGot", "XPSpent", "XPDate"], ["XPstart"], (items, { XPStart }) => {
+      util.runAndOn(["repeating_XP", "XPStart"], () => {
+        util.getGroupAttrs("XP", ["XPGot", "XPSpent"], ["XPStart"], (items, { XPStart }) => {
           const XPtotal = sum([i(XPStart), ...Object.values(items).map(({ XPGot }) => i(XPGot))]);
           const XPspent = sum(Object.values(items).map(({ XPSpent }) => i(XPSpent)));
           const XPRemaining = XPtotal - XPspent;
@@ -752,8 +798,8 @@ export const worker = () =>
                 `repeating_${type}_damageBonus`,
               ],
               (attrs) => {
-                Roll20.sectionIDs(group, (ids) => {
-                  Roll20.setGroupAttrs(
+                util.sectionIDs(group, (ids) => {
+                  util.setGroupAttrs(
                     group,
                     {
                       ...Object.fromEntries(ids.map((id) => [id, { Equipped: false }])),
@@ -800,10 +846,8 @@ export const worker = () =>
       WalkSpeed: () => 7,
       JogSpeed: ({ Dexterity, celerityBoost, MiscSpeed }) => 12 + i(Dexterity) + i(celerityBoost) + i(MiscSpeed),
       RunSpeed: ({ Dexterity, celerityBoost, MiscSpeed }) => 20 + (3 * i(Dexterity) + i(celerityBoost) + i(MiscSpeed)),
-      // todo boosts
-      willpowerRoll: ({ Willpower, WillpowerBoost }) => i(Willpower) + i(WillpowerBoost),
-      // todo boosts
-      willpowerUsedRoll: ({ WillpowerUsed, WillpowerBoost }) => i(WillpowerUsed) + i(WillpowerBoost),
+      willpowerRoll: ({ Willpower }) => i(Willpower),
+      willpowerUsedRoll: ({ WillpowerUsed }) => i(WillpowerUsed),
       initiativeBonus: ({ Dexterity, Wits, celerityBoost, initiativeModifier }) =>
         `+${i(Dexterity) + i(Wits) + i(celerityBoost) + i(initiativeModifier)}`,
       // https://www.reddit.com/r/vtm/comments/164i1vj/revised_vampire_generation_chart_also_how_to_stat/
@@ -851,18 +895,20 @@ export const worker = () =>
     repeatingDefaults = {
       MeleeWeapon: {
         Type: (type) => {
-          const weapon = Roll20.findIntl(meleeWeapons, type, "weapon-melee");
+          const weapon = util.findIntl(meleeWeapons, type, "weapon-melee");
           if (weapon)
             return {
               Damage: weapon[0],
               Lethality: weapon[1],
               Conceal: weapon[2],
+              damageAttr: "Strength",
+              rollSkill: weapon[3] ? "brawl" : "melee",
             };
         },
       },
       RangedWeapon: {
         Type: (type) => {
-          const weapon = Roll20.findIntl(rangedWeapons, type, "weapon-ranged");
+          const weapon = util.findIntl(rangedWeapons, type, "weapon-ranged");
           if (weapon) {
             return {
               Lethality: DamageType.Lethal,
@@ -877,7 +923,7 @@ export const worker = () =>
       },
       vehicles: {
         type: (type) => {
-          const car = Roll20.findIntl(cars, type, "vehicle-type");
+          const car = util.findIntl(cars, type, "vehicle-type");
           if (car) {
             return {
               SafeSpeed: car[0],

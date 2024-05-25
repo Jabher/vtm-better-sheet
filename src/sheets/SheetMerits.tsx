@@ -6,7 +6,6 @@ import { ResizingTextarea } from "../components/ResizingTextarea.tsx";
 import { Row } from "../components/Row.tsx";
 import translation from "../translation.json";
 
-// todo collapse
 export const SheetMerits = () => (
   <div className="sheet-tab-content sheet-merits">
     <datalist id="meritsflaws-type-datalist">

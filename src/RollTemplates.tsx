@@ -19,68 +19,68 @@ const makeDice = (i: number) =>
 {{/^rollLess() computed::count ${i}}}
 `.trim();
 
-const dices = `<div class="sheet-roll-layer sheet-dices">
-    ${range(1, 16)
+const dices = (limit: number) => `<div class="sheet-roll-layer sheet-dices">
+    ${range(1, Math.ceil(limit / 2) + 1)
       .map((i) => `<div>${makeDice(i * 2 - 1)}${makeDice(i * 2)}</div>`.trim())
       .join("")}
     <span class="sheet-roll-bonus">{{diceBonus}}</span>
     </div>`;
 
-const rollFlags = `
-{{#rollLess() computed::result 1}}
-  <span class="sheet-result sheet-result-result-is-zero"></span>
-{{/rollLess() computed::result 1}}
-{{#rollGreater() computed::fails 0}}
-  <span class="sheet-result sheet-result-has-fails"></span>
-{{/rollGreater() computed::fails 0}}
-{{#rollGreater() computed::successes 0}}
-  <span class="sheet-result sheet-result-has-success"></span>
-{{/rollGreater() computed::successes 0}}
-{{#rollGreater() connected 0}}
-  <span class="sheet-result sheet-result-result-is-connected"></span>
-{{/rollGreater() connected 0}}
+// todo damage roll with "soak" button (considering armor)
+
+const attributeTemplate = `
+<div class="sheet-roll-layer sheet-roll-info">
+  <h3>{{name}}</h3>
+  <h5>{{rollTitle}}</h5>
+  <h5>{{difficultyLabel}}: <span class="sheet-info-difficulty">{{computed::difficulty}}</span></h5>
+  <div class="sheet-regularResult">{{computed::result}}</div>
+</div>`;
+
+const combatTemplate = `
+<div class="sheet-roll-layer sheet-roll-info">
+  <h3>{{name}}</h3>
+  <h5>{{rollTitle}}</h5>
+  <h5>{{difficultyLabel}}: <span class="sheet-info-difficulty">{{computed::difficulty}}</span></h5>
+  <div class="sheet-regularResult">{{computed::result}}</div>
+</div>
 `;
 
-// todo damage roll with "soak" button (considering armor)
+const damageTemplate = `
+<div class="sheet-roll-layer sheet-roll-info">
+  <h5>{{rollTitle}}</h5>
+  <div class="sheet-regularResult">{{computed::result}}</div>
+</div>`;
+
+const template = (type: string, maxDice: number, contents: string) => `
+<rolltemplate class="sheet-rolltemplate-${type}">
+  <div class="sheet-rollContainer">
+    {{#rollLess() computed::result 1}}
+    <span class="sheet-result sheet-result-internal sheet-result-result-is-zero">z</span>
+    {{/rollLess() computed::result 1}}
+    {{#rollGreater() computed::fails 0}}
+    <span class="sheet-result sheet-result-internal sheet-result-has-fails">z</span>
+    {{/rollGreater() computed::fails 0}}
+    {{#rollGreater() computed::successes 0}}
+    <span class="sheet-result sheet-result-internal sheet-result-has-success">z</span>
+    {{/rollGreater() computed::successes 0}}
+    {{#rollGreater() connected 0}}
+    <span class="sheet-result sheet-result-internal sheet-result-result-is-connected">z</span>
+    {{/rollGreater() connected 0}}
+
+    ${dices(maxDice)}
+    ${contents}
+  </div>
+</rolltemplate>
+`;
 
 export const RollTemplates = () => (
   <div
     dangerouslySetInnerHTML={{
       __html: `
-<rolltemplate class="sheet-rolltemplate-attribute">
-  ${rollFlags}
-  <div class="sheet-rollContainer">
-    ${dices}
-    <div class="sheet-roll-layer sheet-roll-info">
-      <h3>{{name}}</h3>
-      <h5>{{rollTitle}}</h5>
-      <h5>{{difficultyLabel}}: <span class="sheet-info-difficulty">{{computed::difficulty}}</span></h5>
-      <div class="sheet-regularResult">{{computed::result}}</div>
-    </div>
-  </div>
-</rolltemplate>
-<rolltemplate class="sheet-rolltemplate-combat">
-  ${rollFlags}
-  <div class="sheet-rollContainer">
-    ${dices}
-    <div class="sheet-roll-layer sheet-roll-info">
-      <h3>{{name}}</h3>
-      <h5>{{rollTitle}}</h5>
-      <h5>{{difficultyLabel}}: <span class="sheet-info-difficulty">{{computed::difficulty}}</span></h5>
-      <div class="sheet-regularResult">{{computed::result}}</div>
-    </div>
-  </div>
-</rolltemplate>
-<rolltemplate class="sheet-rolltemplate-damage">
-  ${rollFlags}
-  <div class="sheet-rollContainer">
-    ${dices}
-    <div class="sheet-roll-layer sheet-roll-info">
-      <h5>{{rollTitle}}</h5>
-      <div class="sheet-regularResult">{{computed::result}}</div>
-    </div>
-  </div>
-</rolltemplate>
+${template("attribute", 50, attributeTemplate)}
+${template("combat", 50, combatTemplate)}
+${template("damage", 50, damageTemplate)}
+
 <rolltemplate class="sheet-rolltemplate-initiative">
   <div class="sheet-rollContainer">
     <div class="sheet-roll-layer sheet-dices">

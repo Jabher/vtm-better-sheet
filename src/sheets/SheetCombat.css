@@ -1,6 +1,12 @@
 .sheet-tabCombat {
+    .sheet-tabCombat--checkbox-consealer {
+        display: none;
+    }
+    .sheet-tabCombat--checkbox-consealer:not(:checked) + * {
+        display: none;
+    }
     .sheet-component--labelled:has(select) {
-    flex-shrink: 0;
+        flex-shrink: 0;
     }
     .sheet-component--labelled:has(input[type="number"]) {
         flex: 0 1 min-content;

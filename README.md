@@ -1,30 +1,30 @@
-# React + TypeScript + Vite
+# Vampire: the Masquarade V20 Roll20 charsheet
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is drop-in replacement for default Roll20 v20 charsheet, including automated migrator to allow switching the charsheet almost seamless.
 
-Currently, two official plugins are available:
+### important 
+- if you replace charsheet, up to ~10% of data will be lost due to incompatible changes in charsheet, but it will be mostly working fine.
+- only En and Ru translation are available due to way more content at it.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+How to use:
+Copy HTML, CSS and appropriate translation from latest release to your game configuration.
 
-## Expanding the ESLint configuration
+### Major features
+- Rolls are pre-configured available for almost everything
+- Chat rolls are super-fancy now
+- Combat rolls are done both for attack and damage simultaneously in single click
+- Celerity and potence, including currently used are auto-linked in rolls
+- Pre-configured maneuvers
+- Pre-configured weapons and vehicles (set type and get everything configured)
+- Current weapon tracker (used in maneuver rolls)
+- Advanced XP & session tracker
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Smaller Features
+- fancy dots in Attributes and Abilities. 6+ dots are hidden until hovered on; for smaller charsheet sizes specialisations are hidden for more efficient screen use of GMs
+- Some config values (Conscience/Conviction, Self-Control/Instinct, Yards/Meters) are switched in-place to look natural. Just click and select them
+- Blood pool is auto-sized based on config and generation
+- Path/Humanity is header input. Just click to edit!
+- Path sins are automatically presetted with values
+- Path sins are semi-transparent if you are not caring about this level of sins anymore. This can resemble on becoming a monster
+- Discipline name in powers page has auto-completition
+- Generic roll button in header

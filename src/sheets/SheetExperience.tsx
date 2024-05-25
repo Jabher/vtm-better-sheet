@@ -17,11 +17,10 @@ export const SheetExperience = () => (
           <Input type="number" disabled i18n="points-got-label" name="XPtotal" defaultValue={0} />
           <Input type="number" disabled i18n="points-spent-label" name="XPspent" defaultValue={0} />
         </Row>
-        {/*todo on start amount + calculator*/}
         <RepeatingSection name="XP">
           {() => (
             <Row>
-              <Input i18n="record-date-label" name="XPdate" type="date" />
+              <Input i18n="record-date-label" name="XPDate" disabled />
               <Input i18n="points-got-label" name="XPgot" type="number" />
               <Input i18n="points-spent-label" name="XPspent" type="number" />
               <RowDescription>

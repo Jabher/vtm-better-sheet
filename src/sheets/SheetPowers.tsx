@@ -20,6 +20,13 @@ export const SheetPowers = () => (
             <DisciplineSelect i18n="discipline-label" name="SetDisciplineName" />
             <Input i18n="discipline-power-label" type="text" name="SetDisciplinePower" />
             <Counter name="SetDisciplineLevel" from={1} to={10} />
+            <RollButton
+              data-attribute="rollNumber"
+              data-difficulty-value="difficulty"
+              data-attribute-name-prefix-value="SetDisciplineName"
+              data-attribute-name-value="SetDisciplinePower"
+              childrenName="rollNumber"
+            />
             <RowDescription>
               <Row>
                 <H3 i18n="dice-pool-label" style={{ alignSelf: "center", flexBasis: 0 }} />
@@ -27,15 +34,8 @@ export const SheetPowers = () => (
                 <AttributeSelect name="rollAttr" />
                 <SkillSelect name="rollSkill" />
                 <Input type="number" name="difficulty" defaultValue={6} i18n="difficulty-label" />
-                <RollButton
-                  data-attribute="rollNumber"
-                  data-difficulty-value="difficulty"
-                  data-attribute-name-prefix-value="SetDisciplineName"
-                  data-attribute-name-value="SetDisciplinePower"
-                  childrenName="rollNumber"
-                />
               </Row>
-              <ResizingTextarea i18n="description-label" name="itemDescription" />
+              <ResizingTextarea i18n="description-label" name="SetDisciplinePowerDesc" />
             </RowDescription>
           </Row>
         )}
@@ -77,7 +77,7 @@ export const SheetPowers = () => (
                   childrenName="rollNumber"
                 />
               </Row>
-              <ResizingTextarea i18n="description-label" name="itemDescription" />
+              <ResizingTextarea i18n="description-label" name="ComboDisciplinePowerDesc" />
             </RowDescription>
           </Row>
         )}

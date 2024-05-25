@@ -18,7 +18,6 @@ export const SheetBelongings = () => (
     <Section i18n="vehicles-label">
       <RepeatingSection name="Vehicles">
         {() => (
-          // todo roll ловкость или смекалка + вожде‐ ние
           <Row>
             <Input i18n="name-u" name="VehicleName" />
             <Input i18n="vehicle-type-label" name="Type" list="vehicle-datalist" />

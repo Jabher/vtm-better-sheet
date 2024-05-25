@@ -9,7 +9,6 @@ export const AttributeSelect = ({
   ...rest
 }: DOMProps<"select", { i18n?: I18n }>) => (
   <SelectInput name={name} i18n={i18n} {...rest}>
-    {/*todo replace optgroup with styled option[disabled]*/}
     <option value="Strength" data-i18n="strength-u" />
     <option value="Dexterity" data-i18n="dexterity-u" />
     <option value="Stamina" data-i18n="stamina-u" />
@@ -23,8 +22,9 @@ export const AttributeSelect = ({
   </SelectInput>
 );
 
-export const SkillSelect = ({ name, ...rest }: DOMProps<"select">) => (
+export const SkillSelect = ({ name, options, ...rest }: DOMProps<"select", {options?: string[]}>) => (
   <SelectInput name={name} i18n="ability-u" {...rest}>
+    {!options ? null : options.map(key => <option key={key} value={key} data-i18n={`${key}-u`} />)}
     <option disabled data-i18n="talents-u"></option>
     {talents.map((key) => (
       <option key={key} value={key} data-i18n={`${key}-u`} />

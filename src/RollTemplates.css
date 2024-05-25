@@ -7,6 +7,10 @@
     padding: 0;
     margin-bottom: -7px;
 
+    .sheet-result-internal {
+        display: none;
+    }
+
     .sheet-rollContainer {
         display: grid;
         grid-template-areas: "area";
@@ -41,7 +45,7 @@
     }
 
     .sheet-result {
-        font-family: 'Exo 2', serif;
+        font-family: 'Exo 2', 'Proxima Nova', serif;
         align-self: end;
     }
 
@@ -63,7 +67,7 @@
     }
 
     h3, h4, h5, h6 {
-        font-family: 'Poiret One', serif;
+        font-family: 'Poiret One', 'Nunito', serif;
 
         span {
             font-size: inherit;
@@ -91,7 +95,7 @@
         display: flex;
         flex-wrap: wrap;
         width: 100%;
-        font-family: "Exo 2", serif;
+        font-family: "Exo 2", 'Proxima Nova', serif;
 
         .sheet-flex-break {
             flex-basis: 100%;
@@ -209,7 +213,7 @@
     }
 
     .sheet-regularResult {
-        font-family: 'Exo 2', serif;
+        font-family: "Exo 2", "Proxima Nova", serif;
         font-weight: 400;
     }
 

@@ -71,7 +71,6 @@ export const SheetBonds = () => (
       </RepeatingSection>
     </Section>
     <Section i18n="boons-label">
-      {/*todo секции мои долги + долги мне?*/}
       <RepeatingSection name="Boons">
         {() => (
           <Row>

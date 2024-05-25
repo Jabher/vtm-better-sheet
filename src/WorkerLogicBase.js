@@ -1,4 +1,4 @@
-export class WorkerLogic {
+export class WorkerLogicBase {
   dependencies = {};
   repeatingDefaults = {};
 
