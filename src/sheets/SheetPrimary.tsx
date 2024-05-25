@@ -23,6 +23,11 @@ export const SheetPrimary = () => (
           <option data-i18n={key} key={key} />
         ))}
     </datalist>
+    <datalist id="user-discipline-datalist">
+      {range(1, 16).map((i) => (
+        <option key={i} name={`attr_Discipline${i}Name`} />
+      ))}
+    </datalist>
     <Section>
       <SectionHead i18n="Primary" />
       <SectionBody style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)" }}>
@@ -190,7 +195,7 @@ export const SheetPrimary = () => (
               .reverse()
               .map((i) => (
                 <>
-                  <input type="radio" name="pathNumber" value={i} key={`input_${i}`} />
+                  <input type="radio" name="attr_pathNumberComputed" value={i} key={`input_${i}`} />
                   <ResizingTextarea name={`MoralPath${i}`} placeholder={`Moral path ${i}`} key={i} />
                 </>
               ))}
@@ -215,7 +220,7 @@ export const SheetPrimary = () => (
           <Section>
             <SectionHead i18n="willpower-u">
               <span style={{ padding: "0px 8px", opacity: 0.5 }}>
-                <span name="attr_Willpower_Used" />/<span name="attr_Willpower" />
+                <span name="attr_WillpowerUsed" />/<span name="attr_Willpower" />
               </span>
             </SectionHead>
             <SectionBody style={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
@@ -224,14 +229,25 @@ export const SheetPrimary = () => (
                 <RollButton name="willpower" childrenName="willpowerRoll" />
               </div>
               <div className="sheet-primary--counter-with-roll">
-                <Counter from={0} to={9} name="Willpower_Used" dotStyle="square" />
-                <RollButton name="willpowerUsed" childrenName="willpowerUsedRoll" />
+                <Counter from={0} to={9} name="willpowerUsed" dotStyle="square" style={{ alignItems: "center" }} />
+                <RollButton name="willpowerUsed" childrenName="willpowerUsed" />
               </div>
             </SectionBody>
           </Section>
           <Section className="sheet-component" style={{ display: "flex", flexDirection: "column-reverse" }}>
             <SectionBody>
-              <Counter from={0} to={39} name="BloodPool" className="sheet-primary--bloodpool" fade />
+              <Counter
+                from={0}
+                to={39}
+                name="BloodPool"
+                className="sheet-primary--bloodpool"
+                fade
+                style={{ height: "unset" }}
+              />
+              <div style={{ display: "flex" }}>
+                <Input i18n="bloodpoolMax-u" name="BloodPoolMax" type="number" />
+                <Input i18n="pointsperturn-u" name="BloodPerTurn" type="number" />
+              </div>
             </SectionBody>
             <SectionHead i18n="bloodpool-u">
               <span name="attr_BloodPool" style={{ padding: "0px 8px", opacity: 0.5 }} />
@@ -300,7 +316,7 @@ export const SheetPrimary = () => (
           </SectionBody>
           <SectionHead i18n="movement-u" />
           <SectionBody className="sheet-primary--movement">
-            <div className="sheet-primary--speed">
+            <div className="sheet-primary--2col">
               <H5 i18n="walkspeed-u" />
               <div>
                 <span name="attr_WalkSpeed">10</span>

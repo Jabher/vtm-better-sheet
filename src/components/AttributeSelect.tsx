@@ -2,8 +2,13 @@ import { DOMProps, I18n } from "../types.ts";
 import { talents, knowledges, skills } from "../consts.ts";
 import { SelectInput } from "./SelectInput.tsx";
 
-export const AttributeSelect = ({ name, i18n = "attribute-u", ...rest }: DOMProps<"select", { i18n?: I18n }>) => (
-  <SelectInput name={name} defaultValue={0} i18n={i18n} {...rest}>
+export const AttributeSelect = ({
+  name,
+  i18n = "attribute-u",
+  defaultValue = 0,
+  ...rest
+}: DOMProps<"select", { i18n?: I18n }>) => (
+  <SelectInput name={name} defaultValue={defaultValue} i18n={i18n} {...rest}>
     {/*todo replace optgroup with styled option[disabled]*/}
     <optgroup label="Physical">
       <option value="Strength" data-i18n="strength-u" />

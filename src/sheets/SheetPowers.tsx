@@ -9,6 +9,7 @@ import { Row, RowDescription } from "../components/Row.tsx";
 import { AttributeSelect, SkillSelect } from "../components/AttributeSelect.tsx";
 import { RollButton } from "../components/Buttons.tsx";
 import { H3 } from "../components/globals/Headings.tsx";
+import { Checkbox } from "../components/Checkbox.tsx";
 
 export const SheetPowers = () => (
   <div className="sheet-tab-content sheet-powers">
@@ -22,12 +23,13 @@ export const SheetPowers = () => (
             <RowDescription>
               <Row>
                 <H3 i18n="dice-pool-label" style={{ alignSelf: "center", flexBasis: 0 }} />
-                <AttributeSelect name="rollAttribute" />
+                <Checkbox name="rollUseHealth" i18n="use-health-minus-label" symbol="ecg_heart" />
+                <AttributeSelect name="rollAttr" />
                 <SkillSelect name="rollSkill" />
                 <Input type="number" name="difficulty" defaultValue={6} i18n="difficulty-label" />
-                <RollButton name="combatRoll" childrenName="combatRollNumber" />
+                <RollButton name="combatRoll" childrenName="rollNumber" />
               </Row>
-              <ResizingTextarea i18n="description-label" name="SetDisciplinePowerDesc" />
+              <ResizingTextarea i18n="description-label" name="itemDescription" />
             </RowDescription>
           </Row>
         )}
@@ -56,7 +58,15 @@ export const SheetPowers = () => (
               </div>
             </div>
             <RowDescription>
-              <ResizingTextarea i18n="description-label" name="ComboDisciplinePowerDesc" />
+              <Row>
+                <H3 i18n="dice-pool-label" style={{ alignSelf: "center", flexBasis: 0 }} />
+                <Checkbox name="rollUseHealth" i18n="use-health-minus-label" symbol="ecg_heart" />
+                <AttributeSelect name="rollAttr" />
+                <SkillSelect name="rollSkill" />
+                <Input type="number" name="difficulty" defaultValue={6} i18n="difficulty-label" />
+                <RollButton name="combatRoll" childrenName="rollNumber" />
+              </Row>
+              <ResizingTextarea i18n="description-label" name="itemDescription" />
             </RowDescription>
           </Row>
         )}

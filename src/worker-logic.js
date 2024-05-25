@@ -1,3 +1,4 @@
+import { fromPairs, range } from "ramda";
 import {
   attributes,
   cars,
@@ -12,7 +13,6 @@ import {
 } from "./consts.ts";
 import "./custom.d.ts";
 import { WorkerLogic } from "./WorkerLogic.js";
-import { fromPairs, range } from "ramda";
 
 const Roll20 = {
   sectionIDs: (group, callback) => getSectionIDs(`repeating_${group}`, callback),
@@ -216,21 +216,59 @@ export const worker = () =>
     }
 
     initRolls() {
+      console.log("translation language is", getTranslationLanguage());
+      const cardinalPluralizer = new Intl.PluralRules(getTranslationLanguage() || navigator.language);
       on("clicked:roll_willpower", () => {
-        const rollExpression = `1d100!>95 + @{skill_bonus}[Bonus] + @{skill_mod}[Mod]`;
-        const rollBase = `&{template:test} {{name=Test}} {{roll1=[[${rollExpression}]]}} {{downroll=[[0]]}} {{roll1name=${rollExpression}}} {{roll1mod=- [[1d100!>95]]}} {{roll1final=[[0]]}}`;
-
-        getAttrs(["Name", "Willpower"], ({ Name, Willpower }) => {
-          const template = `&{template:wodAttribute} {{name=${Name}}} {{roll1=[[${Willpower}d10]]}}`;
-          console.log("rolling", template);
+        getAttrs(["Willpower"], ({ Willpower }) => {
+          // todo support 30+dice scenario
+          const diceCount = i(Willpower);
+          const title = `${getTranslationByKey("dice-check-label")}: ${getTranslationByKey("willpower-u")}`;
+          const difficultyTemplate = `?{${getTranslationByKey("difficulty-label")}|6 }`;
+          const template = [
+            `&{template:attribute}`,
+            `{{name=@{Name}}}`,
+            `{{rollTitle=${title}}}`,
+            `{{difficultyLabel=${getTranslationByKey("difficulty-label")}}}`,
+            `{{count=[[${diceCount}]]}}`,
+            `{{successes=[[0]]}}`,
+            `{{fails=[[0]]}}`,
+            `{{difficulty=[[0]]}}`,
+            `{{result=[[0]]}}`,
+            `{{roll=[[${diceCount}d10>${difficultyTemplate}cs>10]]}}`,
+            ...range(1, diceCount + 1).map((j) => `{{dice${j}=[[0]]}}`),
+            ``,
+          ].join(" ");
+          console.log("rolling willpower", template);
           startRoll(template, (results) => {
-            console.log(results);
-            const total = results.results.roll1.result;
-            const computed = total % 4;
-
-            finishRoll(results.rollId, {
-              roll1: computed,
-            });
+            const { roll } = results.results;
+            const difficulty = i(roll.expression.replace(`${diceCount}d10>`, "").replace("cs>10", ""));
+            const successes = roll.result;
+            const fails = roll.dice.filter((d) => d === 1).length;
+            const resultNumber = Math.max(0, successes - fails);
+            let result;
+            console.log(
+              "pluralizing roll result",
+              resultNumber,
+              cardinalPluralizer.select(resultNumber),
+              `${resultNumber} ${getTranslationByKey(`roll-success-pluralize-cardinal-${cardinalPluralizer.select(resultNumber)}`)}`
+            );
+            if (resultNumber > 0) {
+              // eslint-disable-next-line sonarjs/no-nested-template-literals
+              result = `${resultNumber} ${getTranslationByKey(`roll-success-pluralize-cardinal-${cardinalPluralizer.select(resultNumber)}`)}`;
+            } else if (fails > 0 && successes === 0) {
+              result = getTranslationByKey("roll-critical-fail");
+            } else {
+              result = getTranslationByKey("roll-fail");
+            }
+            const rollData = {
+              ...fromPairs(roll.dice.sort((a, b) => a - b).map((d, j) => [`dice${j + 1}`, d])),
+              fails,
+              successes,
+              difficulty,
+              result,
+            };
+            console.log("finishing roll", rollData, results);
+            finishRoll(results.rollId, rollData);
           });
         });
       });
@@ -247,6 +285,7 @@ export const worker = () =>
         "Health",
       ];
 
+      // eslint-disable-next-line unicorn/consistent-function-scoping
       const getRollAttrs = ($) => ({
         ...$,
         Strength: i($.Strength) + Math.max(0, i($.potenceBoost) - i($.potenceSpent)),
@@ -260,24 +299,32 @@ export const worker = () =>
         Wits: i($.Wits),
       });
 
-      const combatRoll = ({ useHealthInCombat, Health, potenceSpent, ...$ }, rollAttr, getter) => {
-        const attrs = getRollAttrs($);
-        const healthModifier = useHealthInCombat === "on" ? i(Health) : 0;
-        const potenceBonus = i(potenceSpent);
-        // todo potence
+      const roll = (state, rollAttr, useHealth, getter) => {
+        const attrs = getRollAttrs(state);
+        const healthModifier = useHealth === "on" ? i(state.Health) : 0;
+        const potenceBonus = i(state.potenceSpent);
+        const value = getter(attrs[rollAttr], attrs);
+        // todo use celerity
+        if (Number.isNaN(value)) {
+          return " ";
+        }
         return [
           Math.max(0, getter(attrs[rollAttr], attrs) + healthModifier),
           potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
         ].join("");
       };
 
-      const damageRoll = ({ useHealthInCombat, Health, potenceSpent, ...$ }, rollAttr, getter) => {
-        const attrs = getRollAttrs($);
-        const healthModifier = useHealthInCombat === "on" ? i(Health) : 0;
-        const potenceBonus = i(potenceSpent);
+      const damageRoll = (state, rollAttr, getter) => {
+        const attrs = getRollAttrs(state);
+        const healthModifier = state.useHealthInCombat === "on" ? i(state.Health) : 0;
+        const potenceBonus = i(state.potenceSpent);
+        const value = getter(attrs[rollAttr], attrs);
+        // todo use celerity
+        if (Number.isNaN(value)) {
+          return " ";
+        }
         return [
-          Math.max(0, getter(attrs[rollAttr], attrs) + rollAttr === "Strength" ? healthModifier : ""),
-          healthModifier || "",
+          Math.max(0, value + (rollAttr === "Strength" ? healthModifier : 0)),
           potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
         ].join("");
       };
@@ -288,8 +335,30 @@ export const worker = () =>
           extraKeys: ["rollAttr", "rollSkill"],
           globalDependencies: attributesWithBoosts,
         },
-        ({ rollAttr, rollSkill }, $) => ({
-          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill])),
+        ({ rollAttr, rollSkill }, state) => ({
+          combatRollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
+        })
+      );
+
+      declareRepeatingDependency(
+        {
+          groupName: "powers",
+          extraKeys: ["rollAttr", "rollSkill"],
+          globalDependencies: attributesWithBoosts,
+        },
+        ({ rollAttr, rollSkill }, state) => ({
+          rollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
+        })
+      );
+
+      declareRepeatingDependency(
+        {
+          groupName: "combinationPowers",
+          extraKeys: ["rollAttr", "rollSkill"],
+          globalDependencies: attributesWithBoosts,
+        },
+        ({ rollAttr, rollSkill }, state) => ({
+          rollNumber: roll(state, rollAttr, state.useHealthInCombat, (attr) => attr + i(state[rollSkill])),
         })
       );
 
@@ -299,45 +368,85 @@ export const worker = () =>
           extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageAttr", "damageBonus"],
           globalDependencies: [...attributesWithBoosts, "CurrentMeleeWeaponDamage"],
         },
-        ({ rollAttr, rollSkill, rollAccuracy, damageAttr, damageBonus }, { CurrentMeleeWeaponDamage, ...$ }) => ({
-          combatRollNumber: combatRoll($, rollAttr, (attribute) => attribute + i($[rollSkill]) + i(rollAccuracy)),
-          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i(damageBonus) + i(CurrentMeleeWeaponDamage)),
+        ({ rollAttr, rollSkill, rollAccuracy, damageAttr, damageBonus }, { CurrentMeleeWeaponDamage, ...state }) => ({
+          combatRollNumber: roll(
+            state,
+            rollAttr,
+            state.useHealthInCombat,
+            (attribute) => attribute + i(state[rollSkill]) + i(rollAccuracy)
+          ),
+          damageRollNumber: damageRoll(
+            state,
+            damageAttr,
+            (attr) => attr + i(damageBonus) + i(CurrentMeleeWeaponDamage)
+          ),
         })
       );
 
       declareRepeatingDependency(
         {
           groupName: "rangedCombatDice",
-          extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageAttr", "damageBonus"],
+          extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageBonus"],
           globalDependencies: [...attributesWithBoosts, "CurrentRangedWeaponDamage"],
         },
-        ({ rollAttr, rollSkill, rollAccuracy, damageAttr }, { CurrentRangedWeaponDamage, ...$ }) => ({
-          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
-          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i(CurrentRangedWeaponDamage)),
+        ({ rollAttr, rollSkill, rollAccuracy, damageBonus }, { CurrentRangedWeaponDamage, ...state }) => ({
+          combatRollNumber: roll(
+            state,
+            rollAttr,
+            state.useHealthInCombat,
+            (attr) => attr + i(state[rollSkill]) + i(rollAccuracy)
+          ),
+          damageRollNumber: damageRoll(state, "", () => i(damageBonus) + i(CurrentRangedWeaponDamage)),
         })
       );
 
       declareRepeatingDependency(
         {
-          groupName: "MeleeWeapons",
-          extraKeys: ["rollAccuracy", "rollAttr", "Damage", "rollSkill"],
+          groupName: "MeleeWeapon",
+          extraKeys: ["Damage", "damageAttr", "BrawlFlag"],
           globalDependencies: attributesWithBoosts,
         },
-        ({ rollAttr, rollSkill, rollAccuracy, damageAttr }, $) => ({
-          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
-          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
+        ({ Damage, damageAttr, BrawlFlag }, state) => ({
+          combatRollNumber: roll(
+            state,
+            "Dexterity",
+            state.useHealthInCombat,
+            (attr) => attr + i(BrawlFlag === "on" ? state.brawl : state.melee)
+          ),
+          damageRollNumber: damageRoll(state, damageAttr, (attr) => attr + i(Damage)),
         })
       );
 
       declareRepeatingDependency(
         {
-          groupName: "RangedWeapons",
-          extraKeys: ["rollAccuracy", "rollAttr", "Damage", "rollSkill"],
+          groupName: "RangedWeapon",
+          extraKeys: ["rollAccuracy", "Damage"],
           globalDependencies: attributesWithBoosts,
         },
-        ({ rollAttr, rollSkill, rollAccuracy, damageAttr }, $) => ({
-          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
-          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
+        ({ rollAccuracy, Damage }, $) => ({
+          combatRollNumber: roll($, "Dexterity", $.useHealthInCombat, (attr) => attr + i($.firearms) + i(rollAccuracy)),
+          damageRollNumber: damageRoll($, "Strength", () => i(Damage)),
+        })
+      );
+
+      declareRepeatingDependency(
+        {
+          groupName: "powers",
+          extraKeys: ["rollAttr", "rollSkill", "rollUseHealth"],
+          globalDependencies: attributesWithBoosts,
+        },
+        ({ rollAttr, rollSkill, rollUseHealth }, $) => ({
+          rollNumber: roll($, rollAttr, rollUseHealth, (attr) => attr + i($[rollSkill])),
+        })
+      );
+      declareRepeatingDependency(
+        {
+          groupName: "combinationPowers",
+          extraKeys: ["rollAttr", "rollSkill", "rollUseHealth"],
+          globalDependencies: attributesWithBoosts,
+        },
+        ({ rollAttr, rollSkill, rollUseHealth }, $) => ({
+          rollNumber: roll($, rollAttr, rollUseHealth, (attr) => attr + i($[rollSkill])),
         })
       );
 
@@ -352,6 +461,7 @@ export const worker = () =>
                   [`Current${type}ID`]: "",
                   [`Current${type}Name`]: "",
                   [`Current${type}Damage`]: 0,
+                  [`Current${type}damageAttr`]: "",
                 });
               }
             });
@@ -377,6 +487,7 @@ export const worker = () =>
                       [`Current${type}Name`]:
                         attrs[`repeating_${type}_WeaponName`] || attrs[`repeating_${type}_Type`] || "???",
                       [`Current${type}Damage`]: attrs[`repeating_${type}_Damage`],
+                      [`Current${type}damageAttr`]: attrs[`repeating_${type}_damageAttr`],
                     }
                   );
                 });
@@ -418,6 +529,46 @@ export const worker = () =>
       willpowerUsedRoll: ({ WillpowerUsed, WillpowerBoost }) => i(WillpowerUsed) + i(WillpowerBoost),
       initiativeBonus: ({ Dexterity, Wits, celerityBoost, initiativeModifier }) =>
         `+${i(Dexterity) + i(Wits) + i(celerityBoost) + i(initiativeModifier)}`,
+      // https://www.reddit.com/r/vtm/comments/164i1vj/revised_vampire_generation_chart_also_how_to_stat/
+      BloodPoolMax: ({ Generation }) =>
+        [
+          undefined, // 0
+          undefined, // 1
+          undefined, // 2
+          undefined, // 3
+          undefined, // 4
+          40, // 5
+          30, // 6
+          20, // 7
+          15, // 8
+          14, // 9
+          13, // 10
+          12, // 11
+          11, // 12
+          10, // 13
+          10, // 14
+          10, // 15
+        ][i(Generation)],
+      BloodPerTurn: ({ Generation }) =>
+        [
+          undefined, // 0
+          undefined, // 1
+          undefined, // 2
+          undefined, // 3
+          undefined, // 4
+          8, // 5
+          6, // 6
+          4, // 7
+          3, // 8
+          2, // 9
+          1, // 10
+          1, // 11
+          1, // 12
+          1, // 13
+          1, // 14
+          1, // 15
+        ][i(Generation)],
+      pathNumberComputed: ({ pathNumber }) => pathNumber,
     };
 
     repeatingDefaults = {

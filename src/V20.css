@@ -32,20 +32,6 @@
     --secondarytext: var(--dark-secondarytext);
 }
 
-.sheet-image-div {
-    background-image: url('/public/banner.png');
-    background-size: 100% 140px;
-    background-repeat: repeat-x;
-    background-position: 0px 10px;
-}
-
-.sheet-border-div {
-    background-color: transparent;
-    border-style: solid;
-    border-width: 278px 30px 38px 23px;
-    border-image: url('/public/border.png') 793 64 62 66 repeat;
-}
-
 .sheet-main-div-inner {
     margin: -128px -3px 0 -4px;
 }

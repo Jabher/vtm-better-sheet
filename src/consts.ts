@@ -105,7 +105,7 @@ export const meleeWeapons: Record<
   Prefix<`weapon-melee-`, "-label">,
   [damage: number, type: DamageType, conceal: ConcealType]
 > = {
-  barehand: [0, DamageType.Bashing, ConcealType.Pocket],
+  fists: [0, DamageType.Bashing, ConcealType.Pocket],
   sap: [+1, DamageType.Bashing, ConcealType.Pocket],
   club: [+2, DamageType.Bashing, ConcealType.Trench],
   knife: [+1, DamageType.Lethal, ConcealType.Jacket],

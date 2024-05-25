@@ -1,0 +1,222 @@
+.sheet-rolltemplate-attribute {
+    margin-left: -45px;
+    margin-right: -16px;
+    padding: 16px 0;
+
+    .sheet-rollContainer {
+        display: grid;
+        grid-template-areas: "area";
+    }
+
+    .sheet-roll-layer {
+        grid-area: area;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .sheet-dices {
+        mask: linear-gradient(to right bottom,white, #222 50%, black) luminance;
+    }
+
+    .sheet-roll-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: flex-end;
+        background-image: linear-gradient(to left top, black, rgba(0,0,0,.5) 20%, rgba(0,0,0,.1) 40%, transparent 60%);
+        padding-top: 32px;
+        padding-bottom: 16px;
+        z-index: 1;
+    }
+
+    .sheet-result {
+        font-family: 'Exo 2', serif;
+        align-self: end;
+    }
+
+    &::after {
+        content: '';
+        display: block;
+        height: 1px;
+        width: 100%;
+        background-image: radial-gradient(rgb(92, 2, 18), transparent 75%);
+        background-size: 100% 1px;
+        background-repeat: no-repeat;
+        background-position: center;
+        padding: 0;
+    }
+
+    &.sheet-rolltemplate-darkmode::after {
+        background-image: radial-gradient(rgb(219, 0, 44), transparent 75%);
+    }
+
+    h3, h4, h5, h6 {
+        font-family: 'Poiret One', serif;
+
+        span {
+            font-size: inherit;
+            font-weight: inherit;
+            display: contents;
+        }
+    }
+
+    &:not(:first-child) {
+        margin-top: -26px;
+        padding-top: 26px;
+    }
+
+    .inlinerollresult.inlinerollresult {
+        background-color: transparent;
+        border: none;
+        padding: 0;
+        cursor: default;
+        font-size: inherit;
+        color: inherit;
+        pointer-events: none;
+    }
+
+    .sheet-dices {
+        padding-top: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        font-family: "Exo 2", serif;
+
+        .sheet-flex-break {
+            flex-basis: 100%;
+            height: 0;
+        }
+
+        & > div {
+            display: flex;
+        }
+
+        .sheet-dice:nth-of-type(2n) {
+            margin-top: 32px;
+        }
+
+        .sheet-dice {
+            width: 25px;
+            height: 35px;
+            display: block;
+            position: relative;
+            color: #eee;
+        }
+
+        .sheet-dice::before, .sheet-dice::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            width: 25px;
+            height: 25px;
+            box-sizing: border-box;
+        }
+
+        .sheet-result {
+            display: none;
+        }
+
+        .sheet-dice::before {
+            border: 3px solid rgba(166, 166, 166, 0.5);
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: matrix(0.620285, 0.793929, -0.620285, 0.793929, 0, 0);
+        }
+
+        .sheet-dice::after {
+            content: "";
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('https://s3.amazonaws.com/files.d20.io/images/227894556/uwrVooXrY20KOzi3aYQHuw/med.png?1623426720');
+            background-size: 25%;
+        }
+
+        .sheet-result-critical-fail + .sheet-dice {
+            &::before {
+                border-color: rgba(255, 0, 0, 0.5);
+            }
+
+            &::after {
+                background-image: url('https://s3.amazonaws.com/files.d20.io/images/227895148/mSAeeo0hopmFguENz6d9ZA/med.png?1623426977');
+                background-size: 50%;
+            }
+        }
+
+        .sheet-result-success + .sheet-dice {
+            &::before {
+                border-color: rgba(40, 167, 69, 0.5);
+            }
+        }
+
+        .sheet-result-critical-success + .sheet-dice {
+            &::before {
+                border-color: rgba(13, 110, 253, 0.5);
+            }
+
+            &::after {
+                background-image: url('https://s3.amazonaws.com/files.d20.io/images/227894565/fdPl8WDo32cJH9KNDBzFBA/med.png?1623426721');
+                background-size: 35%;
+            }
+        }
+
+        .sheet-dice .inlinerollresult {
+            z-index: 1;
+            position: absolute;
+            left: 0;
+            width: 100%;
+            display: block;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            opacity: 0;
+        }
+    }
+
+    .sheet-roll-info {
+        filter: blur(0);
+    }
+
+    &:hover {
+        .sheet-dices {
+            mask: linear-gradient(to right bottom,white, white) luminance;
+        }
+        .sheet-dice::after {
+            opacity: 0;
+        }
+
+        .sheet-dice .inlinerollresult {
+            opacity: 1;
+        }
+        .sheet-roll-info {
+            filter: blur(1px);
+            opacity: .5;
+            z-index: 0;
+        }
+    }
+
+    .sheet-regularResult {
+        font-family: 'Exo 2', serif;
+        font-weight: 400;
+    }
+
+    /*crit fail overrides on next line*/
+
+    .sheet-result-result-is-zero ~ .sheet-rollContainer .sheet-regularResult {
+        color: #75424b;
+    }
+
+    &.sheet-rolltemplate-darkmode .sheet-result-result-is-zero ~ .sheet-rollContainer .sheet-regularResult {
+        color: #ef8599;
+    }
+
+    /*this means that sheet-result-has-success is not declared, thus, crit fail*/
+
+    .sheet-result-has-fails + .sheet-rollContainer .sheet-regularResult {
+        color: #750218;
+    }
+
+    &.sheet-rolltemplate-darkmode .sheet-result-has-fails + .sheet-rollContainer .sheet-regularResult {
+        color: #fb133e;
+    }
+
+}

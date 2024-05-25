@@ -15,14 +15,15 @@ import { H3 } from "../components/globals/Headings.tsx";
 export const SheetCombat = () => (
   <div className="sheet-colrow sheet-tab-content sheet-tabCombat">
     <div style={{ display: "none" }}>
-      <input type="text" name="attr_CurrentMeleeWeaponID" defaultValue="" />
-      <input type="text" name="attr_CurrentMeleeWeaponName" defaultValue="" />
-      <input type="text" name="attr_CurrentMeleeWeaponLethality" defaultValue="" />
-      <input type="text" name="attr_CurrentMeleeWeaponDamage" defaultValue="" />
-      <input type="text" name="attr_CurrentRangedWeaponID" defaultValue="" />
-      <input type="text" name="attr_CurrentRangedWeaponName" defaultValue="" />
-      <input type="text" name="attr_CurrentRangedWeaponLethality" defaultValue="" />
-      <input type="text" name="attr_CurrentRangedWeaponDamage" defaultValue="" />
+      <input type="text" name="attr_CurrentMeleeWeaponID" />
+      <input type="text" name="attr_CurrentMeleeWeaponName" />
+      <input type="text" name="attr_CurrentMeleeWeaponLethality" />
+      <input type="text" name="attr_CurrentMeleeWeaponDamage" />
+      <input type="text" name="attr_CurrentMeleeWeaponDamageAttr" />
+      <input type="text" name="attr_CurrentRangedWeaponID" />
+      <input type="text" name="attr_CurrentRangedWeaponName" />
+      <input type="text" name="attr_CurrentRangedWeaponLethality" />
+      <input type="text" name="attr_CurrentRangedWeaponDamage" />
     </div>
     <datalist id="melee-weapon-datalist">
       {Object.keys(translation)
@@ -39,20 +40,20 @@ export const SheetCombat = () => (
         ))}
     </datalist>
 
-    <div style={{ display: "flex", justifyContent: "space-between" }}>
-      <Section i18n="combat-dice-pools-label">
+    <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", flexDirection: "row-reverse" }}>
+      <Section i18n="initiative-dice-pool-label" style={{ flex: "1 1 min-content" }}>
+        <Row>
+          <Checkbox name="initiativeAddTracker" i18n="use-initiative-label" symbol="low_priority" />
+          <Input type="number" name="initiativeModifier" i18n="result-modifiers-label" />
+          <RollButton name="initiativeRoll" childrenName="initiativeBonus" />
+        </Row>
+      </Section>
+      <Section i18n="combat-dice-pools-label" style={{ flex: "1 1 min-content" }}>
         <Row>
           <Checkbox name="useHealthInCombat" i18n="use-health-minus-label" symbol="ecg_heart" />
           {/*todo use var*/}
           <Input name="celeritySpent" type="number" i18n="use-celerity-minus-label" />
           <Input name="potenceSpent" type="number" i18n="use-potence-minus-label" />
-        </Row>
-      </Section>
-      <Section i18n="initiative-dice-pool-label">
-        <Row style={{ justifyContent: "space-between" }}>
-          <Checkbox name="initiativeAddTracker" i18n="use-initiative-label" symbol="low_priority" />
-          <Input type="number" name="initiativeModifier" i18n="result-modifiers-label" />
-          <RollButton name="initiativeRoll" childrenName="initiativeBonus" />
         </Row>
       </Section>
     </div>
@@ -125,7 +126,6 @@ export const SheetCombat = () => (
                     i18n="damage-u"
                     style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
                   />
-                  <AttributeSelect name="damageAttr" i18n="damage-attribute-label" />
                   <Input type="number" name="damageBonus" defaultValue={0} i18n="damage-bonus-label" />
                   <RollButton name="damageRoll" childrenName="damageRollNumber" />
                 </Row>
@@ -143,6 +143,7 @@ export const SheetCombat = () => (
             <Checkbox i18n="onq-u" className="sheet-APIcheck" name="Equipped" />
             <Input i18n="name2-u" name="WeaponName" />
             <Input i18n="type-u" name="Type" list="melee-weapon-datalist" />
+            <Checkbox i18n="weapon-is-brawl-label" symbol="back_hand" name="BrawlFlag" />
             <SelectInput i18n="type-u" name="Lethality">
               <option value={DamageType.Bashing} data-i18n="bashing-u" />
               <option value={DamageType.Lethal} data-i18n="lethal-u" />
@@ -161,8 +162,8 @@ export const SheetCombat = () => (
                   i18n="damage-u"
                   style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
                 />
-                <AttributeSelect name="damageAttr" />
-                <Input i18n="damage-u" type="number" name="Damage" />
+                <AttributeSelect name="damageAttr" defaultValue="Strength" />
+                <Input i18n="damage-bonus-label" type="number" name="Damage" />
                 <RollButton name="damageRoll" childrenName="damageRollNumber" />
               </Row>
               <ResizingTextarea i18n="notes-label" name="Desc" />
@@ -200,8 +201,7 @@ export const SheetCombat = () => (
                   i18n="damage-u"
                   style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
                 />
-                <AttributeSelect name="damageAttr" />
-                <Input i18n="damage-u" type="number" name="Damage" />
+                <Input i18n="damage-bonus-label" type="number" name="Damage" />
                 <RollButton name="damageRoll" childrenName="damageRollNumber" />
               </Row>
               <ResizingTextarea i18n="notes-label" name="Desc" />

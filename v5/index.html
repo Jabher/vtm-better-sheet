@@ -1,0 +1,226 @@
+<div class="sheet-roll">
+  <div class="sheet-roll__container">{{#character}}
+    <div class="sheet-roll__character">{{ character }}</div>{{/character}}{{#title}}{{#traitTwo}}
+    <div class="sheet-roll__title">{{ title }}{{#traitTwo}}{{#rollGreater() traitTwo 0}}<span class="sheet-roll__hidden" data-i18n-placeholder="{{ traitTwo }}"></span>&amp;<span class="sheet-roll__attribute--strength" data-i18n="Strength"></span><span class="sheet-roll__attribute--dexterity" data-i18n="Dexterity"></span><span class="sheet-roll__attribute--stamina" data-i18n="Stamina"></span><span class="sheet-roll__attribute--charisma" data-i18n="Charisma"></span><span class="sheet-roll__attribute--manipulation" data-i18n="Manipulation"></span><span class="sheet-roll__attribute--composure" data-i18n="Composure"></span><span class="sheet-roll__attribute--intelligence" data-i18n="Intelligence"></span><span class="sheet-roll__attribute--wits" data-i18n="Wits"></span><span class="sheet-roll__attribute--resolve" data-i18n="Resolve"></span><span class="sheet-roll__attribute--physical" data-i18n="Physical"></span><span class="sheet-roll__attribute--social" data-i18n="Social"></span><span class="sheet-roll__attribute--mental" data-i18n="Mental"></span>{{/rollGreater() traitTwo 0}}{{/traitTwo}}
+    </div>{{/traitTwo}}{{/title}}{{#title}}
+    {{  ^traitTwo  }}
+    {{  ^asset  }}
+    <div class="sheet-roll__title">{{ title }}</div>{{  /asset  }}
+    {{  /traitTwo  }}{{/title}}{{#computed::rolls}}{{#rollGreater() computed::rolls 0}}
+    <div class="sheet-roll__results">{{#^rollLess() computed::rolls 1}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_1 6}}{{#rollTotal() roll_1 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_1}}</div>{{/rollTotal() roll_1 10}}{{#^rollTotal() roll_1 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_1}}</div>{{/^rollTotal() roll_1 10}}{{/^rollLess() roll_1 6}}{{#rollLess() roll_1 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_1}}</div>{{/rollLess() roll_1 6}}
+      </div>{{/^rollLess() computed::rolls 1}}{{#^rollLess() computed::rolls 2}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_2 6}}{{#rollTotal() roll_2 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_2}}</div>{{/rollTotal() roll_2 10}}{{#^rollTotal() roll_2 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_2}}</div>{{/^rollTotal() roll_2 10}}{{/^rollLess() roll_2 6}}{{#rollLess() roll_2 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_2}}</div>{{/rollLess() roll_2 6}}
+      </div>{{/^rollLess() computed::rolls 2}}{{#^rollLess() computed::rolls 3}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_3 6}}{{#rollTotal() roll_3 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_3}}</div>{{/rollTotal() roll_3 10}}{{#^rollTotal() roll_3 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_3}}</div>{{/^rollTotal() roll_3 10}}{{/^rollLess() roll_3 6}}{{#rollLess() roll_3 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_3}}</div>{{/rollLess() roll_3 6}}
+      </div>{{/^rollLess() computed::rolls 3}}{{#^rollLess() computed::rolls 4}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_4 6}}{{#rollTotal() roll_4 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_4}}</div>{{/rollTotal() roll_4 10}}{{#^rollTotal() roll_4 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_4}}</div>{{/^rollTotal() roll_4 10}}{{/^rollLess() roll_4 6}}{{#rollLess() roll_4 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_4}}</div>{{/rollLess() roll_4 6}}
+      </div>{{/^rollLess() computed::rolls 4}}{{#^rollLess() computed::rolls 5}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_5 6}}{{#rollTotal() roll_5 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_5}}</div>{{/rollTotal() roll_5 10}}{{#^rollTotal() roll_5 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_5}}</div>{{/^rollTotal() roll_5 10}}{{/^rollLess() roll_5 6}}{{#rollLess() roll_5 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_5}}</div>{{/rollLess() roll_5 6}}
+      </div>{{/^rollLess() computed::rolls 5}}{{#^rollLess() computed::rolls 6}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_6 6}}{{#rollTotal() roll_6 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_6}}</div>{{/rollTotal() roll_6 10}}{{#^rollTotal() roll_6 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_6}}</div>{{/^rollTotal() roll_6 10}}{{/^rollLess() roll_6 6}}{{#rollLess() roll_6 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_6}}</div>{{/rollLess() roll_6 6}}
+      </div>{{/^rollLess() computed::rolls 6}}{{#^rollLess() computed::rolls 7}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_7 6}}{{#rollTotal() roll_7 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_7}}</div>{{/rollTotal() roll_7 10}}{{#^rollTotal() roll_7 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_7}}</div>{{/^rollTotal() roll_7 10}}{{/^rollLess() roll_7 6}}{{#rollLess() roll_7 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_7}}</div>{{/rollLess() roll_7 6}}
+      </div>{{/^rollLess() computed::rolls 7}}{{#^rollLess() computed::rolls 8}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_8 6}}{{#rollTotal() roll_8 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_8}}</div>{{/rollTotal() roll_8 10}}{{#^rollTotal() roll_8 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_8}}</div>{{/^rollTotal() roll_8 10}}{{/^rollLess() roll_8 6}}{{#rollLess() roll_8 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_8}}</div>{{/rollLess() roll_8 6}}
+      </div>{{/^rollLess() computed::rolls 8}}{{#^rollLess() computed::rolls 9}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_9 6}}{{#rollTotal() roll_9 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_9}}</div>{{/rollTotal() roll_9 10}}{{#^rollTotal() roll_9 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_9}}</div>{{/^rollTotal() roll_9 10}}{{/^rollLess() roll_9 6}}{{#rollLess() roll_9 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_9}}</div>{{/rollLess() roll_9 6}}
+      </div>{{/^rollLess() computed::rolls 9}}{{#^rollLess() computed::rolls 10}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_10 6}}{{#rollTotal() roll_10 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_10}}</div>{{/rollTotal() roll_10 10}}{{#^rollTotal() roll_10 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_10}}</div>{{/^rollTotal() roll_10 10}}{{/^rollLess() roll_10 6}}{{#rollLess() roll_10 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_10}}</div>{{/rollLess() roll_10 6}}
+      </div>{{/^rollLess() computed::rolls 10}}{{#^rollLess() computed::rolls 11}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_11 6}}{{#rollTotal() roll_11 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_11}}</div>{{/rollTotal() roll_11 10}}{{#^rollTotal() roll_11 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_11}}</div>{{/^rollTotal() roll_11 10}}{{/^rollLess() roll_11 6}}{{#rollLess() roll_11 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_11}}</div>{{/rollLess() roll_11 6}}
+      </div>{{/^rollLess() computed::rolls 11}}{{#^rollLess() computed::rolls 12}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_12 6}}{{#rollTotal() roll_12 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_12}}</div>{{/rollTotal() roll_12 10}}{{#^rollTotal() roll_12 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_12}}</div>{{/^rollTotal() roll_12 10}}{{/^rollLess() roll_12 6}}{{#rollLess() roll_12 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_12}}</div>{{/rollLess() roll_12 6}}
+      </div>{{/^rollLess() computed::rolls 12}}{{#^rollLess() computed::rolls 13}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_13 6}}{{#rollTotal() roll_13 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_13}}</div>{{/rollTotal() roll_13 10}}{{#^rollTotal() roll_13 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_13}}</div>{{/^rollTotal() roll_13 10}}{{/^rollLess() roll_13 6}}{{#rollLess() roll_13 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_13}}</div>{{/rollLess() roll_13 6}}
+      </div>{{/^rollLess() computed::rolls 13}}{{#^rollLess() computed::rolls 14}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_14 6}}{{#rollTotal() roll_14 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_14}}</div>{{/rollTotal() roll_14 10}}{{#^rollTotal() roll_14 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_14}}</div>{{/^rollTotal() roll_14 10}}{{/^rollLess() roll_14 6}}{{#rollLess() roll_14 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_14}}</div>{{/rollLess() roll_14 6}}
+      </div>{{/^rollLess() computed::rolls 14}}{{#^rollLess() computed::rolls 15}}
+      <div class="sheet-roll__spacer">{{#^rollLess() roll_15 6}}{{#rollTotal() roll_15 10}}
+        <div class="sheet-roll__result sheet-roll__result--crit"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--crit">{{roll_15}}</div>{{/rollTotal() roll_15 10}}{{#^rollTotal() roll_15 10}}
+        <div class="sheet-roll__result sheet-roll__result--success"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--success">{{roll_15}}</div>{{/^rollTotal() roll_15 10}}{{/^rollLess() roll_15 6}}{{#rollLess() roll_15 6}}
+        <div class="sheet-roll__result sheet-roll__result--failure"></div>
+        <div class="sheet-roll__dice sheet-roll__dice--failure">{{roll_15}}</div>{{/rollLess() roll_15 6}}
+      </div>{{/^rollLess() computed::rolls 15}}
+    </div>{{/rollGreater() computed::rolls 0}}{{/computed::rolls}}{{#hunger}}{{#rollGreater() hunger 0}}
+    <div class="sheet-roll__results">{{#^rollLess() hunger 1}}
+      <div class="sheet-roll__spacer">{{#^rollLess() blood_roll_1 6}}{{#rollTotal() blood_roll_1 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--crit"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--crit">{{blood_roll_1}}</div>{{/rollTotal() blood_roll_1 10}}{{#^rollTotal() blood_roll_1 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--success"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--success">{{blood_roll_1}}</div>{{/^rollTotal() blood_roll_1 10}}{{/^rollLess() blood_roll_1 6}}{{#rollLess() blood_roll_1 6}}{{#rollTotal() blood_roll_1 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--critfailure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--critfail">{{blood_roll_1}}</div>{{/rollTotal() blood_roll_1 1}}{{#^rollTotal() blood_roll_1 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--failure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--failure">{{blood_roll_1}}</div>{{/^rollTotal() blood_roll_1 1}}{{/rollLess() blood_roll_1 6}}
+      </div>{{/^rollLess() hunger 1}}{{#^rollLess() hunger 2}}
+      <div class="sheet-roll__spacer">{{#^rollLess() blood_roll_2 6}}{{#rollTotal() blood_roll_2 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--crit"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--crit">{{blood_roll_2}}</div>{{/rollTotal() blood_roll_2 10}}{{#^rollTotal() blood_roll_2 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--success"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--success">{{blood_roll_2}}</div>{{/^rollTotal() blood_roll_2 10}}{{/^rollLess() blood_roll_2 6}}{{#rollLess() blood_roll_2 6}}{{#rollTotal() blood_roll_2 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--critfailure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--critfail">{{blood_roll_2}}</div>{{/rollTotal() blood_roll_2 1}}{{#^rollTotal() blood_roll_2 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--failure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--failure">{{blood_roll_2}}</div>{{/^rollTotal() blood_roll_2 1}}{{/rollLess() blood_roll_2 6}}
+      </div>{{/^rollLess() hunger 2}}{{#^rollLess() hunger 3}}
+      <div class="sheet-roll__spacer">{{#^rollLess() blood_roll_3 6}}{{#rollTotal() blood_roll_3 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--crit"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--crit">{{blood_roll_3}}</div>{{/rollTotal() blood_roll_3 10}}{{#^rollTotal() blood_roll_3 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--success"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--success">{{blood_roll_3}}</div>{{/^rollTotal() blood_roll_3 10}}{{/^rollLess() blood_roll_3 6}}{{#rollLess() blood_roll_3 6}}{{#rollTotal() blood_roll_3 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--critfailure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--critfail">{{blood_roll_3}}</div>{{/rollTotal() blood_roll_3 1}}{{#^rollTotal() blood_roll_3 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--failure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--failure">{{blood_roll_3}}</div>{{/^rollTotal() blood_roll_3 1}}{{/rollLess() blood_roll_3 6}}
+      </div>{{/^rollLess() hunger 3}}{{#^rollLess() hunger 4}}
+      <div class="sheet-roll__spacer">{{#^rollLess() blood_roll_4 6}}{{#rollTotal() blood_roll_4 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--crit"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--crit">{{blood_roll_4}}</div>{{/rollTotal() blood_roll_4 10}}{{#^rollTotal() blood_roll_4 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--success"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--success">{{blood_roll_4}}</div>{{/^rollTotal() blood_roll_4 10}}{{/^rollLess() blood_roll_4 6}}{{#rollLess() blood_roll_4 6}}{{#rollTotal() blood_roll_4 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--critfailure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--critfail">{{blood_roll_4}}</div>{{/rollTotal() blood_roll_4 1}}{{#^rollTotal() blood_roll_4 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--failure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--failure">{{blood_roll_4}}</div>{{/^rollTotal() blood_roll_4 1}}{{/rollLess() blood_roll_4 6}}
+      </div>{{/^rollLess() hunger 4}}{{#^rollLess() hunger 5}}
+      <div class="sheet-roll__spacer">{{#^rollLess() blood_roll_5 6}}{{#rollTotal() blood_roll_5 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--crit"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--crit">{{blood_roll_5}}</div>{{/rollTotal() blood_roll_5 10}}{{#^rollTotal() blood_roll_5 10}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--success"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--success">{{blood_roll_5}}</div>{{/^rollTotal() blood_roll_5 10}}{{/^rollLess() blood_roll_5 6}}{{#rollLess() blood_roll_5 6}}{{#rollTotal() blood_roll_5 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--critfailure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--critfail">{{blood_roll_5}}</div>{{/rollTotal() blood_roll_5 1}}{{#^rollTotal() blood_roll_5 1}}
+        <div class="sheet-roll__bloodresult sheet-roll__bloodresult--failure"></div>
+        <div class="sheet-roll__blooddice sheet-roll__blooddice--failure">{{blood_roll_5}}</div>{{/^rollTotal() blood_roll_5 1}}{{/rollLess() blood_roll_5 6}}
+      </div>{{/^rollLess() hunger 5}}
+    </div>{{/rollGreater() hunger 0}}{{/hunger}}{{#rollcount}}
+    <div class="sheet-roll__dicerolled">
+      <div class="sheet-roll__count">
+        <div class="sheet-roll__label" data-i18n="Dice Rolled:"></div>
+        <div class="sheet-roll__value">{{ rollcount }}</div>
+      </div>
+    </div>{{/rollcount}}{{#healing}}{{#healing_health_superficial}}
+    <div class="sheet-roll__label" data-i18n="Superficial Health"></div>
+    <div class="sheet-roll__healing--health-superficial">
+      <div class="sheet-roll__value">{{ healing_health_superficial_prev }}</div>
+      <div class="sheet-roll__value">-</div>
+      <div class="sheet-roll__value">{{ healing_health_superficial_increase }}</div>
+      <div class="sheet-roll__value">=</div>
+      <div class="sheet-roll__value">{{ healing_health_superficial }}</div>
+    </div>{{/healing_health_superficial}}{{#healing_health_aggravated}}
+    <div class="sheet-roll__label" data-i18n="Aggravated Health"></div>
+    <div class="sheet-roll__healing--health-aggravated">
+      <div class="sheet-roll__value">{{ healing_health_aggravated_prev }}</div>
+      <div class="sheet-roll__value">-</div>
+      <div class="sheet-roll__value">{{ healing_health_aggravated_increase }}</div>
+      <div class="sheet-roll__value">=</div>
+      <div class="sheet-roll__value">{{ healing_health_aggravated }}</div>
+    </div>{{/healing_health_aggravated}}{{#healing_willpower_superficial}}
+    <div class="sheet-roll__label" data-i18n="Superficial Willpower"></div>
+    <div class="sheet-roll__healing--willpower-superficial">
+      <div class="sheet-roll__value">{{ healing_willpower_superficial_prev }}</div>
+      <div class="sheet-roll__value">-</div>
+      <div class="sheet-roll__value">{{ healing_willpower_superficial_increase }}</div>
+      <div class="sheet-roll__value">=</div>
+      <div class="sheet-roll__value">{{ healing_willpower_superficial }}</div>
+    </div>{{/healing_willpower_superficial}}{{#healing_willpower_aggravated}}
+    <div class="sheet-roll__label" data-i18n="Aggravated Willpower"></div>
+    <div class="sheet-roll__healing--health-superficial">
+      <div class="sheet-roll__value">{{ healing_willpower_aggravated_prev }}</div>
+      <div class="sheet-roll__value">-</div>
+      <div class="sheet-roll__value">{{ healing_willpower_aggravated_increase }}</div>
+      <div class="sheet-roll__value">=</div>
+      <div class="sheet-roll__value">{{ healing_willpower_aggravated }}</div>
+    </div>{{/healing_willpower_aggravated}}{{/healing}}{{#notes}}
+    <div class="sheet-roll__text--notes">
+      <div class="sheet-roll__block">{{ notes }}</div>
+    </div>{{/notes}}
+  </div>
+</div>

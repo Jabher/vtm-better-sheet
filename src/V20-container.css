@@ -7,11 +7,12 @@
 .sheet::before {
     content: '';
     display: block;
-    background-image: url('/public/img.png');
+    background-image: url('https://s3.amazonaws.com/files.d20.io/images/228598570/MXFnEFztdj2G9ndi1slSeA/max.png?1623710565');
     height: 100px;
     width: 300px;
     background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     align-self: center;
 }
 

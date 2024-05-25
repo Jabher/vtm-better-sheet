@@ -9,7 +9,7 @@
     height: var(--v20-line-height-large);
     border: none;
     transition: all 0.05s ease-in;
-    background: transparent url('/public/dice.png') no-repeat center;
+    background: transparent url('https://i.imgur.com/vqjtCQx.png') no-repeat center;
     outline: none;
     background-size: contain;
     box-shadow: none;

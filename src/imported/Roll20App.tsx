@@ -1,6 +1,6 @@
 import { PropsWithChildren, useEffect, useState } from "react";
 import { useWorker, Worker } from "./useWorker.ts";
-import "./base.css";
+// import "./base.css";
 
 const Roll20App = ({ children, worker }: PropsWithChildren<{ worker: Worker }>) => {
   const [isLightOS, setIslLightOS] = useState(true);

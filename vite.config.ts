@@ -1,8 +1,6 @@
 import {defineConfig} from 'vite'
 import react from '@vitejs/plugin-react'
 import autoprefixer from 'autoprefixer'
-// @ts-ignore
-import inliner from 'postcss-image-inliner'
 import nested from 'postcss-nested'
 import compileTime from "vite-plugin-compile-time"
 
@@ -19,9 +17,6 @@ export default defineConfig({
         postcss: {
             plugins: [
                 nested(),
-                inliner({
-                    maxFileSize: 100 * 1024
-                }),
                 autoprefixer({})
             ],
         }
