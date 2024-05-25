@@ -3,14 +3,14 @@ import cn from "classnames";
 import { Children } from "react";
 import { DOMProps } from "../types.ts";
 
-export const Row = ({ children, className, ...rest }: DOMProps<"section">) => {
+export const Row = ({ children, className, ...rest }: DOMProps<"div">) => {
   const childrenArray = Children.toArray(children);
   // @ts-expect-error roll20
   const description = childrenArray.find((child) => child?.type == RowDescription);
   const childrenWithoutDescription = childrenArray.filter((c) => c !== description);
   const newChildren = description ? (
     <>
-      <div className="sheet-component--row-head">
+      <div className="sheet-component--row-head" {...rest}>
         <input
           type="checkbox"
           name="attr_description_collapsed"
@@ -21,13 +21,11 @@ export const Row = ({ children, className, ...rest }: DOMProps<"section">) => {
       {description}
     </>
   ) : (
-    <div className="sheet-component--row-head">{childrenWithoutDescription}</div>
+    <div className="sheet-component--row-head" {...rest}>
+      {childrenWithoutDescription}
+    </div>
   );
-  return (
-    <section className={cn("sheet-component sheet-component--row", className)} {...rest}>
-      {newChildren}
-    </section>
-  );
+  return <section className={cn("sheet-component sheet-component--row", className)}>{newChildren}</section>;
 };
 
 export const RowDescription = ({ children, className, ...rest }: DOMProps<"div">) => (

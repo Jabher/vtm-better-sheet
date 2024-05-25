@@ -49,7 +49,7 @@ export const SheetCombat = () => (
         </Row>
       </Section>
       <Section i18n="initiative-dice-pool-label">
-        <Row>
+        <Row style={{ justifyContent: "space-between" }}>
           <Checkbox name="initiativeAddTracker" i18n="use-initiative-label" symbol="low_priority" />
           <Input type="number" name="initiativeModifier" i18n="result-modifiers-label" />
           <RollButton name="initiativeRoll" childrenName="initiativeBonus" />
@@ -62,7 +62,7 @@ export const SheetCombat = () => (
         {() => (
           <Row>
             <Input i18n="name-u" name="rollName" className="sheet-inputname" />
-            <AttributeSelect name="rollAttribute" />
+            <AttributeSelect name="rollAttr" />
             <SkillSelect name="rollSkill" />
             <Input type="number" name="difficulty" defaultValue={6} i18n="difficulty-label" />
             <RollButton name="combatRoll" childrenName="combatRollNumber" />
@@ -83,16 +83,19 @@ export const SheetCombat = () => (
           {() => (
             <Row>
               <Input i18n="name-u" name="rollName" className="sheet-inputname" />
-              <AttributeSelect name="rollAttribute" />
+              <AttributeSelect name="rollAttr" />
               <SkillSelect name="rollSkill" />
               <Input type="number" name="rollAccuracy" defaultValue={0} i18n="accuracy-label" />
               <Input type="number" name="rollDifficulty" defaultValue={6} i18n="difficulty-label" />
               <RollButton name="combatRoll" childrenName="combatRollNumber" />
               <RowDescription>
                 <Row>
-                  <H3 i18n="damage-u" />
-                  <AttributeSelect name="damageAttribute" i18n="damage-attribute-label" />
-                  <Input type="number" name="damageExtra" defaultValue={0} i18n="damage-bonus-label" />
+                  <H3
+                    i18n="damage-u"
+                    style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
+                  />
+                  <AttributeSelect name="damageAttr" i18n="damage-attribute-label" />
+                  <Input type="number" name="damageBonus" defaultValue={0} i18n="damage-bonus-label" />
                   <RollButton name="damageRoll" childrenName="damageRollNumber" />
                 </Row>
               </RowDescription>
@@ -111,16 +114,19 @@ export const SheetCombat = () => (
           {() => (
             <Row>
               <Input i18n="name-u" name="rollName" className="sheet-inputname" />
-              <AttributeSelect name="rollAtrribute" />
+              <AttributeSelect name="rollAtrr" />
               <SkillSelect name="rollSkill" />
               <Input type="number" name="rollAccuracy" defaultValue={0} i18n="accuracy-label" />
               <Input type="number" name="rollDifficulty" defaultValue={6} i18n="difficulty-label" />
               <RollButton name="combatRoll" childrenName="combatRollNumber" />
               <RowDescription>
                 <Row>
-                  <H3 i18n="damage-u" />
-                  <AttributeSelect name="damageAttribute" i18n="damage-attribute-label" />
-                  <Input type="number" name="damageExtra" defaultValue={0} i18n="damage-bonus-label" />
+                  <H3
+                    i18n="damage-u"
+                    style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
+                  />
+                  <AttributeSelect name="damageAttr" i18n="damage-attribute-label" />
+                  <Input type="number" name="damageBonus" defaultValue={0} i18n="damage-bonus-label" />
                   <RollButton name="damageRoll" childrenName="damageRollNumber" />
                 </Row>
               </RowDescription>
@@ -137,7 +143,6 @@ export const SheetCombat = () => (
             <Checkbox i18n="onq-u" className="sheet-APIcheck" name="Equipped" />
             <Input i18n="name2-u" name="WeaponName" />
             <Input i18n="type-u" name="Type" list="melee-weapon-datalist" />
-            <Input i18n="damage-u" type="number" name="Damage" />
             <SelectInput i18n="type-u" name="Lethality">
               <option value={DamageType.Bashing} data-i18n="bashing-u" />
               <option value={DamageType.Lethal} data-i18n="lethal-u" />
@@ -151,6 +156,15 @@ export const SheetCombat = () => (
             </SelectInput>
             <RollButton name="combatRoll" childrenName="combatRollNumber" />
             <RowDescription>
+              <Row>
+                <H3
+                  i18n="damage-u"
+                  style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
+                />
+                <AttributeSelect name="damageAttr" />
+                <Input i18n="damage-u" type="number" name="Damage" />
+                <RollButton name="damageRoll" childrenName="damageRollNumber" />
+              </Row>
               <ResizingTextarea i18n="notes-label" name="Desc" />
             </RowDescription>
           </Row>
@@ -165,7 +179,6 @@ export const SheetCombat = () => (
             <Checkbox i18n="onq-u" className="sheet-APIcheck" name="Equipped" />
             <Input i18n="name2-u" name="WeaponName" />
             <Input i18n="type-u" name="Type" list="ranged-weapon-datalist" />
-            <Input i18n="damage-u" type="number" name="Damage" />
             <SelectInput i18n="type-u" name="Lethality" defaultValue={0}>
               <option value={0} data-i18n="bashing-u" />
               <option value={2} data-i18n="lethal-u" />
@@ -183,6 +196,13 @@ export const SheetCombat = () => (
                 <Input i18n="rate-u" name="Rate" type="number" />
                 <Input i18n="range-u" name="Range" type="number" />
                 <Input i18n="clip-u" name="Clip" />
+                <H3
+                  i18n="damage-u"
+                  style={{ padding: "0 16px", textAlign: "end", alignSelf: "center", flexBasis: "100%" }}
+                />
+                <AttributeSelect name="damageAttr" />
+                <Input i18n="damage-u" type="number" name="Damage" />
+                <RollButton name="damageRoll" childrenName="damageRollNumber" />
               </Row>
               <ResizingTextarea i18n="notes-label" name="Desc" />
             </RowDescription>
@@ -198,13 +218,9 @@ export const SheetCombat = () => (
             <Checkbox i18n="onq-u" className="sheet-APIcheck" name="WearingArmor" />
             <Input i18n="name2-u" name="ArmorName" />
             <Input i18n="class-u" name="ArmorClass" />
+            <Checkbox name="ArmorAgainstAggravated" i18n="armor-protects-from-aggravated-label" symbol="ecg_heart" />
             <Input i18n="rating-u" type="number" name="ArmorRating" />
             <Input i18n="penalty-u" type="number" name="ArmorPenalty" />
-            <select name="ArmorAgainstAggravated" defaultValue={0}>
-              {/*todo*/}
-              <option value={0} data-i18n="no-u" />
-              <option value={1} data-i18n="yes-u" />
-            </select>
             <RowDescription>
               <ResizingTextarea i18n="notes-u" name="ArmorDesc" />
             </RowDescription>

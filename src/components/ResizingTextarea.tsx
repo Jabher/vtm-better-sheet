@@ -14,11 +14,8 @@ export const ResizingTextarea = ({
 }) => (
   <Labelled className={cn("sheet-component sheet-component--resizing-textarea", className)} style={style} i18n={i18n}>
     <div className="sheet-component--resizing-textarea-container">
-      <textarea name={name} rows={1} {...rest} />
-      <span
-        // @ts-expect-error name is custom prop by roll20
-        name={name}
-      />
+      <textarea name={`attr_${name}`} rows={1} {...rest} />
+      <span name={`attr_${name}`} />
     </div>
   </Labelled>
 );
@@ -33,7 +30,7 @@ export const Textarea = ({
   i18n?: I18n;
 }) => (
   <div className={cn("sheet-component sheet-component--textarea", className)} style={style}>
-    <textarea name={name} rows={1} {...rest} />
+    <textarea name={`attr_${name}`} rows={1} {...rest} />
     {i18n ? <label data-i18n={i18n}></label> : null}
   </div>
 );

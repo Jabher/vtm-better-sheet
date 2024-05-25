@@ -1,4 +1,7 @@
 .sheet-tabCombat {
+    .sheet-component--labelled:has(select) {
+    flex-shrink: 0;
+    }
     .sheet-component--labelled:has(input[type="number"]) {
         flex: 0 1 min-content;
     }

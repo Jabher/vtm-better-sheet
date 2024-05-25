@@ -74,7 +74,7 @@ const Roll20 = {
   },
 };
 
-const int = (val) => {
+const i = (val) => {
   if (typeof val === "number") {
     return val;
   }
@@ -109,7 +109,7 @@ const onRepeatingChange = (group, props, cb) => {
   );
   compute();
 };
-const declareRepeatingDependency = (groupName, extraKeys, globalDependencies, getter) => {
+const declareRepeatingDependency = ({ groupName, extraKeys, globalDependencies }, getter) => {
   const compute = (e) => {
     console.log("declareRepeatingDependency triggered", e, groupName, extraKeys);
     Roll20.getGroupAttrs(groupName, extraKeys, globalDependencies, (groupedAttrs, globalAttrs) => {
@@ -148,29 +148,28 @@ export const worker = () =>
         [`repeating_backgrounds_${generateRowID()}_name`]: "",
       };
 
-      for (const [key, [attribute, skill]] of Object.entries(defenceManeuvers)) {
+      for (const [key, [attr, skill]] of Object.entries(defenceManeuvers)) {
         const rowID = `repeating_brawlCombatDice_${generateRowID()}`;
         attrs[`${rowID}_rollName`] = getTranslationByKey(`maneuver-defence-${key}`);
-        attrs[`${rowID}_rollAttribute`] = attribute;
+        attrs[`${rowID}_rollAttr`] = attr;
         attrs[`${rowID}_rollSkill`] = skill;
       }
-      for (const [
-        key,
-        [attribute, skill, accuracy, difficulty, damageAttribute = 0, damageExtra = 0],
-      ] of Object.entries(meleeManeuvers)) {
+      for (const [key, [attr, skill, accuracy, difficulty, damageAttr = 0, damageBonus = 0]] of Object.entries(
+        meleeManeuvers
+      )) {
         const rowID = `repeating_meleeCombatDice_${generateRowID()}`;
         attrs[`${rowID}_rollName`] = getTranslationByKey(`maneuver-melee-${key}`);
-        attrs[`${rowID}_rollAttribute`] = attribute;
+        attrs[`${rowID}_rollAttr`] = attr;
         attrs[`${rowID}_rollSkill`] = skill;
         attrs[`${rowID}_rollDifficulty`] = Number(difficulty) + 6;
         attrs[`${rowID}_rollAccuracy`] = accuracy || "";
-        attrs[`${rowID}_damageAttribute`] = damageAttribute;
-        attrs[`${rowID}_damageExtra`] = damageExtra;
+        attrs[`${rowID}_damageAttr`] = damageAttr;
+        attrs[`${rowID}_damageBonus`] = damageBonus;
       }
-      for (const [key, [attribute, skill, accuracy, difficulty]] of Object.entries(rangedManeuvers)) {
+      for (const [key, [attr, skill, accuracy, difficulty]] of Object.entries(rangedManeuvers)) {
         const rowID = `repeating_rangedCombatDice_${generateRowID()}`;
         attrs[`${rowID}_rollName`] = getTranslationByKey(`maneuver-ranged-${key}`);
-        attrs[`${rowID}_rollAttribute`] = attribute;
+        attrs[`${rowID}_rollAttr`] = attr;
         attrs[`${rowID}_rollSkill`] = skill;
         attrs[`${rowID}_rollAccuracy`] = accuracy || "";
         attrs[`${rowID}_rollDifficulty`] = Number(difficulty) + 6;
@@ -206,6 +205,11 @@ export const worker = () =>
         });
       });
 
+      this.initRolls();
+      this.initCombatSheet();
+    }
+
+    initRolls() {
       on("clicked:roll_willpower", (eventInfo) => {
         const rollExpression = `1d100!>95 + @{skill_bonus}[Bonus] + @{skill_mod}[Mod]`;
         const rollBase = `&{template:test} {{name=Test}} {{roll1=[[${rollExpression}]]}} {{downroll=[[0]]}} {{roll1name=${rollExpression}}} {{roll1mod=- [[1d100!>95]]}} {{roll1final=[[0]]}}`;
@@ -224,7 +228,9 @@ export const worker = () =>
           });
         });
       });
+    }
 
+    initCombatSheet() {
       const attributesWithBoosts = [
         ...attributes,
         "celerityBoost",
@@ -235,70 +241,97 @@ export const worker = () =>
         "Health",
       ];
 
-      const computedAttrs = (globals, getter) => {
-        const attrs = {
-          ...globals,
-          Strength: int(globals.Strength) + Math.max(0, int(globals.potenceBoost) - int(globals.potenceSpent)),
-          Dexterity: int(globals.Dexterity) + Math.max(0, int(globals.celerityBoost) - int(globals.celeritySpent)),
-          Stamina: int(globals.Stamina),
-          Charisma: int(globals.Charisma),
-          Manipulation: int(globals.Manipulation),
-          Appearance: int(globals.Appearance),
-          Perception: int(globals.Perception),
-          Intelligence: int(globals.Intelligence),
-          Wits: int(globals.Wits),
-        };
+      const getRollAttrs = ($) => ({
+        ...$,
+        Strength: i($.Strength) + Math.max(0, i($.potenceBoost) - i($.potenceSpent)),
+        Dexterity: i($.Dexterity) + Math.max(0, i($.celerityBoost) - i($.celeritySpent)),
+        Stamina: i($.Stamina),
+        Charisma: i($.Charisma),
+        Manipulation: i($.Manipulation),
+        Appearance: i($.Appearance),
+        Perception: i($.Perception),
+        Intelligence: i($.Intelligence),
+        Wits: i($.Wits),
+      });
 
-        return Math.max(0, getter(attrs) + (globals.useHealthInCombat === "on" ? int(globals.Health) : 0));
+      const combatRoll = ({ useHealthInCombat, Health, potenceSpent, ...$ }, rollAttr, getter) => {
+        const attrs = getRollAttrs($);
+        const healthModifier = useHealthInCombat === "on" ? i(Health) : 0;
+        const potenceBonus = i(potenceSpent);
+        // todo potence
+        return [
+          Math.max(0, getter(attrs[rollAttr], attrs) + healthModifier),
+          potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
+        ].join("");
       };
-      const potenceAddition = (globals, rollAttribute) =>
-        rollAttribute === "Strength" && int(globals.potenceSpent) > 0 ? `+${globals.potenceSpent}` : "";
+
+      const damageRoll = ({ useHealthInCombat, Health, potenceSpent, ...$ }, rollAttr, getter) => {
+        const attrs = getRollAttrs($);
+        const healthModifier = useHealthInCombat === "on" ? i(Health) : 0;
+        const potenceBonus = i(potenceSpent);
+        return [
+          Math.max(0, getter(attrs[rollAttr], attrs) + rollAttr === "Strength" ? healthModifier : ""),
+          healthModifier || "",
+          potenceBonus && rollAttr === "Strength" ? ` +${potenceBonus}` : "",
+        ].join("");
+      };
 
       declareRepeatingDependency(
-        "brawlCombatDice",
-        ["rollAttribute", "rollSkill"],
-        attributesWithBoosts,
-        ({ rollAttribute, rollSkill }, globals) => ({
-          combatRollNumber: `${int(globals[rollAttribute]) + int(globals[rollSkill])}${potenceAddition(globals, rollAttribute)}`,
+        {
+          groupName: "brawlCombatDice",
+          extraKeys: ["rollAttr", "rollSkill"],
+          globalDependencies: attributesWithBoosts,
+        },
+        ({ rollAttr, rollSkill }, $) => ({
+          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill])),
         })
       );
 
       declareRepeatingDependency(
-        "meleeCombatDice",
-        ["rollAccuracy", "rollAttribute", "rollSkill"],
-        [...attributesWithBoosts, "CurrentMeleeWeaponDamage"],
-        ({ rollAttribute, rollSkill, rollAccuracy }, globals) => ({
-          combatRollNumber: `${computedAttrs(
-            globals,
-            ({ [rollAttribute]: attribute }) => attribute + int(globals[rollSkill]) + int(rollAccuracy)
-          )}${potenceAddition(globals, rollAttribute)}`,
-          damageRollNumber: int(globals.CurrentMeleeWeaponDamage),
+        {
+          groupName: "meleeCombatDice",
+          extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageAttr", "damageBonus"],
+          globalDependencies: [...attributesWithBoosts, "CurrentMeleeWeaponDamage"],
+        },
+        ({ rollAttr, rollSkill, rollAccuracy, damageAttr, damageBonus }, { CurrentMeleeWeaponDamage, ...$ }) => ({
+          combatRollNumber: combatRoll($, rollAttr, (attribute) => attribute + i($[rollSkill]) + i(rollAccuracy)),
+          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i(damageBonus) + i(CurrentMeleeWeaponDamage)),
         })
       );
 
       declareRepeatingDependency(
-        "rangedCombatDice",
-        ["rollAccuracy", "rollAttribute", "rollSkill", "damageAttribute"],
-        [...attributesWithBoosts, "CurrentRangedWeaponDamage"],
-        ({ rollAttribute, rollSkill, rollAccuracy, damageAttribute }, globals) => ({
-          combatRollNumber: `${computedAttrs(
-            globals,
-            ({ [rollAttribute]: attribute }) => attribute + int(globals[rollSkill]) + int(rollAccuracy)
-          )}${potenceAddition(globals, rollAttribute)}`,
-          damageRollNumber: int(globals[damageAttribute]) + int(globals.CurrentRangedWeaponDamage),
+        {
+          groupName: "rangedCombatDice",
+          extraKeys: ["rollAccuracy", "rollAttr", "rollSkill", "damageAttr", "damageBonus"],
+          globalDependencies: [...attributesWithBoosts, "CurrentRangedWeaponDamage"],
+        },
+        ({ rollAttr, rollSkill, rollAccuracy, damageAttr }, { CurrentRangedWeaponDamage, ...$ }) => ({
+          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
+          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i(CurrentRangedWeaponDamage)),
         })
       );
 
       declareRepeatingDependency(
-        "rangedCombatDice",
-        ["rollAccuracy", "rollAttribute", "damageAttribute", "rollSkill"],
-        attributesWithBoosts,
-        ({ rollAttribute, rollSkill, rollAccuracy, damageAttribute }, globals) => ({
-          combatRollNumber: `${computedAttrs(
-            globals,
-            ({ [rollAttribute]: attribute }) => attribute + int(globals[rollSkill]) + int(rollAccuracy)
-          )}${potenceAddition(globals, rollAttribute)}`,
-          damageRollNumber: int(globals[damageAttribute]),
+        {
+          groupName: "MeleeWeapons",
+          extraKeys: ["rollAccuracy", "rollAttr", "Damage", "rollSkill"],
+          globalDependencies: attributesWithBoosts,
+        },
+        ({ rollAttr, rollSkill, rollAccuracy, damageAttr }, $) => ({
+          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
+          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
+        })
+      );
+
+      declareRepeatingDependency(
+        {
+          groupName: "RangedWeapons",
+          extraKeys: ["rollAccuracy", "rollAttr", "Damage", "rollSkill"],
+          globalDependencies: attributesWithBoosts,
+        },
+        ({ rollAttr, rollSkill, rollAccuracy, damageAttr }, $) => ({
+          combatRollNumber: combatRoll($, rollAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
+          damageRollNumber: damageRoll($, damageAttr, (attr) => attr + i($[rollSkill]) + i(rollAccuracy)),
         })
       );
 
@@ -322,8 +355,8 @@ export const worker = () =>
                 `repeating_${type}_WeaponName`,
                 `repeating_${type}_Type`,
                 `repeating_${type}_Damage`,
-                `repeating_${type}_damageAttribute`
-                `repeating_${type}_damageExtra`,
+                `repeating_${type}_damageAttr`,
+                `repeating_${type}_damageBonus`,
               ],
               (attrs) => {
                 Roll20.sectionIDs(group, (ids) => {
@@ -331,7 +364,7 @@ export const worker = () =>
                     group,
                     {
                       ...Object.fromEntries(ids.map((id) => [id, { Equipped: false }])),
-                    [id]: {}
+                      [sourceId]: {},
                     },
                     {
                       [`Current${type}ID`]: sourceId,
@@ -371,15 +404,14 @@ export const worker = () =>
     dependencies = {
       // todo take health into account
       WalkSpeed: () => 7,
-      JogSpeed: ({ Dexterity, celerityBoost, MiscSpeed }) => 12 + int(Dexterity) + int(celerityBoost) + int(MiscSpeed),
-      RunSpeed: ({ Dexterity, celerityBoost, MiscSpeed }) =>
-        20 + (3 * int(Dexterity) + int(celerityBoost) + int(MiscSpeed)),
+      JogSpeed: ({ Dexterity, celerityBoost, MiscSpeed }) => 12 + i(Dexterity) + i(celerityBoost) + i(MiscSpeed),
+      RunSpeed: ({ Dexterity, celerityBoost, MiscSpeed }) => 20 + (3 * i(Dexterity) + i(celerityBoost) + i(MiscSpeed)),
       // todo boosts
-      willpowerRoll: ({ Willpower, WillpowerBoost }) => int(Willpower) + int(WillpowerBoost),
+      willpowerRoll: ({ Willpower, WillpowerBoost }) => i(Willpower) + i(WillpowerBoost),
       // todo boosts
-      willpowerUsedRoll: ({ WillpowerUsed, WillpowerBoost }) => int(WillpowerUsed) + int(WillpowerBoost),
+      willpowerUsedRoll: ({ WillpowerUsed, WillpowerBoost }) => i(WillpowerUsed) + i(WillpowerBoost),
       initiativeBonus: ({ Dexterity, Wits, celerityBoost, initiativeModifier }) =>
-        `+${int(Dexterity) + int(Wits) + int(celerityBoost) + int(initiativeModifier)}`,
+        `+${i(Dexterity) + i(Wits) + i(celerityBoost) + i(initiativeModifier)}`,
     };
 
     repeatingDefaults = {

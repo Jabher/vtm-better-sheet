@@ -149,6 +149,7 @@ export const meleeManeuvers: Record<
     damageExtra?: number,
   ]
 > = {
+  attack: [Attribute.Strength, "brawl", 0, 0, Attribute.Strength, 0],
   throw: [Attribute.Strength, "brawl", 0, +1, Attribute.Strength, +1],
   grapple: [Attribute.Strength, "brawl", 0, 0],
   clinch: [Attribute.Strength, "brawl", 0, 0, Attribute.Strength],
