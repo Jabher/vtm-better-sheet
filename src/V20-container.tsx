@@ -1,20 +1,24 @@
-import {PropsWithChildren} from "react";
-import './V20-container.css'
-import {blurry} from "./components/utility/Blurry.tsx";
+import { PropsWithChildren } from "react";
+import "./V20-container.css";
+import { blurry } from "./components/utility/Blurry.tsx";
 
-export const V20Container = ({children}: PropsWithChildren) => <div className="sheet">
+export const V20Container = ({ children }: PropsWithChildren) => (
+  <div
+    className="sheet"
+    style={{
+      // @ts-expect-error types
+      "--blurry-10-50": blurry(10, 50),
+      "--blurry-5-20": blurry(5, 20),
+    }}
+  >
     <div className="sheet-header">
-        <div className="sheet-header-line-left"/>
-        <img src="/src/assets/img.png" alt=""/>
-        <div className="sheet-header-line-right"/>
+      <div className="sheet-header-line-left" />
+      <div className="sheet-header-logo" />
+      <div className="sheet-header-line-right" />
     </div>
-    <div className="sheet-body" style={{
-        // @ts-ignore
-        '--blurry-10-50': blurry(10, 50).mask
-    }}>
-        <div style={{width: '100%', overflow: 'hidden', padding: '20px'}}>
-            {children}
-        </div>
+    <div className="sheet-body">
+      <div style={{ width: "100%", overflow: "hidden", padding: "20px" }}>{children}</div>
     </div>
-    <div className="sheet-footer"/>
-</div>
+    <div className="sheet-footer" />
+  </div>
+);

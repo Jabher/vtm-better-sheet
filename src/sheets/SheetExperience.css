@@ -1,0 +1,8 @@
+.sheet-tabExp {
+    & .sheet-tabExp--row {
+        display: grid;
+        grid-template-areas: "points date" "description description";
+        grid-template-columns: 1fr 200px;
+
+    }
+}

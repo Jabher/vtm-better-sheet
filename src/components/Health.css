@@ -1,9 +1,58 @@
-.sheet-component--health select {
-    width: 22px;
-    height: 22px;
-    appearance: none;
-    outline: none;
-    margin: 4px;
-    font-size: 17px;
-    border: rgba(128, 128, 128, 0.125) 1px solid;
+.sheet-component--health {
+    --padding: 3px;
+    position: relative;
+    padding: var(--padding);
+
+    & input {
+        display: none;
+        margin: 0;
+        font-size: 17px;
+        width: 22px;
+        height: 22px;
+        border: rgba(128, 128, 128, 0.125) 1px solid;
+        appearance: none;
+        background-color: transparent;
+
+        &, &:checked, &:active {
+            outline: none;
+        }
+    }
+
+    input:checked + input,
+    &:has(input:checked:last-child) input:first-child {
+        display: block;
+    }
+
+    input::before, input::after, &::after {
+        position: absolute;
+        left: calc(50%);
+        top: calc(var(--padding) * -1);
+        pointer-events: none;
+        display: block;
+        width: var(--border-width);
+        background-color: var(--border-color);
+        height: calc(100% + var(--padding) * 2);
+    }
+
+    input[value="0"],
+    input[value="2"],
+    input[value="3"] {
+        &::after {
+            content: '';
+            transform: rotate(45deg);
+        }
+    }
+
+    input[value="0"],
+    input[value="3"] {
+        &::before {
+            content: '';
+            transform: rotate(-45deg);
+        }
+    }
+
+    &:has(input[value="3"]:checked)::after {
+        content: '';
+        height: calc(100% + var(--padding));
+    }
 }

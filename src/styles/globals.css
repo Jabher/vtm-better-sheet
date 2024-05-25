@@ -1,0 +1,39 @@
+:root {
+    --width: 20px;
+    --skew: 60deg;
+    --crop: 30deg;
+    --border-width: 0.5px;
+    --border-color: rgb(92, 2, 18);
+    --line-height: 30px;
+    --line-large-height: 46px;
+
+    --background-color: white;
+
+    --color-accent: rgba(117, 2, 24, 1);
+    --color-dark-primary: rgb(66, 1, 13);
+    --color-dark-primary-highlight: rgb(92, 2, 18);
+    --gap-horizontal: 16px;
+    --gap-vertical: 8px;
+    --color: #111;
+
+    /*14,16,18px*/
+    --font-size-normal: 1em;
+    --font-size-large: 1.2em;
+    --font-size-xl: 1.4em;
+
+    --blurry-10-50: unset;
+    --blurry-5-20: unset;
+    --neuromorph-box-shadow: inset 3px 3px 6px #e6e6e6,
+    inset -3px -3px 6px #ffffff;
+    --neuromorph-box-shadow-active: inset 3px 3px 6px #cccccc,
+    inset -3px -3px 6px #ffffff;
+
+    --color-neutral: rgba(127, 127, 127, .5);
+}
+
+@media screen and (max-device-pixel-ratio: 1) {
+    :root {
+        --border-width: 1px;
+        --border-color: rgba(117, 2, 24, .5);
+    }
+}

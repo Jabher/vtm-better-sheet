@@ -1,0 +1,62 @@
+/*good headings font*/
+@import "https://fonts.googleapis.com/css2?family=Poiret+One";
+/*good body font*/
+@import "https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap";
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+
+@import url("https://p.typekit.net/p.css?s=1&k=zvt1yww&ht=tk&f=139.140.175.176&a=84346485&app=typekit&e=css");
+
+/*only latin*/
+@font-face {
+    font-family: "Medusa Gothic";
+    src: url("/public/MedusaGothic D.otf") format("opentype");
+    font-display: auto;
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "Bernardo Moda";
+    src: url("/public/fonts/BernardoModa/BernardoModa.ttf") format("truetype");
+    font-display: auto;
+    font-style: normal;
+    font-weight: 400;
+}
+
+
+@font-face {
+    font-family: "Forum";
+    src: url("/public/fonts/Forum/Forum-Regular.ttf") format("truetype");
+    font-display: auto;
+    font-style: normal;
+    font-weight: 400;
+}
+
+
+
+h1, h2, h3 {
+    font-family: 'Poiret One';
+}
+h4, h5, h6 {
+    font-family: 'Exo 2';
+    font-weight: 200;
+}
+
+select, option {
+    font-family: 'Exo 2';
+    font-weight: 200;
+}
+
+label {
+    font-family: 'Poiret One';
+    font-weight: 200;
+}
+
+.charsheet :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: 0;
+    text-align: center;
+    white-space: nowrap;
+}

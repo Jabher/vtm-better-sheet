@@ -1,21 +1,4 @@
 
-.sheet {
-    --width: 20px;
-    padding: var(--width);
-    position: relative;
-    --skew: 60deg;
-    --crop: 30deg;
-    --border-width: 0.5px;
-    --border-color: rgba(117, 2, 24, 1);
-}
-
-@media screen and (max-device-pixel-ratio: 1) {
-    .sheet {
-        --border-width: 1px;
-        --border-color: rgba(117, 2, 24, .5);
-    }
-}
-
 .sheet-header {
     height: 100px;
 }
@@ -30,73 +13,95 @@
 .sheet-header, .sheet-body, .sheet-footer {
     position: relative;
 }
-
-:is(.sheet-body, .sheet-footer)::before,
-:is(.sheet-body, .sheet-footer)::after,
-.sheet-header-line-left::before,
-.sheet-header-line-right::before {
-    content: '';
-    display: block;
-    border-style: solid;
-    border-width: 0 var(--border-width);
-    border-color: var(--border-color);
-    width: 20px;
-    box-sizing: border-box;
+.sheet-header-logo {
+    background-image: url('/public/img.png');
+    height: 100px;
+    width: 300px;
+    background-size: contain;
+    background-position: center;
+    .sheet-darkmode & {
+        filter: invert(1) brightness(0.8);
+    }
 }
 
-.sheet-body::before, .sheet-body::after {
-    --offset: calc(var(--width) * -1 * calc(cos(var(--skew))) - 2px);
-    margin-top: var(--offset);
-    border-width: 0 var(--border-width);
-    clip-path: polygon(
-            0% 0%,
-            calc(100% + 1px) calc(-1 * var(--offset)),
-            calc(100% + 1px) calc(100% + var(--offset)),
-            0 100%
-    );
-    /*background: blue;*/
+.sheet-body {
+    border: 0 1px solid var(--border-color);
+    & > div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    & > div > .sheet-tab-content {
+        flex: 1;
+    }
 }
 
-.sheet-body::after {
-    clip-path: polygon(
-            -1px calc(-1 * var(--offset)),
-            100% 0%,
-            100% 100%,
-            -1px calc(100% + var(--offset))
-    );
-}
+/*:is(.sheet-body, .sheet-footer)::before,*/
+/*:is(.sheet-body, .sheet-footer)::after,*/
+/*.sheet-header-line-left::before,*/
+/*.sheet-header-line-right::before {*/
+/*    content: '';*/
+/*    display: block;*/
+/*    border-style: solid;*/
+/*    border-width: 0 var(--border-width);*/
+/*    border-color: var(--border-color);*/
+/*    width: var(--width);*/
+/*    box-sizing: border-box;*/
+/*}*/
 
-.sheet-header {
-    --offset-x: var(--width);
-    --offset-y: calc(var(--width) * sin(var(--crop)));
-    clip-path: polygon(
-            0% 0%,
-            0% calc(100% - var(--offset-y)),
-            calc(var(--offset-x)) 100%,
-            100% 100%,
-            calc(100% - var(--offset-x)) 100%,
-            100% calc(100% - var(--offset-y)),
-            100% 0%
-    );
-    /*background: blue;*/
-}
+/*.sheet-body::before, .sheet-body::after {*/
+/*    --offset: calc(var(--width) * -1 * calc(cos(var(--skew))) - 2px);*/
+/*    margin-top: var(--offset);*/
+/*    border-width: 0 var(--border-width);*/
+/*    clip-path: polygon(*/
+/*            0% 0%,*/
+/*            calc(100% + 1px) calc(-1 * var(--offset)),*/
+/*            calc(100% + 1px) calc(100% + var(--offset)),*/
+/*            0 100%*/
+/*    );*/
+/*    !*background: blue;*!*/
+/*}*/
 
-.sheet-header-line-left::before {
-    align-self: flex-end;
-    bottom: 0;
-    height: 50%;
-    transform-origin: calc(100% - 1px) calc(100% - 1px);
-    transform: skewX(calc(var(--skew) * -1)) scaleX(calc(1 / cos(var(--skew))));
-}
+/*.sheet-body::after {*/
+/*    clip-path: polygon(*/
+/*            -1px calc(-1 * var(--offset)),*/
+/*            100% 0%,*/
+/*            100% 100%,*/
+/*            -1px calc(100% + var(--offset))*/
+/*    );*/
+/*}*/
 
-.sheet-header-line-right::before {
-    align-self: flex-end;
-    bottom: 0;
-    height: 50%;
-    /*todo solve -7px*/
-    transform-origin: 0 calc(100% - 1px);
-    transform: skewX(var(--skew)) scaleX(calc(1 / cos(var(--skew))));
-}
+/*.sheet-header {*/
+/*    --offset-x: var(--width);*/
+/*    --offset-y: calc(var(--width) * sin(var(--crop)));*/
+/*    clip-path: polygon(*/
+/*            0% 0%,*/
+/*            0% calc(100% - var(--offset-y)),*/
+/*            calc(var(--offset-x)) 100%,*/
+/*            100% 100%,*/
+/*            calc(100% - var(--offset-x)) 100%,*/
+/*            100% calc(100% - var(--offset-y)),*/
+/*            100% 0%*/
+/*    );*/
+/*    !*background: blue;*!*/
+/*}*/
+
+/*.sheet-header-line-left::before {*/
+/*    align-self: flex-end;*/
+/*    bottom: 0;*/
+/*    height: 50%;*/
+/*    transform-origin: calc(100% - 1px) calc(100% - 1px);*/
+/*    transform: skewX(calc(var(--skew) * -1)) scaleX(calc(1 / cos(var(--skew))));*/
+/*}*/
+
+/*.sheet-header-line-right::before {*/
+/*    align-self: flex-end;*/
+/*    bottom: 0;*/
+/*    height: 50%;*/
+/*    !*todo solve -7px*!*/
+/*    transform-origin: 0 calc(100% - 1px);*/
+/*    transform: skewX(var(--skew)) scaleX(calc(1 / cos(var(--skew))));*/
+/*}*/
 
 .sheet-header-line-right {
     justify-content: flex-end;
@@ -114,79 +119,3 @@
     }
 }
 
-.repcontrol {
-    display: flex;
-    justify-content: flex-end;
-    gap: 16px;
-
-    &:only-child, &:nth-child(2) {
-        & .repcontrol_edit {
-            display: none;
-        }
-    }
-
-    & button.btn {
-        outline: none !important;
-        padding: 8px 16px;
-        color: rgba(127, 127, 127, .5);
-        border-radius: 8px;
-        background: #ffffff;
-        box-shadow: inset 3px 3px 6px #e6e6e6,
-        inset -3px -3px 6px #ffffff;
-        text-shadow: none;
-        border-color: transparent;
-        transition: box-shadow 0.25s ease-in-out;
-
-        &:hover {
-            background: #ffffff;
-            color: rgba(127, 127, 127, .5);
-            border-color: transparent;
-            box-shadow: inset 3px 3px 6px #cccccc,
-            inset -3px -3px 6px #ffffff;
-        }
-    }
-}
-
-*:has(> .itemcontrol) {
-    position: relative;
-}
-
-.itemcontrol {
-    position: absolute;
-
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-
-    & .repcontrol_move {
-        cursor: grab;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        color: transparent;
-        background-color: transparent;
-        border: none;
-        box-shadow: none;
-
-        &:hover {
-            backdrop-filter: blur(1.5px);
-        }
-
-        &:hover, &:active, &:focus {
-            background: none;
-            box-shadow: none;
-        }
-    }
-
-    & .repcontrol_del, & .repcontrol_del {
-        position: relative;
-        z-index: 2;
-        background-color: var(--border-color);
-        backdrop-filter: grayscale(100%) blur(1.5px) brightness(50%);
-        border: none;
-        text-shadow: none;
-        color: rgba(127, 127, 127, 0.5) !important;
-    }
-}

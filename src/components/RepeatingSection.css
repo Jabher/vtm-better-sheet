@@ -1,3 +1,79 @@
 .repitem {
     margin-bottom: 40px;
 }
+
+
+.repcontrol {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+
+    &:only-child, &:nth-child(2) {
+        & .repcontrol_edit {
+            display: none;
+        }
+    }
+
+    & button.btn {
+        outline: none !important;
+        padding: 8px 16px;
+        color: var(--color);
+        border-radius: 8px;
+        background: var(--background-color);
+        box-shadow: var(--neuromorph-box-shadow);
+        text-shadow: none;
+        border-color: transparent;
+        transition: box-shadow 0.25s ease-in-out;
+
+        &:hover {
+            background: var(--background-color);
+            color: var(--color);
+            border-color: transparent;
+            box-shadow: var(--neuromorph-box-shadow-active);
+        }
+    }
+}
+
+*:has(> .itemcontrol) {
+    position: relative;
+}
+
+.itemcontrol {
+    position: absolute;
+
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+
+    & .repcontrol_move {
+        cursor: grab;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        color: transparent;
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+
+        &:hover {
+            backdrop-filter: blur(1.5px);
+        }
+
+        &:hover, &:active, &:focus {
+            background: none;
+            box-shadow: none;
+        }
+    }
+
+    & .repcontrol_del, & .repcontrol_del {
+        position: relative;
+        z-index: 2;
+        background-color: var(--border-color);
+        backdrop-filter: grayscale(100%) blur(1.5px) brightness(50%);
+        border: none;
+        text-shadow: none;
+        color: rgba(127, 127, 127, 0.5) !important;
+    }
+}

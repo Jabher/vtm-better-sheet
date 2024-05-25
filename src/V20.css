@@ -14,6 +14,10 @@
     flex: 0 0 auto;
 }
 
+.sheet-body > div {
+    min-height: 100vh;
+}
+
 :root {
     --light-secondarytext: #333;
     --light-primarytext: #333;
@@ -29,7 +33,7 @@
 }
 
 .sheet-image-div {
-    background-image: url(/public/banner.png);
+    background-image: url('/public/banner.png');
     background-size: 100% 140px;
     background-repeat: repeat-x;
     background-position: 0px 10px;
@@ -39,7 +43,7 @@
     background-color: transparent;
     border-style: solid;
     border-width: 278px 30px 38px 23px;
-    border-image: url(/public/border.png) 793 64 62 66 repeat;
+    border-image: url('/public/border.png') 793 64 62 66 repeat;
 }
 
 .sheet-main-div-inner {
@@ -48,7 +52,7 @@
 
 .charsheet {
     font-family: "Century Gothic", CenturyGothic, AppleGothic, sans-serif;
-    background-color: white;
+    background-color:  var(--background-color);
 }
 
 .sheet-toplevel-nav {

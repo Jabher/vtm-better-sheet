@@ -153,6 +153,10 @@
     &:not(.sheet-component--counter-style-box) label:has(input:checked) ~ label:before {
         content: '⚪';
     }
+    .sheet-darkmode &:not(.sheet-component--counter-style-box) label:has(input:checked) ~ label:before {
+        opacity: .5;
+    }
+
 
     &.sheet-component--counter-style-box label:has(input:checked) ~ label:before {
         content: ' ';
@@ -162,3 +166,4 @@
         transition: opacity 0.5s;
     }
 }
+

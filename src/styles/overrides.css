@@ -1,0 +1,92 @@
+:root {
+    margin: 0;
+    padding: var(--width);
+    position: relative;
+}
+
+.sheet {
+    width: calc(100% - 20px);
+    box-sizing: border-box;
+}
+
+.charactersheet {
+    padding: 0 !important;
+}
+
+.characterviewer {
+    padding: 0 !important;
+}
+
+html, body {
+    padding: 0 !important;
+}
+
+.nav-tabs {
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--color-neutral);
+    padding: 0 20px;
+}
+
+.nav-tabs > li > a {
+    cursor: pointer !important;
+    border: none !important;
+    outline: none;
+    transition: all 0.25s ease-in-out;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
+    text-decoration: none !important;
+    color: var(--color) !important;
+    background-color: var(--color-neutral) !important;
+}
+
+.nav-tabs > li > a {
+    border-radius: 0;
+}
+
+.sheet {
+    max-width: 1080px;
+    margin: 0 auto;
+}
+
+.sheet-darkmode {
+    color-scheme: dark;
+    --color: #eee;
+    --background-color: var(--dark-surface1, #1F1F1F);
+    background-color: var(--background-color);
+    --neuromorph-box-shadow: 20px 20px 60px #181818,
+    -20px -20px 60px #262626;
+    --neuromorph-box-shadow-active: 20px 20px 60px #121212,
+    -20px -20px 60px #2c2c2c;
+}
+
+label, h1, h2, h3, h4, h5, h6, select, option {
+    color: var(--color);
+}
+
+select, option {
+    background: transparent;
+}
+
+
+.attributesabilities.attributesabilities {
+    input, textarea, h1, h2, h3, h4, h5, h6, button {
+        color: unset;
+        background-color: unset;
+    }
+}
+
+
+.characterviewer {
+    display: flex !important;
+    flex-direction: column;
+}
+
+.tab-content {
+    flex-grow: 1;
+    height: 0;
+}
+
+.sheetform, .charactersheet {
+    display: contents;
+}

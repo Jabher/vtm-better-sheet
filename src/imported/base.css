@@ -305,59 +305,7 @@ html[data-theme="dark"] {
     --input-filter: invert(1);
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
 
-@import url("https://p.typekit.net/p.css?s=1&k=zvt1yww&ht=tk&f=139.140.175.176&a=84346485&app=typekit&e=css");
-
-@font-face {
-    font-family: "Proxima Nova";
-    src: url("https://use.typekit.net/af/2555e1/00000000000000007735e603/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff2"), url("https://use.typekit.net/af/2555e1/00000000000000007735e603/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff"), url("https://use.typekit.net/af/2555e1/00000000000000007735e603/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("opentype");
-    font-display: auto;
-    font-style: normal;
-    font-weight: 700;
-}
-
-@font-face {
-    font-family: "Proxima Nova";
-    src: url("https://use.typekit.net/af/4de20a/00000000000000007735e604/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("woff2"), url("https://use.typekit.net/af/4de20a/00000000000000007735e604/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("woff"), url("https://use.typekit.net/af/4de20a/00000000000000007735e604/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("opentype");
-    font-display: auto;
-    font-style: italic;
-    font-weight: 700;
-}
-
-@font-face {
-    font-family: "Proxima Nova";
-    src: url("https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"), url("https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"), url("https://use.typekit.net/af/efe4a5/00000000000000007735e609/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
-    font-display: auto;
-    font-style: normal;
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: "Proxima Nova";
-    src: url("https://use.typekit.net/af/3322cc/00000000000000007735e616/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff2"), url("https://use.typekit.net/af/3322cc/00000000000000007735e616/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff"), url("https://use.typekit.net/af/3322cc/00000000000000007735e616/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("opentype");
-    font-display: auto;
-    font-style: italic;
-    font-weight: 400;
-}
-
-@font-face {
-    font-family: "Proxima Nova";
-    src: url("https://use.typekit.net/af/78aca8/00000000000000007735e60d/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3") format("woff2"), url("https://use.typekit.net/af/78aca8/00000000000000007735e60d/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3") format("woff"), url("https://use.typekit.net/af/78aca8/00000000000000007735e60d/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n6&v=3") format("opentype");
-    font-display: auto;
-    font-style: normal;
-    font-weight: 600;
-}
-
-@font-face {
-    font-family: "Proxima Nova";
-    src: url("https://use.typekit.net/af/144da4/00000000000000007735e619/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3") format("woff2"), url("https://use.typekit.net/af/144da4/00000000000000007735e619/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3") format("woff"), url("https://use.typekit.net/af/144da4/00000000000000007735e619/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i6&v=3") format("opentype");
-    font-display: auto;
-    font-style: italic;
-    font-weight: 600;
-}
 
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
@@ -9435,7 +9383,6 @@ button.close {
     margin: 0;
     padding: 3px 4px 0;
     border: 1px solid #999;
-    *padding-bottom: 3px;
 }
 
 .textboxlist-bit {
@@ -9454,7 +9401,6 @@ button.close {
 .textboxlist-bit-editable-input {
     border: 0;
     padding: 0;
-    *padding-bottom: 0;
     font-family: "Lucida Grande", Verdana;
     font-size: 11px;
     height: auto !important;
@@ -9585,7 +9531,6 @@ button.close {
 			It's advisable not to set widths and margins from here, but instead apply it to a particular object or class (#id .textboxlist { width: xxx } or .class .textboxlist { width: xxx })
 			The padding-top + padding-left + height of ".textboxlist-bit-editable-input {}" has to match the line-height of ".textboxlist-bit-box {}" for UI consistency.
 			The font configuration has to be present in .textboxlist and .textboxlist-bit-editable-input (for IE reasons)
-			The *padding-bottom (notice the *) property of .textboxlist-bits {} has to be equal to the margin-bottom of .textboxlist-bit {} for IE reasons.
 			The padding-top of .textboxlist ul {} has to match the margin-bottom of .textboxlist-bit, and the padding-bottom has to be null.
 			Make sure the border-width of the .textboxlist-bit-editable {} is equal to the border-width of the box (a border that matches the background is advisable for the input)
 			Feel free to edit the borders, fonts, backgrounds and radius.
@@ -12242,8 +12187,6 @@ body {
 }
 
 button.btn, input[type="submit"].btn {
-    *padding-top: 2px;
-    *padding-bottom: 2px;
 }
 
 button.btn::-moz-focus-inner, input[type="submit"].btn::-moz-focus-inner {
@@ -12252,13 +12195,9 @@ button.btn::-moz-focus-inner, input[type="submit"].btn::-moz-focus-inner {
 }
 
 button.btn.large, input[type="submit"].btn.large {
-    *padding-top: 7px;
-    *padding-bottom: 7px;
 }
 
 button.btn.small, input[type="submit"].btn.small {
-    *padding-top: 3px;
-    *padding-bottom: 3px;
 }
 
 [class^="icon-"], [class*=" icon-"] {
@@ -12648,8 +12587,8 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     --dark-gamecard: #2b2130;
     --dark-primarytext: #e6e6e6;
     --dark-secondarytext: #b3b3b3;
-    --dark-primary: #702c91;
-    --dark-primary-highlight: #8d56a7;
+    --color-dark-primary: #702c91;
+    --color-dark-primary-highlight: #8d56a7;
     --dark-purple-text: #a980bd;
     --dark-gray-enabled: #666666;
     --dark-gray-text: #666666;

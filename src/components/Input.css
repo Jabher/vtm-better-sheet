@@ -58,11 +58,14 @@ textarea {
     left: -4px;
     top: -6px;
     margin: 0;
-    backdrop-filter: blur(5px);
     cursor: text;
     color: var(--secondarytext);
     transition: color 0.5s;
     white-space: nowrap;
+    padding: 5px 20px;
+    mask: var(--blurry-5-20);
+    mask-composite: intersect;
+    background: var(--background-color);
 }
 
 .sheet-element-input:has(label) {
