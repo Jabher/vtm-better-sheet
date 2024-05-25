@@ -13,19 +13,65 @@ import {
 import "./custom.d.ts";
 import { WorkerLogic } from "./WorkerLogic.js";
 
-const findIntl = (object, value, prefix) => {
-  const key = Object.keys(object).find((k) => value === k || value === getTranslationByKey(`${prefix}-${k}-label`));
-  return object[key];
-};
+const Roll20 = {
+  sectionIDs: (group, callback) => getSectionIDs(`repeating_${group}`, callback),
+  resetRepeatingField: () => {
+    try {
+      trigger?.({
+        eventname: "reset_repeating_field",
+      });
+    } catch {
+      console.log("failed to reset workerGlobals");
+    }
+  },
+  findIntl: (object, value, prefix) => {
+    const key = Object.keys(object).find((k) => value === k || value === getTranslationByKey(`${prefix}-${k}-label`));
+    return object[key];
+  },
 
-const resetRepeatingField = () => {
-  try {
-    trigger?.({
-      eventname: "reset_repeating_field",
+  getGroupAttrs: (group, keys, globalKeys, cb) => {
+    console.log("getGroupAttrs", group, keys, globalKeys);
+    if (cb == undefined && globalKeys instanceof Function) {
+      cb = globalKeys;
+      globalKeys = undefined;
+    }
+    getSectionIDs(`repeating_${group}`, (ids) => {
+      const queryKeys = [
+        ...globalKeys,
+        ...ids.flatMap((groupID) => keys.map((key) => `repeating_${group}_${groupID}_${key}`)),
+      ];
+      getAttrs(queryKeys, (attrs) => {
+        console.log("getGroupAttrs parsing", queryKeys, attrs, group, keys, globalKeys);
+        const globalAttrs = {};
+        const groupedAttrs = {};
+        for (const [key, value] of Object.entries(attrs)) {
+          if (key.startsWith(`repeating_${group}_`)) {
+            const groupId = key.replace(`repeating_${group}_`, "").replace(/_.+/, "");
+            const localKey = key.replace(`repeating_${group}_${groupId}_`, "");
+            groupedAttrs[groupId] ??= {};
+            groupedAttrs[groupId][localKey] = value;
+          } else {
+            globalAttrs[key] = value;
+          }
+        }
+        console.log("got group attrs", group, keys, globalKeys, groupedAttrs, globalAttrs);
+        cb(groupedAttrs, globalAttrs);
+      });
     });
-  } catch {
-    console.log("failed to reset workerGlobals");
-  }
+  },
+
+  setGroupAttrs: (group, attrs, globalAttrs = {}) => {
+    const resultingAttrs = Object.assign(
+      { ...globalAttrs },
+      ...Object.entries(attrs).map(([groupID, groupAttrs]) =>
+        Object.fromEntries(
+          Object.entries(groupAttrs).map(([key, value]) => [`repeating_${group}_${groupID}_${key}`, value])
+        )
+      )
+    );
+    console.log("setting group attrs", group, attrs, globalAttrs, resultingAttrs);
+    setAttrs(resultingAttrs);
+  },
 };
 
 const int = (val) => {
@@ -35,24 +81,15 @@ const int = (val) => {
   return Number.parseInt(val) || 0;
 };
 
-const withoutPrefix = (prefix, object) =>
-  Object.fromEntries(
-    Object.entries(object)
-      .filter(([key]) => key.startsWith(prefix))
-      .map(([key, value]) => [key.replace(prefix, ""), value])
-  );
-const withPrefix = (prefix, object) =>
-  Object.fromEntries(Object.entries(object).map(([key, value]) => [prefix + key, value]));
-
 const onRepeatingChange = (group, props, cb) => {
-  const fn = (e) => {
-    console.log(e);
-    getSectionIDs(`repeating_${group}`, (idarray) => {
+  const compute = (e) => {
+    Roll20.sectionIDs(group, (idarray) => {
+      console.log("computing onRepeatingChange", group, props, idarray, e);
       const keys = idarray.flatMap((id) => props.map((prop) => `repeating_${group}_${id}_${prop}`));
-      resetRepeatingField();
+      Roll20.resetRepeatingField();
       getAttrs(keys, (attrs) => {
         const result = Object.fromEntries(idarray.map((id) => [id, {}]));
-        console.log(keys, attrs);
+        console.log("applying onRepeatingChange", keys, attrs);
         for (const [key, value] of Object.entries(attrs)) {
           console.log("searching for key", key, idarray, value);
           const id = idarray.find((sectionID) => key.startsWith(`repeating_${group}_${sectionID}`));
@@ -68,77 +105,35 @@ const onRepeatingChange = (group, props, cb) => {
       `remove:repeating_${group}`,
       ...props.map((p) => `change:repeating_${group}_${p}`),
     ].join(" "),
-    fn
+    compute
   );
+  compute();
 };
-const declareRepeatingDependency = (groupName, extraKeys, getter) => {
+const declareRepeatingDependency = (groupName, extraKeys, globalDependencies, getter) => {
+  const compute = (e) => {
+    console.log("declareRepeatingDependency triggered", e, groupName, extraKeys);
+    Roll20.getGroupAttrs(groupName, extraKeys, globalDependencies, (groupedAttrs, globalAttrs) => {
+      console.log("declareRepeatingDependency state", groupedAttrs, globalAttrs);
+      for (const [id, attrs] of Object.entries(groupedAttrs)) {
+        console.log("declareRepeatingDependency updating group", groupName, {
+          [id]: getter(attrs, globalAttrs),
+        });
+        Roll20.setGroupAttrs(groupName, {
+          [id]: getter(attrs, globalAttrs),
+        });
+      }
+    });
+  };
   on(
     [
-      ...attributes.map((attr) => `change:${attr}`),
+      ...globalDependencies.map((attr) => `change:${attr}`),
       ...Object.keys(talents).map((name) => `change:${name}`),
       ...Object.keys(skills).map((name) => `change:${name}`),
-    ].join(" "),
-    () => {
-      getSectionIDs(groupName, (groupIDs) => {
-        getAttrs(
-          [
-            ...attributes,
-            ...groupIDs.flatMap((groupID) => extraKeys.map((key) => `repeating_${groupName}_${groupID}_${key}`)),
-          ],
-          (attrs) => {
-            const newAttrs = {};
-            for (const groupID of groupIDs) {
-              const localAttrs = withoutPrefix(`repeating_${groupName}_${groupID}_`, attrs);
-              Object.assign(
-                newAttrs,
-                withPrefix(
-                  `repeating_${groupName}_${groupID}_`,
-                  getter({
-                    ...localAttrs,
-                    attribute: attrs[localAttrs.rollAttribute],
-                    skill: attrs[localAttrs.skill],
-                  })
-                )
-              );
-            }
-          }
-        );
-      });
-    }
-  );
-
-  on(
-    [
-      `change:repeating_${groupName}:rollAttribute`,
-      `change:repeating_${groupName}:rollSkill`,
       ...extraKeys.map((key) => `change:repeating_${groupName}:${key}`),
     ].join(" "),
-    () => {
-      getAttrs(
-        [
-          `repeating_${groupName}_rollAttribute`,
-          `repeating_${groupName}_rollSkill`,
-          ...extraKeys.map((key) => `repeating_${groupName}_${key}`),
-        ],
-        (_localAttrs) => {
-          const { rollAttribute, rollSkill, ...rest } = withoutPrefix(`repeating_${groupName}_`, _localAttrs);
-
-          getAttrs([rollAttribute, rollSkill], ({ [rollAttribute]: attribute, [rollSkill]: skill }) => {
-            setAttrs(
-              withPrefix(
-                `repeating_${groupName}_`,
-                getter({
-                  ...rest,
-                  attribute,
-                  skill,
-                })
-              )
-            );
-          });
-        }
-      );
-    }
+    compute
   );
+  compute();
 };
 
 export const worker = () =>
@@ -228,12 +223,42 @@ export const worker = () =>
         });
       });
 
-      declareRepeatingDependency("meleeCombatDice", ["rollAccuracy"], ({ attribute, skill, rollAccuracy }) => ({
-        combatRollNumber: int(attribute) + int(skill) + int(rollAccuracy),
-      }));
-      declareRepeatingDependency("rangedCombatDice", ["rollAccuracy"], ({ attribute, skill, rollAccuracy }) => ({
-        combatRollNumber: int(attribute) + int(skill) + int(rollAccuracy),
-      }));
+      declareRepeatingDependency(
+        "brawlCombatDice",
+        ["rollAttribute", "rollSkill"],
+        attributes,
+        ({ rollAttribute, rollSkill }, attrs) => ({
+          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]),
+        })
+      );
+
+      declareRepeatingDependency(
+        "meleeCombatDice",
+        ["rollAccuracy", "rollAttribute", "rollSkill"],
+        attributes,
+        ({ rollAttribute, rollSkill, rollAccuracy }, attrs) => ({
+          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]) + int(rollAccuracy),
+        })
+      );
+
+      declareRepeatingDependency(
+        "meleeCombatDice",
+        ["rollAccuracy", "rollAttribute", "rollSkill", "damageAttribute"],
+        attributes,
+        ({ rollAttribute, rollSkill, rollAccuracy, damageAttribute }, attrs) => ({
+          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]) + int(rollAccuracy),
+          damageRollNumber: int(attrs[damageAttribute]),
+        })
+      );
+
+      declareRepeatingDependency(
+        "rangedCombatDice",
+        ["rollAccuracy", "rollAttribute", "rollSkill"],
+        attributes,
+        ({ rollAttribute, rollSkill, rollAccuracy }, attrs) => ({
+          combatRollNumber: int(attrs[rollAttribute]) + int(attrs[rollSkill]) + int(rollAccuracy),
+        })
+      );
 
       on("change:repeating_melee:selected", (e) => {
         // todo
@@ -260,7 +285,7 @@ export const worker = () =>
     repeatingDefaults = {
       MeleeWeapons: {
         Type: (type) => {
-          const weapon = findIntl(meleeWeapons, type, "weapon-melee");
+          const weapon = Roll20.findIntl(meleeWeapons, type, "weapon-melee");
           if (weapon)
             return {
               Damage: weapon[0],
@@ -271,7 +296,7 @@ export const worker = () =>
       },
       RangedWeapons: {
         Type: (type) => {
-          const weapon = findIntl(rangedWeapons, type, "weapon-ranged");
+          const weapon = Roll20.findIntl(rangedWeapons, type, "weapon-ranged");
           if (weapon) {
             return {
               Lethality: DamageType.Lethal,
@@ -286,7 +311,7 @@ export const worker = () =>
       },
       vehicles: {
         type: (type) => {
-          const car = findIntl(cars, type, "vehicle-type");
+          const car = Roll20.findIntl(cars, type, "vehicle-type");
           if (car) {
             return {
               SafeSpeed: car[0],

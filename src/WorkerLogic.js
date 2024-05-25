@@ -111,7 +111,12 @@ export class WorkerLogic {
         on(`change:repeating_${key}:${triggerKey}`, (eventInfo) => {
           const prefix = WorkerLogic.getRepeatingKey(eventInfo.sourceAttribute);
           const result = fn(eventInfo.newValue);
-          console.debug("updating repeating key for", key, triggerKey, eventInfo.newValue, result);
+          console.debug("updating repeating key for", key, {
+            triggerKey,
+            result,
+            eventInfo,
+            prefix,
+          });
           if (result) {
             setAttrs(Object.fromEntries(Object.entries(result).map(([key2, value]) => [`${prefix}_${key2}`, value])));
           }

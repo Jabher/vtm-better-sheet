@@ -136,7 +136,6 @@ export const SheetCombat = () => (
           <Row>
             <Input i18n="name2-u" name="Name" />
             <Input i18n="type-u" name="Type" list="ranged-weapon-datalist" />
-            {/*<Input i18n="minstr-u" type="number" name="MinimumStrength" />*/}
             <Input i18n="damage-u" type="number" name="Damage" />
             <SelectInput i18n="type-u" name="Lethality" defaultValue={0}>
               <option value={0} data-i18n="bashing-u" />
