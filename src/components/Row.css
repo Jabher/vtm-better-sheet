@@ -1,0 +1,38 @@
+.sheet-component--row {
+    display: block;
+    .sheet-component--row-head {
+        display: flex;
+        & > * {
+            width: fit-content;
+            flex: 1 1 fit-content;
+        }
+        .sheet-component--row-description-toggler {
+            flex: 0;
+            align-self: flex-end;
+            appearance: none;
+            background: transparent;
+            color: var(--v20-color-text);
+            border: none;
+            width: min-content;
+            height: 100%;
+            &::after {
+                content: 'expand_content'
+            }
+            &:checked::after {
+                content: 'collapse_content'
+            }
+
+            &:active, &:focus {
+                outline: none;
+            }
+        }
+    }
+
+    .sheet-component--row-description {
+        display: none;
+    }
+
+    &:has(.sheet-component--row-description-toggler:checked) .sheet-component--row-description {
+        display: block;
+    }
+}

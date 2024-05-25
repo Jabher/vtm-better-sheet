@@ -6,7 +6,6 @@ import { DisciplineSelect } from "../components/DisciplineSelect.tsx";
 import { AbilitySelect, AttributeSelect } from "../components/AttributeSelect.tsx";
 import { SelectInput } from "../components/SelectInput.tsx";
 import { RepeatingSection } from "../components/RepeatingSection.tsx";
-import { Checkbox } from "../components/Checkbox.tsx";
 
 export const SheetDice = () => (
   <div className="sheet-tab-content sheet-dice">
@@ -31,24 +30,6 @@ export const SheetDice = () => (
       </SectionBody>
     </Section>
     <Section>
-      <SectionHead i18n="initiative-dice-pool-label" />
-      <SectionBody className="sheet-colrow sheet-table">
-        <div className="sheet-dice--repeating-line">
-          <AttributeSelect name="attr_attribute1Roll" defaultValue="@{Dexterity}+@{DexterityBoost}" />
-          <AttributeSelect name="attr_attribute2Roll" defaultValue="@{Wits}+@{WitsBoost}" />
-          <DisciplineSelect name="attr_initiativedisciplineRoll" />
-          <Input type="number" name="attr_modNumber" i18n="result-modifiers-label" />
-          <Checkbox name="attr_initiativeuseHealth" i18n="use-health-minus-label" symbol="ecg_heart" />
-          <Input type="number" name="attr_initrollDiff" defaultValue={6} i18n="difficulty-label" />
-          <Checkbox name="attr_initiativeaddTracker" i18n="use-initiative-label" symbol="low_priority" />
-          <RollButton
-            name="initiativeRoll"
-            value="&{template:wodinitiative} {{name=@{Name}}} {{roll_name=Initiative}} {{attr1=Attribute 1}} {{attr1_num=@{attribute1Roll}}} {{attr2=Attribute 2}} {{attr2_num=@{attribute2Roll}}} {{pwr=Celerity}} {{pwr_num=@{initiativedisciplineRoll}}} {{mod_num=@{modNumber}}} {{hp_mod=@{initiativeuseHealth}}} {{result=[[[[@{attribute1Roll}+@{attribute2Roll}+@{initiativedisciplineRoll}+@{modNumber}+@{initiativeuseHealth}]]+[[1d10]] @{initiativeaddTracker}]]}} "
-          />
-        </div>
-      </SectionBody>
-    </Section>
-    <Section>
       <SectionHead i18n="main-dice-pools-label" />
       <SectionBody className="sheet-colrow sheet-table">
         <RepeatingSection name="mainDice">
@@ -68,31 +49,6 @@ export const SheetDice = () => (
               <RollButton
                 name="mainRoll"
                 value="&{template:wod} {{name=@{Name}}} {{roll_name=@{mainrollTitle}}} {{attr=Attribute}} {{attr_num=@{mainattributeRoll}}} {{skill=Ability}} {{skill_num=@{mainabilityRoll}}} {{pwr=Discipline}} {{pwr_num=@{maindisciplineRoll}}} {{mod_num=@{mainmodNumber}}} {{hp_mod=@{useHealth}}} {{result=[[{(@{mainattributeRoll}+@{mainabilityRoll}+@{maindisciplineRoll}+@{mainmodNumber}+@{useHealth})d10sd}>@{mainrollDiff}f1]]}} "
-              />
-            </div>
-          )}
-        </RepeatingSection>
-      </SectionBody>
-    </Section>
-    <Section>
-      <SectionHead i18n="combat-dice-pools-label" />
-      <SectionBody>
-        <RepeatingSection name="repeating_combatDice">
-          {() => (
-            <div className="sheet-dice--repeating-line">
-              <Input i18n="name-u" name="attr_combatrollTitle" className="sheet-inputname" />
-              <AttributeSelect name="attr_combatattributeRoll" />
-              <AttributeSelect name="attr_combatabilityRoll" />
-              <DisciplineSelect i18n="discipline-label" name="attr_combatdisciplineRoll" />
-              <Input type="number" name="attr_combatmodNumber" i18n="result-modifiers-label" />
-              <SelectInput name="attr_combatuseHealth">
-                <option value="@{Health}">Yes</option>
-                <option value={0}>No</option>
-              </SelectInput>
-              <Input type="number" name="attr_combatDiff" defaultValue={6} i18n="difficulty-label" />
-              <RollButton
-                name="combatRoll"
-                value="&{template:wod} {{name=@{Name}}} {{roll_name=@{combatrollTitle}}} {{attr=Attribute}} {{attr_num=@{combatattributeRoll}}} {{skill=Ability}} {{skill_num=@{combatabilityRoll}}} {{pwr=Discipline}} {{pwr_num=@{combatdisciplineRoll}}} {{mod_num=@{combatmodNumber}}} {{hp_mod=@{combatuseHealth}}} {{result=[[{(@{combatattributeRoll}+@{combatabilityRoll}+@{combatdisciplineRoll}+@{combatmodNumber}+@{combatuseHealth})d10sd}>@{combatDiff}f1]]}} "
               />
             </div>
           )}

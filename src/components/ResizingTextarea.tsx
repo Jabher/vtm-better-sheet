@@ -1,6 +1,7 @@
 import cn from "classnames";
 import { DOMProps, I18n } from "../types.ts";
 import "./ResizingTextarea.css";
+import {Labelled} from "./Labelled.tsx";
 
 export const ResizingTextarea = ({
   name,
@@ -11,7 +12,7 @@ export const ResizingTextarea = ({
 }: DOMProps<"textarea"> & {
   i18n?: I18n;
 }) => (
-  <div className={cn("sheet-component sheet-component--resizing-textarea", className)} style={style}>
+  <Labelled className={cn("sheet-component sheet-component--resizing-textarea", className)} style={style} i18n={i18n}>
     <div className="sheet-component--resizing-textarea-container">
       <textarea name={name} rows={1} {...rest} />
       <span
@@ -19,8 +20,7 @@ export const ResizingTextarea = ({
         name={name}
       />
     </div>
-    {i18n ? <label data-i18n={i18n}></label> : null}
-  </div>
+  </Labelled>
 );
 
 export const Textarea = ({

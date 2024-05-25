@@ -18,13 +18,19 @@ const onValues = (props, fn) => {
 };
 
 const findIntl = (object, value, prefix) => {
-    const key = Object.keys(object).find(key => key === type || key === getTranslationByKey(`${prefix}-${type}-label`));
+    const key = Object.keys(object).find(key => value === key || value === getTranslationByKey(`${prefix}-${key}-label`));
     return object[key];
 }
 
 
 export const worker = () => new class extends WorkerLogic {
     init(cb) {
+        on('change:repeating_melee:selected', (e) => {
+           console.log(e);
+        });
+        on('change:repeating_ranged:selected', (e) => {
+            console.log(e);
+        });
         cb();
     }
 
@@ -77,9 +83,9 @@ export const worker = () => new class extends WorkerLogic {
                 const car = findIntl(cars, type, 'vehicle-type');
                 if (car) {
                     return {
-                        SafeSpeed: car,
-                        MaxSpeed: car,
-                        Maneuver: car,
+                        SafeSpeed: car[0],
+                        MaxSpeed: car[1],
+                        Maneuver: car[2],
                     }
                 }
             }

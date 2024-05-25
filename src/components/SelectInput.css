@@ -1,5 +1,9 @@
 .sheet-component--select-input {
-    position: relative;
+    display: grid;
+    grid-template-areas: "area";
+    & > * {
+        grid-area: area;
+    }
     width: auto;
     select {
         width: 100%;
@@ -18,31 +22,5 @@
 
     option:empty {
         display: none;
-    }
-
-    & {
-        padding: 4px 8px;
-    }
-
-    &:has(label) {
-        padding: 10px 4px 2px;
-    }
-
-    label {
-        pointer-events: none;
-        display: inline-block;
-        width: min-content;
-        position: absolute;
-        left: -4px;
-        top: -6px;
-        margin: 0;
-        cursor: text;
-        color: var(--secondarytext);
-        transition: color var(--v20-transition-duration);
-        white-space: nowrap;
-        padding: 5px 20px;
-        mask: var(--v20-blurry-5-20);
-        mask-composite: subtract;
-        background: var(--v20-color-background);
     }
 }

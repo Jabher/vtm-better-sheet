@@ -12,7 +12,7 @@ const SHEET_TYPE_ATTR = "attr_sheet_type";
 
 export const V20 = ({ sheets }: { sheets: Partial<Record<I18n, () => ReactNode>> }) => (
   <>
-    <input type="checkbox" style={{display: 'none'}} name="attr_V20_NotInitialized" checked/>
+    <input type="checkbox" style={{display: 'none'}} name="attr_V20_NotInitialized" defaultChecked/>
     <div className="sheet-toplevel-nav">
       {(Object.keys(sheets) as I18n[]).map((section, i) => (
         <label data-i18n={section} htmlFor={`${SHEET_TYPE_ATTR}_${i}`} key={`section_${i}`} />

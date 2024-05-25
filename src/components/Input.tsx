@@ -3,6 +3,7 @@ import cn from "classnames";
 import "./Input.css";
 import { DOMProps, I18n } from "../types.ts";
 import { H5 } from "./globals/Headings.tsx";
+import {Labelled} from "./Labelled.tsx";
 
 export const Input = ({
   i18n,
@@ -13,7 +14,6 @@ export const Input = ({
   ...rest
 }: ComponentProps<"input"> & {
   i18n?: I18n;
-  labelName?: string; // todo temp, remove with intl
   postfix?: I18n;
 }) => {
   const inputProps: DOMProps<"input"> = {
@@ -25,9 +25,9 @@ export const Input = ({
     defaultValue: rest.type == "number" ? 0 : undefined,
     ...rest,
   };
-  if (i18n || labelName) {
+  if (i18n) {
       return (
-      <div className="sheet-element-input">
+      <Labelled className="sheet-element-input" i18n={i18n}>
         <div className="sheet-element-input-container">
             {disabled
                 // @ts-ignore
@@ -36,8 +36,7 @@ export const Input = ({
             }
           {postfix ? <H5 className="sheet-element-input-postfix" i18n={postfix} /> : null}
         </div>
-        {i18n ? <label data-i18n={i18n}></label> : <label>{labelName}</label>}
-      </div>
+      </Labelled>
     );
   } else {
     return (

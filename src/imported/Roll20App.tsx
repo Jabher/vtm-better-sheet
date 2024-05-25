@@ -5,7 +5,7 @@ import "./base.css";
 
 const Roll20App = ({ children, worker }: PropsWithChildren<{ worker: Worker }>) => {
   const isLightOS = useMediaQuery("(prefers-color-scheme: light)", {
-    defaultValue: true
+    // defaultValue: true
   });
   const formRef = useWorker(worker);
 

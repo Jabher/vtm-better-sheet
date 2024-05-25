@@ -9,6 +9,7 @@ import { SheetInfo } from "./SheetInfo.tsx";
 import { SheetExperience } from "./SheetExperience.tsx";
 import { SheetCombat } from "./SheetCombat.tsx";
 import { SheetDice } from "./SheetDice.tsx";
+import {SheetBelongings} from "./SheetBelongings.tsx";
 
 export const sheets: Partial<Record<I18n, () => ReactNode>> = {
   "Primary": SheetPrimary,
@@ -19,5 +20,6 @@ export const sheets: Partial<Record<I18n, () => ReactNode>> = {
   "Information": SheetInfo,
   "experience-u": SheetExperience,
   "Combat": SheetCombat,
+  "Belongings": SheetBelongings,
   "Dice": SheetDice,
 };
