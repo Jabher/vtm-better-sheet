@@ -14,29 +14,28 @@
     & .sheet-component--resizing-textarea-container {
         width: 100%;
     }
-    & textarea {
-        width: 100%;
-        min-height: 30px;
-        height: 100%;
-        outline: none;
-        background: none;
-        vertical-align: top;
-        margin-bottom: 0;
-        padding: 4px 8px;
-    }
+
     & span {
         width: 100%;
         word-break: break-all;
         pointer-events: none;
         opacity: 0;
         padding: 4px;
+        min-height: var(--v20-line-height);
+        transition: min-height 0.1s ease-in-out;
 
         &::before, &::after {
             content: 'z';
         }
     }
 
+    & textarea:focus + span {
+        min-height: calc(var(--v20-line-height) * 5);
+    }
+}
 
+.sheet-component--resizing-textarea, .sheet-component--textarea {
+    padding: 8px 4px;
     & label {
         pointer-events: none;
         display: inline-block;
@@ -47,7 +46,7 @@
         margin: 0;
         cursor: text;
         color: var(--secondarytext);
-        transition: color 0.5s;
+        transition: color var(--v20-transition-duration);
         white-space: nowrap;
         padding: 5px 20px;
         mask: var(--v20-blurry-5-20);
@@ -55,12 +54,22 @@
         background: var(--v20-color-background);
     }
 
-    padding: 8px 4px;
     &:has(label) {
         padding: 10px 4px 2px;
 
         & textarea {
             padding: 4px 16px;
         }
+    }
+
+    & textarea {
+        width: 100%;
+        min-height: 30px;
+        height: 100%;
+        outline: none;
+        background: none;
+        vertical-align: top;
+        margin-bottom: 0;
+        padding: 4px 8px;
     }
 }

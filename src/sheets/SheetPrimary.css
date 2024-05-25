@@ -1,4 +1,4 @@
-.sheet-primary {
+.sheet-primary.sheet-primary.sheet-primary {
     .sheet-primary--virtues {
         display: grid;
         grid-auto-flow: row;
@@ -20,7 +20,6 @@
             line-height: var(--v20-line-height);
             font-size: 13px;
             text-align: right;
-            width: 100%;
         }
     }
 
@@ -105,9 +104,10 @@
         }
 
         input, span {
+            margin: 0;
+            padding: 0;
             line-height: 27px;
             font-size: 18px;
-            padding: 4px;
             color: var(--v20-color-text);
             font-family: 'Poiret One';
         }

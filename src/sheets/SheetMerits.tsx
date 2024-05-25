@@ -4,42 +4,38 @@ import { Input } from "../components/Input.tsx";
 import { RepeatingSection } from "../components/RepeatingSection.tsx";
 import { ResizingTextarea } from "../components/ResizingTextarea.tsx";
 
+// todo collapse
 export const SheetMerits = () => (
   <Section>
-    <SectionHead>Merits</SectionHead>
-    {/*todo intl*/}
+    <SectionHead i18n="merits-label" />
     <SectionBody>
-      <div>
-        <RepeatingSection name="Merits" initialCount={1}>
-          {() => (
-            <>
-              <div style={{ display: "flex" }}>
-                <Input i18n="name2-u" type="text" name="attr_meritname" />
-                <Counter name="attr_meritpoints" from={1} to={7} />
-                <Input i18n="type-u" name="attr_merittype"></Input>
-              </div>
-              <ResizingTextarea i18n="description-label" name="attr_meritdesc" />
-            </>
-          )}
-        </RepeatingSection>
-      </div>
+      <RepeatingSection name="Merits" initialCount={1}>
+        {() => (
+          <>
+            <div style={{ display: "flex" }}>
+              <Input i18n="name2-u" type="text" name="attr_meritname" />
+              <Counter name="attr_meritpoints" from={1} to={7} />
+              <Input i18n="type-u" name="attr_merittype"></Input>
+            </div>
+            <ResizingTextarea i18n="description-label" name="attr_meritdesc" />
+          </>
+        )}
+      </RepeatingSection>
     </SectionBody>
-    <SectionHead>Flaws</SectionHead> {/*todo intl*/}
+    <SectionHead i18n="flaws-label" />
     <SectionBody>
-      <div>
-        <RepeatingSection name="Flaws" initialCount={1}>
-          {() => (
-            <>
-              <div style={{ display: "flex" }}>
-                <Input i18n="name2-u" type="text" name="attr_flawname" />
-                <Counter name="attr_flawpoints" from={1} to={7} />
-                <Input i18n="type-u" name="attr_flawtype"></Input>
-              </div>
-              <ResizingTextarea i18n="description-label" name="attr_flawdesc" />
-            </>
-          )}
-        </RepeatingSection>
-      </div>
+      <RepeatingSection name="Flaws" initialCount={1}>
+        {() => (
+          <>
+            <div style={{ display: "flex" }}>
+              <Input i18n="name2-u" type="text" name="attr_flawname" />
+              <Counter name="attr_flawpoints" from={1} to={7} />
+              <Input i18n="type-u" name="attr_flawtype"></Input>
+            </div>
+            <ResizingTextarea i18n="description-label" name="attr_flawdesc" />
+          </>
+        )}
+      </RepeatingSection>
     </SectionBody>
   </Section>
 );

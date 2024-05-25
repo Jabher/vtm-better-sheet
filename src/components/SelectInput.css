@@ -1,0 +1,48 @@
+.sheet-component--select-input {
+    position: relative;
+    width: auto;
+    select {
+        width: 100%;
+        margin: 0;
+        height: 100%;
+        background: transparent;
+        resize: none;
+        border: rgba(128, 128, 128, 0.125) 1px solid;
+        &:active, &:focus {
+            outline: none;
+        }
+        &:disabled {
+            border-color: rgba(128, 128, 128, 0.05);
+        }
+    }
+
+    option:empty {
+        display: none;
+    }
+
+    & {
+        padding: 4px 8px;
+    }
+
+    &:has(label) {
+        padding: 10px 4px 2px;
+    }
+
+    label {
+        pointer-events: none;
+        display: inline-block;
+        width: min-content;
+        position: absolute;
+        left: -4px;
+        top: -6px;
+        margin: 0;
+        cursor: text;
+        color: var(--secondarytext);
+        transition: color var(--v20-transition-duration);
+        white-space: nowrap;
+        padding: 5px 20px;
+        mask: var(--v20-blurry-5-20);
+        mask-composite: subtract;
+        background: var(--v20-color-background);
+    }
+}

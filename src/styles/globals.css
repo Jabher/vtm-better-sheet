@@ -4,6 +4,7 @@
     --v20-crop: 30deg;
     --v20-border-width: 0.5px;
     --v20-border-color: rgb(92, 2, 18);
+    --v20-min-viewport-width: 1000px;
 
     --v20-line-height: 30px;
     --v20-line-height-large: 46px;
@@ -14,10 +15,14 @@
     --v20-color-background: white;
     --v20-color-visual-accent: rgba(117, 2, 24, 1);
     --v20-common-border-color: rgba(77, 77, 77, .3);
+    --v20-common-border-color-transparent: rgba(77, 77, 77, .1);
+    --v20-transition-duration: 0.25s;
 
     --v20-gap-horizontal: 16px;
     --v20-gap-vertical: 8px;
     --v20-color-text: #111;
+
+    --v20-column-width: calc(var(--v20-min-viewport-width) / 3 - var(--v20-gap-horizontal) * 2);
 
     /*14,16,18px*/
     --v20-font-size-normal: 1em;
@@ -26,12 +31,10 @@
 
     --v20-blurry-10-50: unset;
     --v20-blurry-5-20: unset;
-    --v20-neuromorph-box-shadow: inset 3px 3px 6px #e6e6e6,
-    inset -3px -3px 6px #ffffff;
-    --v20-neuromorph-box-shadow-active: inset 3px 3px 6px #cccccc,
-    inset -3px -3px 6px #ffffff;
 
     --v20-color-neutral: rgba(127, 127, 127, .5);
+
+    --v20-counter-item-width: 14px;
 }
 
 @media screen and (max-device-pixel-ratio: 1) {
@@ -39,4 +42,9 @@
         --v20-border-width: 1px;
         --v20-border-color: rgba(117, 2, 24, .5);
     }
+}
+
+.sheet-darkmode {
+    --v20-border-color: rgb(219, 0, 44);
+    --v20-color-visual-accent: rgb(219, 0, 44);
 }

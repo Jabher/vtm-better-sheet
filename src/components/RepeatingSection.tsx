@@ -10,7 +10,7 @@ const RepeatingItem = ({
   reprowid,
   children,
 }: PropsWithChildren<{
-  component: (i: number) => ReactNode;
+  component: () => ReactNode;
   name: string;
   reprowid: number;
 }>) => {
@@ -32,10 +32,11 @@ const RepeatingItem = ({
   return (
     <div className="repitem" data-reprowid={reprowid} style={{ position: "relative", top: 0, left: 0 }} ref={setRef}>
       {children}
-      {component(reprowid)}
+      {component()}
     </div>
   );
 };
+const isProd = process.env.NODE_ENV == "production";
 
 export const RepeatingSection = ({
   name,
@@ -45,11 +46,18 @@ export const RepeatingSection = ({
   ...rest
 }: Omit<DOMProps<"fieldset">, "children"> & {
   name: string;
-  children: (i: number) => ReactNode;
+  children: () => ReactNode;
   initialCount?: number;
 }) => {
   const [counter, setCounter] = useState(initialCount);
   const [isEdit, setIsEdit] = useState(false);
+  if (isProd) {
+    return (
+      <fieldset className={cn(`repeating_${name}`, className)} {...rest}>
+        {children()}
+      </fieldset>
+    );
+  }
   return (
     <fieldset className={cn(`repeating_${name}`, className)} {...rest}>
       {range(0, counter).map((i) => (

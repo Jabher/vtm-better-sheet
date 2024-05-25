@@ -3,18 +3,26 @@ import { RepeatingSection } from "../components/RepeatingSection.tsx";
 import { Section, SectionBody, SectionHead } from "../components/Section.tsx";
 import { Input } from "../components/Input.tsx";
 import { ResizingTextarea } from "../components/ResizingTextarea.tsx";
+import "./SheetPowers.css";
+import { range } from "ramda";
+import { SelectInput } from "../components/SelectInput.tsx";
+import { DisciplineSelect } from "../components/DisciplineSelect.tsx";
 
 export const SheetPowers = () => (
-  <div>
+  <div className="sheet-tab-content sheet-powers">
     <Section>
-      <SectionHead>Discipline Powers</SectionHead>
+      <SectionHead i18n="discipline-powers-label" />
       <SectionBody>
-        <RepeatingSection name="repeating_powers">
+        <RepeatingSection name="powers">
           {() => (
             <>
-              <div style={{ display: "flex" }}>
-                <Input labelName="Discipline" type="text" name="attr_SetDisciplineName" />
-                <Input labelName="Power" type="text" name="attr_SetDisciplinePower" />
+              <div className="sheet-powers--power">
+                <SelectInput i18n="discipline-label" name="attr_SetDisciplineName">
+                  {range(1, 11).map((i) => (
+                    <option key={i} value={i} name={`attr_Discipline${i}Name`} />
+                  ))}
+                </SelectInput>
+                <Input i18n="discipline-power-label" type="text" name="attr_SetDisciplinePower" />
                 <Counter name="attr_SetDisciplineLevel" from={1} to={10}></Counter>
               </div>
               <ResizingTextarea i18n="description-label" name="attr_SetDisciplinePowerDesc" />
@@ -25,29 +33,29 @@ export const SheetPowers = () => (
     </Section>
 
     <Section>
-      <SectionHead>Combination Disciplines</SectionHead>
+      <SectionHead i18n="discipline-combination-powers-label" />
       <SectionBody>
         <RepeatingSection name="combinationPowers">
           {() => (
-            <>
-              <Input labelName="Name" name="attr_ComboDisciplineName" />
-              <div style={{ display: "flex" }}>
-                <Input labelName="Discipline 1" name="attr_ComboDisciplinePower1" />
-                <Input labelName="Discipline 2" name="attr_ComboDisciplinePower2" />
-                <Input labelName="Discipline 3" name="attr_ComboDisciplinePower3" />
+            <div className="sheet-powers--multi">
+              <Input i18n="name2-u" name="attr_ComboDisciplineName" />
+              <div className="sheet-powers--multi-description">
+                <div>
+                  <DisciplineSelect i18n="discipline-1-label" name="attr_ComboDisciplinePower1" />
+                  <Counter name="attr_ComboDisciplineLevel1" from={1} to={10}></Counter>
+                </div>
+                <div>
+                  <DisciplineSelect i18n="discipline-2-label" name="attr_ComboDisciplinePower2" />
+                  <Counter name="attr_ComboDisciplineLevel2" from={1} to={10}></Counter>
+                </div>
+                <div>
+                  <DisciplineSelect i18n="discipline-3-label" name="attr_ComboDisciplinePower3" />
+                  <Counter name="attr_ComboDisciplineLevel3" from={1} to={10}></Counter>
+                </div>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-evenly", alignItems: "flex-start" }}>
-                <Counter name="attr_ComboDisciplineLevel1" from={1} to={10}></Counter>
-                <Counter name="attr_ComboDisciplineLevel2" from={1} to={10}></Counter>
-                <Counter name="attr_ComboDisciplineLevel3" from={1} to={10}></Counter>
-              </div>
-              <div style={{ display: "flex" }}>
-                <Input labelName="Required Power 1" name="attr_ComboPowerRequiredNamed1" />
-                <Input labelName="Required Power 2" name="attr_ComboPowerRequiredNamed2" />
-                <Input labelName="Book and Pg Number" name="attr_ComboPowerBooknPage" />
-              </div>
+              <Input i18n="book-and-page-label" name="attr_ComboPowerBooknPage" />
               <ResizingTextarea i18n="description-label" name="attr_ComboDisciplinePowerDesc" />
-            </>
+            </div>
           )}
         </RepeatingSection>
       </SectionBody>

@@ -1,6 +1,5 @@
 import { ComponentProps } from "react";
 import cn from "classnames";
-import translation from "../translation.json";
 import "./Input.css";
 import { DOMProps, I18n } from "../types.ts";
 import { H5 } from "./globals/Headings.tsx";
@@ -26,20 +25,13 @@ export const Input = ({
     ...rest,
   };
   if (i18n || labelName) {
-    const label = `input_${i18n || labelName}`;
     return (
       <div className="sheet-element-input">
         <div className="sheet-element-input-container">
-          <input id={label} {...inputProps} />
+          <input {...inputProps} />
           {postfix ? <H5 className="sheet-element-input-postfix" i18n={postfix} /> : null}
         </div>
-        {i18n ? (
-          <label htmlFor={label} data-i18n={i18n}>
-            {translation[i18n]}
-          </label>
-        ) : (
-          <label htmlFor={label}>{labelName}</label>
-        )}
+        {i18n ? <label data-i18n={i18n}></label> : <label>{labelName}</label>}
       </div>
     );
   } else {

@@ -1,4 +1,5 @@
 .sheet-element-section-heading {
+    flex: 0;
     width: 100%;
     text-align: center;
     min-height: 50px;
@@ -11,7 +12,6 @@
     padding-bottom: 4px;
     align-items: flex-start;
     justify-content: center;
-    flex-grow: 1; /*for nested scenarios*/
 }
 
 .sheet-element-section-heading > * {
@@ -20,10 +20,12 @@
     -webkit-mask: var(--v20-blurry-10-50);
     mask-composite: subtract;
     background: var(--v20-color-background);
+    display: flex;
+    line-height: 27px;
 }
 
 .sheet-element-section-body {
-    max-width: 1080px;
+    max-width: var(--v20-min-viewport-width);
     margin: 0 auto;
     gap: var(--v20-gap-horizontal);
 }

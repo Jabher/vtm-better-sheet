@@ -3,23 +3,19 @@ import { RepeatingSection } from "../components/RepeatingSection.tsx";
 import { Input } from "../components/Input.tsx";
 import "./SheetBonds.css";
 import { ResizingTextarea } from "../components/ResizingTextarea.tsx";
+import { SelectInput } from "../components/SelectInput.tsx";
 
 export const SheetBonds = () => (
   <div className="sheet-tab-content sheet-tabBBond">
     <Section>
-      <SectionHead>Bonds</SectionHead>
+      <SectionHead i18n="bonds-label" />
       <SectionBody>
-        <div className="sheet-tabBBond--grid-relations">
-          <span />
-          <h4>To Target</h4>
-          <h4>To Me</h4>
-        </div>
         <RepeatingSection name="Bonds">
           {() => (
             <div style={{ marginBottom: 40 }}>
               <div className="sheet-tabBBond--grid-relations">
-                <Input labelName="Who" name="attr_boundToName" />
-                <select className="sheet-center-select" name="attr_ratingBond">
+                <Input i18n="who-label" name="attr_boundToName" />
+                <SelectInput name="attr_ratingBond" defaultValue={0} i18n="to-him-label">
                   <option value={0} style={{ color: "Black" }}>
                     No Blood Bond
                   </option>
@@ -32,8 +28,8 @@ export const SheetBonds = () => (
                   <option value={3} style={{ color: "Crimson" }}>
                     Full Blood Bond
                   </option>
-                </select>
-                <select name="attr_reverseRatingBond">
+                </SelectInput>
+                <SelectInput name="attr_reverseRatingBond" defaultValue={0} i18n="to-me-label">
                   <option value={0} style={{ color: "Black" }}>
                     No Blood Bond
                   </option>
@@ -46,7 +42,7 @@ export const SheetBonds = () => (
                   <option value={3} style={{ color: "Crimson" }}>
                     Full Blood Bond
                   </option>
-                </select>
+                </SelectInput>
               </div>
               <ResizingTextarea i18n="description-label" name="attr_bounddesc" />
             </div>
@@ -55,19 +51,14 @@ export const SheetBonds = () => (
       </SectionBody>
     </Section>
     <Section>
-      <SectionHead>Vinculums</SectionHead>
+      <SectionHead i18n="vinculums-label" />
       <SectionBody>
-        <div className="sheet-tabBBond--grid-relations">
-          <span />
-          <h4>To Target</h4>
-          <h4>To Me</h4>
-        </div>
         <RepeatingSection name="Vincs">
           {() => (
             <div style={{ marginBottom: 40 }}>
               <div className="sheet-tabBBond--grid-relations">
-                <Input labelName="Who" type="text" name="attr_vincToName" />
-                <select className="sheet-center-select" name="attr_ratingVinc">
+                <Input i18n="who-label" type="text" name="attr_vincToName" />
+                <SelectInput i18n="to-him-label" name="attr_ratingVinc">
                   <option value={0}>0</option>
                   <option value={1}>1</option>
                   <option value={2}>2</option>
@@ -79,8 +70,8 @@ export const SheetBonds = () => (
                   <option value={8}>8</option>
                   <option value={9}>9</option>
                   <option value={10}>10</option>
-                </select>
-                <select className="sheet-center-select" name="attr_reverseRatingVinc">
+                </SelectInput>
+                <SelectInput i18n="to-me-label" name="attr_reverseRatingVinc">
                   <option value={0}>0</option>
                   <option value={1}>1</option>
                   <option value={2}>2</option>
@@ -92,7 +83,7 @@ export const SheetBonds = () => (
                   <option value={8}>8</option>
                   <option value={9}>9</option>
                   <option value={10}>10</option>
-                </select>
+                </SelectInput>
               </div>
               <ResizingTextarea name="attr_vincbounddesc" />
             </div>
@@ -101,26 +92,21 @@ export const SheetBonds = () => (
       </SectionBody>
     </Section>
     <Section>
-      <SectionHead>Boons</SectionHead>
+      <SectionHead i18n="boons-label" />
       <SectionBody>
-        <div className="sheet-tabBBond--grid-relations">
-          <span />
-          <h4>To Who</h4>
-          <h4>Type</h4>
-        </div>
         <RepeatingSection name="Boons">
           {() => (
             <div style={{ marginBottom: 40 }}>
               <div className="sheet-tabBBond--grid-relations">
-                <Input labelName="Debtor" name="attr_boonDebtorName" />
-                <Input labelName="To Who" name="attr_boonToName" />
-                <select name="attr_ratingBoon" defaultValue={0}>
-                  <option value={0}>Unknown</option>
-                  <option value={1}>Trival</option>
-                  <option value={2}>Minor</option>
-                  <option value={3}>Major</option>
-                  <option value={4}>Life</option>
-                </select>
+                <Input i18n="debtor-label" name="attr_boonDebtorName" />
+                <Input i18n="to-whom-label" name="attr_boonToName" />
+                <SelectInput i18n="type-u" name="attr_ratingBoon" defaultValue={0}>
+                  <option value={0} data-i18n="boon-other-label"></option>
+                  <option value={1} data-i18n="boon-trivial-label" />
+                  <option value={2} data-i18n="boon-minor-label" />
+                  <option value={3} data-i18n="boon-major-label" />
+                  <option value={4} data-i18n="boon-life-label" />
+                </SelectInput>
               </div>
               <ResizingTextarea i18n="description-label" name="attr_boondesc" />
             </div>

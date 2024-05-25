@@ -1,0 +1,19 @@
+.sheet-tabSorcery {
+    & .sheet-tabSorcery--item {
+        & + .sheet-tabSorcery--item {
+            padding-top: 40px;
+        }
+
+        .sheet-tabSorcery--item-row {
+            display: flex;
+            align-items: center;
+
+            & > * {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                align-items: stretch;
+            }
+        }
+    }
+}

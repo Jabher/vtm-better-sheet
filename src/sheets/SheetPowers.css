@@ -1,0 +1,40 @@
+.sheet-powers {
+    .sheet-powers--power {
+        display: flex;
+        .sheet-component--select-input {
+            flex: 0 0 var(--v20-column-width);
+        }
+    }
+
+    .sheet-powers--multi {
+        display: block;
+    }
+    .sheet-powers--multi-description {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 16px 0;
+        gap: 16px;
+
+        &:after {
+            content: '';
+            flex-shrink: 1;
+            flex-grow: 1;
+            width: var(--v20-column-width);
+        }
+
+        & > * {
+            display: inline-flex;
+            width: var(--v20-column-width);
+            flex-grow: 1;
+        }
+
+        .sheet-component--select-input {
+            flex-grow: 1;
+        }
+    }
+
+    & option:empty {
+        display: none;
+    }
+}

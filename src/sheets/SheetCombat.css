@@ -1,9 +1,20 @@
 .sheet-tabCombat {
     & .sheet-tabCombat--item {
+        & + .sheet-tabCombat--item {
+            padding-top: 40px;
+        }
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         & > * {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            align-items: stretch;
+            justify-content: flex-start;
+            width: 100%;
+        }
+
+        .sheet-tabCombat--item-row > * {
+            width: 100%;
         }
     }
 

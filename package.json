@@ -2,9 +2,11 @@
   "name": "vtm-better-char-sheet",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "dev": "vite-react-ssg dev",
-    "build": "tsc && NODE_ENV=production vite-react-ssg build",
+    "dev": "NODE_ENV=dev vite-react-ssg dev",
+    "build": "npm run build:worker && tsc && NODE_ENV=production vite-react-ssg build",
+    "build:worker": "npx parcel build ./src/worker.ts --dist-dir ./dist2 --no-cache",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -12,14 +14,18 @@
     "@childrentime/devcert": "^1.2.8",
     "autoprefixer": "^10.4.18",
     "classnames": "^2.5.1",
+    "parcel": "^2.12.0",
     "postcss": "^8.4.35",
     "postcss-image-inliner": "^7.0.1",
+    "postcss-nested": "^6.0.1",
     "ramda": "^0.29.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "usehooks-ts": "^3.0.1",
+    "vite-plugin-compile-time": "^0.2.1",
     "vite-plugin-prerender": "^1.0.8",
-    "vite-react-ssg": "^0.6.0"
+    "vite-react-ssg": "^0.6.0",
+    "zone.js": "^0.14.4"
   },
   "devDependencies": {
     "@types/ramda": "^0.29.11",
@@ -44,6 +50,8 @@
     "eslint-plugin-unicorn": "^51.0.1",
     "eslint-scope": "^8.0.0",
     "prettier": "^3.2.5",
+    "process": "^0.11.10",
+    "rollup": "^4.13.0",
     "typescript": "^5.4.2",
     "vite": "^5.1.6"
   }

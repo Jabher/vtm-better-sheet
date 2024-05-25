@@ -1,0 +1,59 @@
+@import "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200";
+
+.sheet-component:has(.sheet-component--boost) {
+    position: relative;
+}
+
+.sheet-component--boost {
+    position: absolute;
+    left: 0;
+    left: 0;
+    width: 100%;
+    min-height: 100%;
+    color: white;
+
+    input[type="radio"] {
+        display: none;
+    }
+
+    input[type="radio"]:checked ~ .sheet-component--boost-zero {
+        display: none;
+    }
+
+    &:not(:has(input[type="radio"]:checked)) .sheet-component--boost-value {
+        display: none;
+    }
+
+    .sheet-component--boost-zero, .sheet-component--boost-value {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        transition: opacity var(--v20-transition-duration);
+        opacity: 0;
+    }
+
+    &:hover .sheet-component--boost-contents {
+        opacity: .5;
+    }
+
+    &:hover .sheet-component--boost-zero,
+    &:hover .sheet-component--boost-value {
+        opacity: 1;
+    }
+
+    .sheet-component--boost-zero {
+        font-variation-settings: 'FILL' 1,
+        'wght' 100,
+        'GRAD' 0,
+        'opsz' 16;
+    }
+}
+
+ .material-symbols-outlined {
+     font-variation-settings:
+             'FILL' 1,
+             'wght' 400,
+             'GRAD' 0,
+             'opsz' 20
+ }

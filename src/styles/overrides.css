@@ -8,16 +8,9 @@
 }
 
 .sheet {
+    flex-grow: 1;
     width: calc(100% - 20px);
     box-sizing: border-box;
-}
-
-.charactersheet {
-    padding: 0 !important;
-}
-
-.characterviewer {
-    padding: 0 !important;
 }
 
 html, body {
@@ -34,7 +27,7 @@ html, body {
     cursor: pointer !important;
     border: none !important;
     outline: none;
-    transition: all 0.25s ease-in-out;
+    transition: all var(--v20-transition-duration) ease-in-out;
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus {
@@ -48,7 +41,7 @@ html, body {
 }
 
 .sheet {
-    max-width: 1080px;
+    max-width: var(--v20-min-viewport-width);
     margin: 0 auto;
 }
 
@@ -57,13 +50,9 @@ html, body {
     --v20-color-text: #eee;
     --v20-color-background: var(--dark-surface1, #1F1F1F);
     background-color: var(--v20-color-background);
-    --v20-neuromorph-box-shadow: 20px 20px 60px #181818,
-    -20px -20px 60px #262626;
-    --v20-neuromorph-box-shadow-active: 20px 20px 60px #121212,
-    -20px -20px 60px #2c2c2c;
 }
 
-label, h1, h2, h3, h4, h5, h6, select, option {
+label, h1, h2, h3, h4, h5, h6, select, option, span {
     color: var(--v20-color-text);
 }
 
@@ -81,15 +70,27 @@ select, option {
 
 
 .characterviewer {
+    min-height: 100%;
     display: flex !important;
     flex-direction: column;
 }
 
 .tab-content {
     flex-grow: 1;
-    height: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.sheetform, .charactersheet {
-    display: contents;
+.sheetform, .characterviewer, #root {
+    display: contents !important;
+}
+
+#dialog-window {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    padding-bottom: 20px;
+}
+
+.sheet-tab-content {
+    flex-grow: 1;
 }

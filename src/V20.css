@@ -74,7 +74,7 @@
 }
 
 .sheet-utility-hidden-input-radio:not(:checked) + * {
-    display: none;
+    display: none !important;
 }
 
 input, textarea {

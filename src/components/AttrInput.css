@@ -1,36 +1,35 @@
-.sheet-component--attr-input {
-    --sheet-component--attr-input-dots-area: 84px;
+.charsheet .sheet-component--attr-input {
+    --sheet-component--attr-input-dots-area: calc(var(--v20-counter-item-width) * 6);
     --sheet-component--attr-input-input-area: 100px;
     --sheet-component--attr-input-gap: 4px;
 
     display: grid;
-    grid-template-areas: "title counter-value counter spec";
-    grid-template-columns: auto min-content var(--sheet-component--attr-input-dots-area) var(--sheet-component--attr-input-input-area);
+    height: var(--v20-line-height);
+    grid-template-columns: auto var(--sheet-component--attr-input-dots-area) var(--sheet-component--attr-input-input-area);
     grid-gap: var(--sheet-component--attr-input-gap);
     align-items: center;
 
-    & .sheet-component--attr-input--dots-input {
-        grid-area: counter;
-    }
-
     & .sheet-component--attr-input--title {
-        grid-area: title;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        display: block;
         margin: 0;
         text-align: start;
+        display: flex;
+        justify-content: flex-start;
+        & input {
+            display: none;
+        }
+        & input:checked + span {
+            display: none;
+        }
     }
 
     & .sheet-component--attr-input--counter-value {
-        grid-area: counter-value;
         line-height: 100%;
     }
 
     & .sheet-component--attr-input--spec {
-        grid-area: spec;
-
         &:invalid:not(:focus) {
             border-color: rgba(128,128,128,.1);
         }
@@ -66,7 +65,7 @@
             justify-content: flex-start;
             align-items: center;
             flex-wrap: nowrap;
-            transition: background-color .25s;
+            transition: background-color var(--v20-transition-duration);
             background: transparent;
             z-index: 100;
             position: relative;
@@ -75,7 +74,7 @@
     }
 
     .sheet-component--attr-input--dots-input {
-        &:not(:hover) label:nth-of-type(n+7) {
+        &:not(:hover) input[value='5'] ~ input {
             opacity: 0;
             pointer-events: none;
         }
@@ -90,9 +89,27 @@
     container-type: inline-size;
 }
 
-/*@container (width <= 400px) {*/
-/*    .sheet-component--attr-input {*/
-/*        grid-template-areas: "title counter-value" "counter spec";*/
-/*        grid-template-columns: var(--sheet-component--attr-input-dots-area) 1ft;*/
-/*    }*/
-/*}*/
+@container (width <= 260px) {
+    .charsheet .sheet-component--attr-input {
+        grid-template-columns: auto var(--sheet-component--attr-input-dots-area) 0;
+        .sheet-element-input:has(.sheet-component--attr-input--spec) {
+            display: none;
+        }
+
+        &.sheet-component--attr-input-expanding .sheet-component--attr-input--dots-input {
+            & div {
+                width: auto;
+            }
+        }
+        .sheet-component--attr-input--dots-input {
+            &:hover input[value='5'] ~ input {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            &:hover label {
+                pointer-events: none;
+            }
+        }
+    }
+}

@@ -12,6 +12,11 @@ input.sheet-component--square-radio {
         outline: none;
     }
 
+    &:checked {
+        color: var(--v20-color-visual-accent);
+        border-color: var(--v20-color-visual-accent);
+    }
+
     &::after {
         content: attr(value);
     }

@@ -14,4 +14,12 @@
             }
         }
     }
+
+    & .sheet-dice--repeating-line {
+        display: flex;
+        justify-content: stretch;
+        & > * {
+            width: 100%;
+        }
+    }
 }

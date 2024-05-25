@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-compile-time/client" />
+
 import translation from "./translation.json";
 
 declare module "react" {
@@ -11,4 +13,3 @@ declare module "react" {
     type?: "submit" | "reset" | "button" | "roll" | undefined;
   }
 }
-

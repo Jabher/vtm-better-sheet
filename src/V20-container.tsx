@@ -11,14 +11,6 @@ export const V20Container = ({ children }: PropsWithChildren) => (
       "--v20-blurry-5-20": blurry(5, 20),
     }}
   >
-    <div className="sheet-header">
-      <div className="sheet-header-line-left" />
-      <div className="sheet-header-logo" />
-      <div className="sheet-header-line-right" />
-    </div>
-    <div className="sheet-body">
-      <div style={{ width: "100%", overflow: "hidden", padding: "20px" }}>{children}</div>
-    </div>
-    <div className="sheet-footer" />
+    {children}
   </div>
 );

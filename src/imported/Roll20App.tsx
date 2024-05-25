@@ -1,20 +1,30 @@
 import { useMediaQuery } from "usehooks-ts";
 import { PropsWithChildren } from "react";
 import { useWorker, Worker } from "./useWorker.ts";
+import "./base.css";
 
 const Roll20App = ({ children, worker }: PropsWithChildren<{ worker: Worker }>) => {
-  const isLightOS = useMediaQuery("(prefers-color-scheme: light)") || true;
+  const isLightOS = useMediaQuery("(prefers-color-scheme: light)");
   const formRef = useWorker(worker);
 
   if (process.env.NODE_ENV == "production") {
-    return <>{children}</>;
+    return (
+      <>
+        <script
+          type="text/worker"
+          // @ts-expect-error types
+          dangerouslySetInnerHTML={{ __html: import.meta.compileTime("./build-worker.ts").file }}
+        />
+        {children}
+      </>
+    );
   }
 
   return (
     <div className={isLightOS ? "" : "sheet-darkmode"} style={{ minHeight: "100vh", width: "100vw" }}>
       <div id="dialog-window" style={{ minHeight: "100%", width: "100%" }}>
         <div
-          className="dialog largedialog characterviewer"
+          className="dialog largedialog characterviewer characterviewer-simulated"
           style={{ minHeight: "100%", width: "100%", display: "block" }}
         >
           <ul className="nav nav-tabs">

@@ -8,7 +8,7 @@ export const SheetInfo = () => (
     <Section>
       <SectionHead i18n="description-label" />
       <SectionBody>
-        <aside>
+        <aside> {/*remove / hide*/}
           <Input i18n="description-age-label" name="attr_AgeDesc" />
           <Input i18n="description-apparent-age-label" name="attr_ApparentAgeDesc" />
           <Input i18n="description-born-in-label" name="attr_PlaceDesc" />

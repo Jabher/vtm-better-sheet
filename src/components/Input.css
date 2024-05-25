@@ -5,6 +5,7 @@
 }
 
 textarea {
+    color: var(--v20-color-text);
     background: transparent;
     resize: none;
     border: rgba(128, 128, 128, 0.125) 1px solid;
@@ -25,62 +26,64 @@ textarea {
     border-color: rgba(128, 128, 128, 0.05);
 }
 
-.sheet-element-input input {
-    padding: 4px 8px;
-    font-size: 16px;
-    min-height: 24px;
-    min-width: 36px;
-    outline: none;
-    transition: background 0.5s;
-    margin: 0;
-    background: transparent;
-    width: 100%;
-    border: none;
+.sheet-element-input.sheet-element-input.sheet-element-input {
+    input {
+        color: var(--v20-color-text);
+        padding: 4px 8px;
+        font-size: 16px;
+        min-height: 24px;
+        min-width: 36px;
+        outline: none;
+        transition: background var(--v20-transition-duration);
+        margin: 0;
+        background: transparent;
+        width: 100%;
+        border: none;
+    }
+
+    input:disabled {
+        border-color: rgba(128, 128, 128, 0.05);
+    }
+
+    input::placeholder {
+        color: rgba(128, 128, 128, .2);
+    }
+
+    input::-webkit-input-placeholder {
+        color: rgba(128, 128, 128, .2);
+    }
+
+    label {
+        pointer-events: none;
+        display: inline-block;
+        width: min-content;
+        position: absolute;
+        left: -4px;
+        top: -6px;
+        margin: 0;
+        cursor: text;
+        color: var(--secondarytext);
+        transition: color var(--v20-transition-duration);
+        white-space: nowrap;
+        padding: 5px 20px;
+        mask: var(--v20-blurry-5-20);
+        mask-composite: subtract;
+        background: var(--v20-color-background);
+    }
+
+    &:has(label) {
+        padding: 10px 4px 2px;
+    }
+
+    &:has(label) input {
+        padding: 16px 16px;
+    }
+
+
+    input:focus + label {
+        color: var(--primarytext);
+    }
 }
-
-.sheet-element-input input:disabled {
-    border-color: rgba(128, 128, 128, 0.05);
-}
-
-.sheet-element-input input::placeholder {
-    color: rgba(128, 128, 128, .2);
-}
-
-.sheet-element-input input::-webkit-input-placeholder {
-    color: rgba(128, 128, 128, .2);
-}
-
-.sheet-element-input label {
-    pointer-events: none;
-    display: inline-block;
-    width: min-content;
-    position: absolute;
-    left: -4px;
-    top: -6px;
-    margin: 0;
-    cursor: text;
-    color: var(--secondarytext);
-    transition: color 0.5s;
-    white-space: nowrap;
-    padding: 5px 20px;
-    mask: var(--v20-blurry-5-20);
-    mask-composite: subtract;
-    background: var(--v20-color-background);
-}
-
-.sheet-element-input:has(label) {
-    padding: 10px 4px 2px;
-}
-
-.sheet-element-input:has(label) input {
-    padding: 16px 16px;
-}
-
-
-.sheet-element-input input:focus + label {
-    color: var(--primarytext);
-}
-
 .sheet-element-input-postfix {
     padding: 4px 8px;
 }

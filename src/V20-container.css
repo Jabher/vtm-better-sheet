@@ -1,121 +1,20 @@
-
-.sheet-header {
-    height: 100px;
-}
-
-.sheet-header, .sheet-body, .sheet-footer {
+.sheet {
     display: flex;
-    justify-content: space-between;
-    box-sizing: border-box;
-    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
 }
 
-.sheet-header, .sheet-body, .sheet-footer {
-    position: relative;
-}
-.sheet-header-logo {
+.sheet::before {
+    content: '';
+    display: block;
     background-image: url('/public/img.png');
     height: 100px;
     width: 300px;
     background-size: contain;
     background-position: center;
-    .sheet-darkmode & {
-        filter: invert(1) brightness(0.8);
-    }
+    align-self: center;
 }
 
-.sheet-body {
-    border: 0 1px solid var(--v20-border-color);
-    & > div {
-        display: flex;
-        flex-direction: column;
-    }
-
-    & > div > .sheet-tab-content {
-        flex: 1;
-    }
+.sheet-darkmode .sheet::before {
+    filter: invert(1) brightness(0.8);
 }
-
-/*:is(.sheet-body, .sheet-footer)::before,*/
-/*:is(.sheet-body, .sheet-footer)::after,*/
-/*.sheet-header-line-left::before,*/
-/*.sheet-header-line-right::before {*/
-/*    content: '';*/
-/*    display: block;*/
-/*    border-style: solid;*/
-/*    border-width: 0 var(--border-width);*/
-/*    border-color: var(--border-color);*/
-/*    width: var(--width);*/
-/*    box-sizing: border-box;*/
-/*}*/
-
-/*.sheet-body::before, .sheet-body::after {*/
-/*    --offset: calc(var(--width) * -1 * calc(cos(var(--skew))) - 2px);*/
-/*    margin-top: var(--offset);*/
-/*    border-width: 0 var(--border-width);*/
-/*    clip-path: polygon(*/
-/*            0% 0%,*/
-/*            calc(100% + 1px) calc(-1 * var(--offset)),*/
-/*            calc(100% + 1px) calc(100% + var(--offset)),*/
-/*            0 100%*/
-/*    );*/
-/*    !*background: blue;*!*/
-/*}*/
-
-/*.sheet-body::after {*/
-/*    clip-path: polygon(*/
-/*            -1px calc(-1 * var(--offset)),*/
-/*            100% 0%,*/
-/*            100% 100%,*/
-/*            -1px calc(100% + var(--offset))*/
-/*    );*/
-/*}*/
-
-/*.sheet-header {*/
-/*    --offset-x: var(--width);*/
-/*    --offset-y: calc(var(--width) * sin(var(--crop)));*/
-/*    clip-path: polygon(*/
-/*            0% 0%,*/
-/*            0% calc(100% - var(--offset-y)),*/
-/*            calc(var(--offset-x)) 100%,*/
-/*            100% 100%,*/
-/*            calc(100% - var(--offset-x)) 100%,*/
-/*            100% calc(100% - var(--offset-y)),*/
-/*            100% 0%*/
-/*    );*/
-/*    !*background: blue;*!*/
-/*}*/
-
-/*.sheet-header-line-left::before {*/
-/*    align-self: flex-end;*/
-/*    bottom: 0;*/
-/*    height: 50%;*/
-/*    transform-origin: calc(100% - 1px) calc(100% - 1px);*/
-/*    transform: skewX(calc(var(--skew) * -1)) scaleX(calc(1 / cos(var(--skew))));*/
-/*}*/
-
-/*.sheet-header-line-right::before {*/
-/*    align-self: flex-end;*/
-/*    bottom: 0;*/
-/*    height: 50%;*/
-/*    !*todo solve -7px*!*/
-/*    transform-origin: 0 calc(100% - 1px);*/
-/*    transform: skewX(var(--skew)) scaleX(calc(1 / cos(var(--skew))));*/
-/*}*/
-
-.sheet-header-line-right {
-    justify-content: flex-end;
-}
-
-.sheet-header-line-left, .sheet-header-line-right {
-    flex: 0 1 100px;
-    overflow: hidden;
-    display: flex;
-    align-items: flex-end;
-    position: relative;
-
-    &::before {
-        height: 50%;
-    }
-}
-

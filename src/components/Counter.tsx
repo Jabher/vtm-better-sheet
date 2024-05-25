@@ -11,6 +11,7 @@ export const Counter = ({
   fade,
   dotStyle,
   preserveZeroGap = true,
+  renderCounterOnZero = false,
   ...rest
 }: DOMProps<
   "div",
@@ -20,6 +21,7 @@ export const Counter = ({
     name: string;
     fade?: boolean;
     preserveZeroGap?: boolean;
+    renderCounterOnZero?: boolean;
     dotStyle?: "circle" | "square";
   }
 >) => (
@@ -31,10 +33,12 @@ export const Counter = ({
     })}
     {...rest}
   >
-    {
-      /*for counting selectors*/
-      from >= 1 ? null : <input type="radio" name={name} value={0} defaultChecked={from == 0} />
-    }
+    <>
+      {from == 0 ? <input type="radio" name={name} value={0} defaultChecked={from == 0} /> : null}
+      {renderCounterOnZero && (from == 0 || preserveZeroGap) ? (
+        <span className="sheet-component--counter-value" name={name} />
+      ) : null}
+    </>
     {range(1, to + 1).map((i) => (
       <input type="radio" name={name} key={i} value={i} defaultChecked={i == from} title={to < 10 ? "" : `${i}`} />
     ))}

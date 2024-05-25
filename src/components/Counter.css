@@ -1,20 +1,18 @@
 /* feature: visual */
 
 .sheet-component--counter {
-    --local-width: 14px;
     position: relative;
     display: flex;
 
     & input {
         all: unset;
         appearance: none;
-        display: block;
         height: 100%;
         display: inline-flex;
         justify-content: center;
         align-items: center;
         cursor: pointer;
-        font-size: calc(var(--local-width) - 2px);
+        font-size: calc(var(--v20-counter-item-width) - 2px);
         pointer-events: all;
         text-align: center;
 
@@ -25,18 +23,22 @@
 
     & input::before {
         content: '⚫';
-        width: var(--local-width);
+        width: var(--v20-counter-item-width);
     }
 
     &.sheet-component--counter-style-box {
         & input {
-            width: calc(var(--local-width) - 2px);
-            height: calc(var(--local-width) - 2px);
+            width: calc(var(--v20-counter-item-width) - 2px);
+            height: calc(var(--v20-counter-item-width) - 2px);
             box-sizing: border-box;
             margin: 0 1px;
             border: solid var(--v20-border-width) var(--v20-common-border-color);
             background: transparent;
             box-shadow: 0 0 5px rgba(128, 128, 128, .1) inset;
+        }
+
+        &:not(:hover) input {
+            border-color: var(--v20-common-border-color-transparent);
         }
 
         & input::before {
@@ -54,7 +56,25 @@
 
     &:not(:hover) input[value="0"] {
         opacity: 0;
-        transition: opacity 0.5s;
+        transition: opacity var(--v20-transition-duration);
+    }
+
+    & .sheet-component--counter-value {
+        width: var(--v20-counter-item-width);
+        flex: 0 0 var(--v20-counter-item-width);
+        margin-left: calc(var(--v20-counter-item-width) * -1);
+        height: 100%;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-size: calc(var(--v20-counter-item-width) - 2px);
+        pointer-events: none;
+        text-align: center;
+    }
+    &:hover input[value="0"] + .sheet-component--counter-value,
+    & input[value="0"]:checked + .sheet-component--counter-value {
+        opacity: 0;
     }
 
     &.sheet-component--counter-preserve-zero-gap:not(:has(input[value="0"])) {
@@ -67,6 +87,9 @@
 
     & input[value="0"]:checked {
         opacity: 1;
+    }
+    &:hover input[value="0"]:not(:checked) {
+        opacity: .5;
     }
 
     &:not(:hover) input[value="0"]:checked ~ input {
@@ -134,11 +157,11 @@
     }
 
     .sheet-darkmode &:not(.sheet-component--counter-style-box) input:checked ~ input {
-        opacity: .5;
+        filter: brightness(.5);
     }
 
 
     & input {
-        transition: opacity 0.5s;
+        transition: opacity var(--v20-transition-duration);
     }
 }

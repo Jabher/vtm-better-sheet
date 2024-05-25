@@ -1,13 +1,21 @@
-.sheet-component--roll-button {
+.sheet-component--roll-button.sheet-component--roll-button.sheet-component--roll-button {
     &:empty {
+        all: unset;
+        cursor: pointer;
+        flex-shrink: 0;
+        flex-grow: 0;
+        flex-basis: var(--v20-line-height-large);
         background-size: contain;
         width: var(--v20-line-height-large);
         height: var(--v20-line-height-large);
         border: none;
-        transition: transform 0.15s ease-in-out;
+        transition: all 0.05s ease-in;
         background: transparent url('/public/dice.png') no-repeat center;
         outline: none;
         background-size: contain;
+        box-shadow: none;
+        text-shadow: none;
+        transform: rotate(-1deg);
 
         .sheet-darkmode & {
             filter: invert(1) hue-rotate(180deg);
@@ -16,7 +24,35 @@
             transform: rotate(-15deg);
         }
         &:active {
+            outline: none;
             transform: rotate(15deg);
         }
+        &::before {
+            content: unset;
+        }
+    }
+}
+
+.sheet-element-section:not(:has(.sheet-element-section)) {
+    button.sheet-component--roll-button.sheet-component--roll-button.sheet-component--roll-button {
+        opacity: 0.1;
+    }
+    &:hover button.sheet-component--roll-button.sheet-component--roll-button.sheet-component--roll-button {
+        opacity: 0.3;
+    }
+    .sheet-primary--counter-with-roll:hover button.sheet-component--roll-button.sheet-component--roll-button.sheet-component--roll-button {
+        opacity: 0.5;
+    }
+    button.sheet-component--roll-button.sheet-component--roll-button.sheet-component--roll-button.sheet-component--roll-button:hover {
+        opacity: 1;
+    }
+}
+
+.sheet-primary--counter-with-roll {
+    display: flex;
+    justify-content: space-between;
+    button.sheet-component--roll-button.sheet-component--roll-button.sheet-component--roll-button {
+        height: 100%;
+        min-height: var(--v20-line-height);
     }
 }

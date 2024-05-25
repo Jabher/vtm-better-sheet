@@ -1,4 +1,4 @@
-.sheet-component--health {
+.charsheet .sheet-component--health {
     --padding: 3px;
     position: relative;
     padding: var(--padding);
