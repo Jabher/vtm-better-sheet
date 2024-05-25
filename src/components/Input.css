@@ -1,0 +1,53 @@
+.sheet-element-input {
+    position: relative;
+    width: 100%;
+    padding: 2px 4px;
+}
+
+.sheet-element-input input {
+    padding: 4px 8px;
+    font-size: 16px;
+    min-height: 24px;
+    outline: none;
+    transition: background 0.5s;
+    margin: 0;
+    background: transparent;
+    width: 100%;
+}
+
+.sheet-element-input input::placeholder {
+    color: rgba(128,128,128,.2);
+}
+.sheet-element-input input::-webkit-input-placeholder {
+    color: rgba(128,128,128,.2);
+}
+
+.sheet-element-input label {
+    display: inline-block;
+    width: min-content;
+    position: absolute;
+    left: -4px;
+    top: -6px;
+    margin: 0;
+    backdrop-filter: blur(5px);
+    cursor: text;
+    color: var(--secondarytext);
+    transition: color 0.5s;
+}
+
+.sheet-element-input:has(label) {
+    padding: 6px 0;
+}
+
+.sheet-element-input:has(label) {
+    padding: 10px 4px 2px;
+}
+
+.sheet-element-input:has(label) input {
+    padding: 16px 16px;
+}
+
+
+.sheet-element-input input:focus + label {
+    color: var(--primarytext);
+}

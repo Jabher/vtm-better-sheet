@@ -1,0 +1,17 @@
+/*good headings font*/
+@import "https://fonts.googleapis.com/css2?family=Poiret+One";
+/*good body font*/
+@import "https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap";
+
+h1, h2, h3 {
+    font-family: 'Poiret One', inherit;
+}
+h4, h5, h6 {
+    font-family: 'Exo 2', inherit;
+    font-weight: 200;
+}
+
+.charsheet :is(h1, h2, h3, h4, h5, h6) {
+    margin-top: 0;
+    text-align: center;
+}

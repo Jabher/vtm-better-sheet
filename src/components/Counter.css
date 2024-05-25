@@ -1,0 +1,157 @@
+/* feature: parent-level counter value for reuse */
+.sheet-component--counter-value {
+    height: 100%;
+    vertical-align: middle;
+
+    &::before {
+        content: counter(dots-value);
+        height: 100%;
+        vertical-align: middle;
+    }
+}
+
+.sheet-component:not(.sheet-component--counter) {
+    counter-reset: dots-value;
+
+    &:has(input[value="0"]:checked) .sheet-component--counter-value::before {
+        opacity: 0;
+    }
+}
+
+.sheet-component--counter {
+    & input:not([value="0"]) + label {
+        counter-increment: dots-value;
+    }
+
+    & input:checked ~ input + label {
+        counter-increment: none;
+    }
+}
+
+/* feature: visual */
+
+.sheet-component--counter {
+    position: relative;
+    display: flex;
+
+    & input {
+        display: none;
+    }
+
+    & label {
+        height: 100%;
+        display: inline-block;
+        cursor: pointer;
+        margin: 0;
+        padding: 0;
+        font-size: 12px;
+        pointer-events: all;
+        flex: 0 1 min-content;
+    }
+
+    & label::before {
+        content: '⚫';
+        display: flex;
+        flex: 0 1 14px;
+        width: 14px;
+        height: 100%;
+        vertical-align: middle;
+        line-height: 18px;
+        padding: 1px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &.sheet-component--counter-style-box label::before {
+        content: 'X';
+        width: 12px;
+        height: 12px;
+        margin: 0 1px;
+        border: solid 1px rgba(128,128,128, .25);
+        background: rgba(128,128,128, .1);
+        box-shadow: 0 0 5px rgba(128,128,128, .25) inset;
+    }
+
+    &:not(:hover) label.sheet-component--counter--label-zero::before {
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+
+    &.sheet-component--counter-style-box label.sheet-component--counter--label-zero::before {
+        border-radius: 50px;
+    }
+
+    &.sheet-component--counter-startsFrom-1 {
+        padding-left: 14px; /*compensating missing X*/
+    }
+
+    & label.sheet-component--counter--label-zero::before {
+        content: "X";
+    }
+
+    & input[value="0"]:checked {
+        & + label.sheet-component--counter--label-zero::before {
+            opacity: 1;
+        }
+
+        & ~ label:not(.sheet-component--counter--label-zero) {
+            opacity: .1;
+        }
+    }
+
+    & label.sheet-component--counter--label-zero:is(:hover)::before {
+        opacity: 1;
+    }
+
+    /* todo do we need it? */
+    &.sheet-component--counter-fade:not(:hover) input:not([value="0"]):checked,
+    &.sheet-component--counter-fade:hover label:hover {
+        & ~ label {
+            opacity: 0.75;
+        }
+
+        & ~ label ~ label ~ label {
+            opacity: .5625;
+        }
+
+        & ~ label ~ label ~ label ~ label {
+            opacity: .4218;
+        }
+
+        & ~ label ~ label ~ label ~ label ~ label {
+            opacity: .3164;
+        }
+
+        & ~ label ~ label ~ label ~ label ~ label ~ label {
+            opacity: .2373;
+        }
+
+        & ~ label ~ label ~ label ~ label ~ label ~ label ~ label {
+            opacity: .1779;
+        }
+
+        & ~ label ~ label ~ label ~ label ~ label ~ label ~ label ~ label {
+            opacity: .1334;
+        }
+
+        & ~ label ~ label ~ label ~ label ~ label ~ label ~ label ~ label ~ label {
+            opacity: .1;
+        }
+
+        & ~ label ~ label ~ label ~ label ~ label ~ label ~ label ~ label ~ label ~ label {
+            opacity: .1;
+        }
+    }
+
+    & input:checked + label ~ label:before {
+        content: '⚪';
+    }
+
+    &.sheet-component--counter-style-box input:checked + label ~ label:before {
+        content: ' ';
+    }
+
+    & label {
+        transition: opacity 0.5s;
+    }
+}

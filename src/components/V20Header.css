@@ -1,0 +1,12 @@
+.sheet-component--v20header {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.sheet-component--v20header > * {
+    min-width: min-content;
+    white-space: nowrap;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: min-content;
+}

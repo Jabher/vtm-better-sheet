@@ -1,0 +1,65 @@
+.sheet-primary {
+    .sheet-primary--virtues {
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: 1fr 1fr;
+
+        & select {
+            width: 100%;
+            border: none;
+            outline: none;
+            text-align: right;
+            margin: 0;
+            color: var(--color-grayscale1);
+            appearance: none;
+            cursor: pointer;
+            padding: 0;
+        }
+        & * {
+            height: 28px;
+            line-height: 28px;
+            font-size: 13px;
+            text-align: right;
+            width: 100%;
+        }
+    }
+
+    & textarea.sheet-primary-moralpath {
+        width: 100%;
+        outline: none;
+        background: none;
+        height: 44px;
+        vertical-align: top;
+        resize: none;
+        margin: 2px 4px;
+    }
+
+    & .sheet-primary-humanity-path {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+        "humanitypath-counter humanitypath-counter"
+        "humanitypath-title humanitypath-input"
+        "humanitypath-bearing-title humanitypath-bearing-input";
+        justify-items: end;
+        align-items: center;
+        & .sheet-primary-humanity-path--counter {
+            grid-area: humanitypath-counter;
+            justify-self: center;
+        }
+    }
+
+    & .sheet-primary--health-extra {
+        display: flex;
+    }
+
+    & .sheet-primary--health-main > div {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        & > :first-child {
+            flex: 1 1 auto;
+            text-align: start;
+        }
+    }
+}

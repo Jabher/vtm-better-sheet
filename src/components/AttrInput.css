@@ -1,0 +1,82 @@
+.sheet-component--attr-input {
+    --sheet-component--attr-input-dots-area: 84px;
+    --sheet-component--attr-input-input-area: 100px;
+    --sheet-component--attr-input-gap: 4px;
+
+    display: grid;
+    grid-template-areas: "title counter spec";
+    grid-template-columns: 5fr var(--sheet-component--attr-input-dots-area) var(--sheet-component--attr-input-input-area);
+    grid-gap: var(--sheet-component--attr-input-gap);
+    align-items: center;
+
+    & .sheet-component--attr-input--dots-input {
+        grid-area: counter;
+    }
+
+    & .sheet-component--attr-input--title {
+        grid-area: title;
+    }
+
+    & .sheet-component--attr-input--spec {
+        grid-area: spec;
+
+        &:invalid:not(:focus) {
+            border-color: rgba(128,128,128,.1);
+        }
+    }
+
+    &.sheet-component--attr-input-expanding .sheet-component--attr-input--dots-input {
+        & div {
+            width: calc(var(--sheet-component--attr-input-dots-area) + var(--sheet-component--attr-input-input-area) + var(--sheet-component--attr-input-gap));
+        }
+
+        &:hover div {
+            background: white;
+        }
+
+        &:hover div:after {
+            content: '';
+            flex: 1;
+            height: 100%;
+            pointer-events: all;
+            display: block;
+        }
+    }
+
+    .sheet-component--attr-input--dots-input {
+        width: var(--sheet-component--attr-input-dots-area);
+        overflow: visible;
+        height: 100%;
+
+        & div {
+            width: auto;
+            height: 100%;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            flex-wrap: nowrap;
+            transition: background-color .25s;
+            background: transparent;
+            z-index: 100;
+            position: relative;
+            pointer-events: none;
+        }
+    }
+
+    .sheet-component--attr-input--title {
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+    }
+
+    .sheet-component--attr-input--dots-input {
+        &:not(:hover) label:nth-of-type(n+7) {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        &:hover label {
+            pointer-events: all;
+        }
+    }
+}

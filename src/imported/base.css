@@ -12512,11 +12512,6 @@ input[disabled], select[disabled], textarea[disabled], input[readonly], select[r
     cursor: not-allowed;
 }
 
-img {
-    max-width: 100%;
-    height: auto;
-}
-
 .characterviewer .nav-tabs {
     padding-top: 10px;
 }
