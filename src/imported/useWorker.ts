@@ -38,7 +38,6 @@ export const useWorker = (worker: Worker) => {
     setEntries();
     form.addEventListener("submit", (e) => e.preventDefault());
 
-    // @ts-expect-error roll20
     globalThis.on = (events: string, callback: WorkerEventCallback) => {
       for (const event of events.split(/ +/)) {
         eventListeners[event] ??= new Set();
@@ -53,7 +52,6 @@ export const useWorker = (worker: Worker) => {
 
     // @ts-expect-error roll20
     globalThis.getTranslationByKey = (key: string) => translation[key];
-    // @ts-expect-error roll20
     globalThis.getActiveCharacterId = () => "test";
 
     const updateInputs = (attrs: Record<string, string | number>) => {
@@ -111,7 +109,8 @@ export const useWorker = (worker: Worker) => {
       updateInputs(attrs);
       updateValues(attrs);
       Object.assign(state, attrs);
-      cb();
+      if (cb instanceof Function)
+        cb();
     };
     worker();
     for (const callback of eventListeners["sheet:opened"] || []) {
