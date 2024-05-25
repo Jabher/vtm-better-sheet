@@ -1,7 +1,7 @@
 .sheet-rolltemplate-attribute {
     margin-left: -45px;
     margin-right: -16px;
-    padding: 16px 0;
+    padding: 32px 0 0;
 
     .sheet-rollContainer {
         display: grid;
@@ -15,7 +15,7 @@
     }
 
     .sheet-dices {
-        mask: linear-gradient(to right bottom,white, #222 50%, black) luminance;
+        mask: linear-gradient(to right bottom, white, #222 50%, black) luminance;
     }
 
     .sheet-roll-info {
@@ -23,10 +23,14 @@
         flex-direction: column;
         justify-content: flex-end;
         align-items: flex-end;
-        background-image: linear-gradient(to left top, black, rgba(0,0,0,.5) 20%, rgba(0,0,0,.1) 40%, transparent 60%);
+        background-image: radial-gradient(ellipse at 100% 100%, rgba(79, 85, 92, 0.5), rgba(79, 85, 92, 0.3) 20%, rgba(79, 85, 92, 0.1) 60%, transparent 70%);
         padding-top: 32px;
         padding-bottom: 16px;
         z-index: 1;
+    }
+
+    &.sheet-rolltemplate-darkmode .sheet-roll-info {
+        background-image: radial-gradient(ellipse at 100% 100%, rgba(0, 0, 0, .5), rgba(0, 0, 0, .3) 20%, rgba(0, 0, 0, .1) 60%, transparent 70%);
     }
 
     .sheet-result {
@@ -178,8 +182,9 @@
 
     &:hover {
         .sheet-dices {
-            mask: linear-gradient(to right bottom,white, white) luminance;
+            mask: linear-gradient(to right bottom, white, white) luminance;
         }
+
         .sheet-dice::after {
             opacity: 0;
         }
@@ -187,6 +192,7 @@
         .sheet-dice .inlinerollresult {
             opacity: 1;
         }
+
         .sheet-roll-info {
             filter: blur(1px);
             opacity: .5;
