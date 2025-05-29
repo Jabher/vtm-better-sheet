@@ -12,9 +12,14 @@ export class WorkerLogicBase {
 
   constructor() {
     console.debug("initializing worker", this);
+    let initialized = false;
     on("sheet:opened", (e) => {
       console.debug("sheet opened", e);
       getAttrs(["V20_Initialized"], ({ V20_Initialized }) => {
+        if (initialized) {
+          return;
+        }
+        initialized = true;
         console.debug("V20_Initialized", V20_Initialized);
         // noinspection EqualityComparisonWithCoercionJS
         if (!V20_Initialized || V20_Initialized == "0") {
